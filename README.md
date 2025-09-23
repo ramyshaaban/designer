@@ -1,3 +1,28 @@
+## Designer App
+
+Production-ready scaffold for a medical-education Designer.
+
+### Setup
+
+1. Node 22+, pnpm via corepack.
+2. Copy `.env.local` (already created) and review `NEXTAUTH_SECRET`.
+3. Install deps: `pnpm install`.
+4. Generate DB: `pnpm prisma:migrate`.
+5. Seed: `pnpm run db:seed`.
+6. Dev: `pnpm dev` then sign in at `/signin` with `admin@demo.test` / `password`.
+
+### Key Pages
+
+- `/designer`: Cards CRUD and reorder.
+- `/library`: Content & Collections CRUD.
+- `/templates`: Browse and apply templates.
+- `/preview`: Read-only preview; use `/api/home-layout/publish` to publish.
+
+### Tests
+
+- Unit: `pnpm test` (Vitest)
+- E2E: `pnpm e2e` (Playwright)
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
