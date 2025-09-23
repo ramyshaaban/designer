@@ -18,11 +18,19 @@ const CreateCardBody = z.object({
 });
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
-  const { hospitalId } = getSessionContext(session);
-  const cards = await listCards(hospitalId);
-  return NextResponse.json(cards);
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
+    const { hospitalId } = getSessionContext(session);
+    const cards = await listCards(hospitalId);
+    return NextResponse.json(cards);
+  } catch (error) {
+    console.error("Database error:", error);
+    return NextResponse.json({ 
+      error: "Database connection failed",
+      message: "Unable to connect to database"
+    }, { status: 503 });
+  }
 }
 
 export async function POST(req: Request) {
