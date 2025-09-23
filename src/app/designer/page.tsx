@@ -2,7 +2,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type Card = {
   id: string;
@@ -19,8 +21,21 @@ async function fetchJSON<T>(url: string, init?: RequestInit): Promise<T> {
 }
 
 export default function DesignerPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const qc = useQueryClient();
-  const { data: cards = [] } = useQuery<Card[]>({ queryKey: ["cards"], queryFn: () => fetchJSON("/api/cards") });
+  
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/signin");
+    }
+  }, [status, router]);
+
+  const { data: cards = [] } = useQuery<Card[]>({ 
+    queryKey: ["cards"], 
+    queryFn: () => fetchJSON("/api/cards"),
+    enabled: status === "authenticated"
+  });
 
   const create = useMutation({
     mutationFn: (title: string) =>
@@ -76,6 +91,14 @@ export default function DesignerPage() {
   };
 
   const [title, setTitle] = useState("");
+
+  if (status === "loading") {
+    return <div className="p-6">Loading...</div>;
+  }
+
+  if (status === "unauthenticated") {
+    return <div className="p-6">Redirecting to sign in...</div>;
+  }
 
   return (
     <div className="p-6 space-y-4">
