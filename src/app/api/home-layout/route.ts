@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 import { getSessionContext, requireRole } from "@/lib/rbac";
 import { getDraftLayout, updateDraftLayout } from "@/server/repositories/layout";
 import { z } from "zod";
 
 export async function GET() {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
   const { hospitalId } = getSessionContext(session);
   const layout = await getDraftLayout(hospitalId);
@@ -15,7 +16,7 @@ export async function GET() {
 const UpdateBody = z.object({ cardIds: z.array(z.string()) });
 
 export async function POST(req: Request) {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
   try {
     requireRole(session, ["admin", "editor"]);
