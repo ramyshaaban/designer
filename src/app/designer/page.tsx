@@ -21,9 +21,11 @@ async function fetchJSON<T>(url: string, init?: RequestInit): Promise<T> {
 }
 
 export default function DesignerPage() {
-  const { data: session, status } = useSession();
+  const session = useSession();
   const router = useRouter();
   const qc = useQueryClient();
+  
+  const { data, status } = session || { data: null, status: "loading" };
   
   useEffect(() => {
     if (status === "unauthenticated") {
