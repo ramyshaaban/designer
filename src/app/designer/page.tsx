@@ -15,9 +15,25 @@ type Card = {
 };
 
 async function fetchJSON<T>(url: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(url, { ...init, headers: { "content-type": "application/json" } });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+  
+  try {
+    const res = await fetch(url, { 
+      ...init, 
+      headers: { "content-type": "application/json" },
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error.name === 'AbortError') {
+      throw new Error('Request timeout - database connection failed');
+    }
+    throw error;
+  }
 }
 
 export default function DesignerPage() {
@@ -35,10 +51,12 @@ export default function DesignerPage() {
 
   const { data: cards = [], error: cardsError, isLoading: cardsLoading } = useQuery<Card[]>({
     queryKey: ["cards"],
-    queryFn: () => fetchJSON("/api/cards"),
+    queryFn: () => fetchJSON("/api/cards-demo"), // Using demo endpoint temporarily
     enabled: status === "authenticated",
     retry: 1,
-    retryDelay: 1000
+    retryDelay: 1000,
+    staleTime: 0,
+    gcTime: 0
   });
 
   const create = useMutation({
