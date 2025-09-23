@@ -33,10 +33,12 @@ export default function DesignerPage() {
     }
   }, [status, router]);
 
-  const { data: cards = [] } = useQuery<Card[]>({ 
-    queryKey: ["cards"], 
+  const { data: cards = [], error: cardsError, isLoading: cardsLoading } = useQuery<Card[]>({
+    queryKey: ["cards"],
     queryFn: () => fetchJSON("/api/cards"),
-    enabled: status === "authenticated"
+    enabled: status === "authenticated",
+    retry: 1,
+    retryDelay: 1000
   });
 
   const create = useMutation({
@@ -100,6 +102,30 @@ export default function DesignerPage() {
 
   if (status === "unauthenticated") {
     return <div className="p-6">Redirecting to sign in...</div>;
+  }
+
+  if (cardsError) {
+    return (
+      <div className="p-6">
+        <div className="text-red-600 bg-red-50 p-4 rounded-lg">
+          <h2 className="font-semibold">Database Connection Error</h2>
+          <p className="text-sm mt-1">
+            Unable to connect to the database. Please try refreshing the page or contact support.
+          </p>
+          <Button 
+            onClick={() => window.location.reload()} 
+            className="mt-2"
+            variant="outline"
+          >
+            Refresh Page
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (cardsLoading) {
+    return <div className="p-6">Loading cards...</div>;
   }
 
   return (
