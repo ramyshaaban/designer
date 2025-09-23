@@ -4,18 +4,20 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Home() {
-  const { data: session, status } = useSession();
+  const session = useSession();
   const router = useRouter();
+  
+  const { data, status } = session || { data: null, status: "loading" };
 
   useEffect(() => {
     if (status === "loading") return;
     
-    if (session) {
+    if (data) {
       router.push("/designer");
     } else {
       router.push("/signin");
     }
-  }, [session, status, router]);
+  }, [data, status, router]);
 
   return (
     <div className="flex min-h-screen items-center justify-center">
