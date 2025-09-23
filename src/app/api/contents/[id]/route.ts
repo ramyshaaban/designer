@@ -1,4 +1,5 @@
-import { auth } from "@/lib/auth";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 import { requireRole, getSessionContext } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
 import { NextResponse } from "next/server";
@@ -16,7 +17,7 @@ const UpdateBody = z.object({
 });
 
 export async function GET(_: Request, { params }: { params: { id: string } }) {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
   const item = await prisma.contentPiece.findUnique({ where: { id: params.id } });
   if (!item) return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
@@ -24,7 +25,7 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
 }
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
   try {
     requireRole(session, ["admin", "editor"]);
@@ -42,7 +43,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 }
 
 export async function DELETE(_: Request, { params }: { params: { id: string } }) {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
   try {
     requireRole(session, ["admin", "editor"]);

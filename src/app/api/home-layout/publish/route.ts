@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 import { getSessionContext, requireRole } from "@/lib/rbac";
 import { publishLayout } from "@/server/repositories/layout";
 import { writeAudit } from "@/lib/audit";
 
 export async function POST() {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
   try {
     requireRole(session, ["admin", "editor"]);

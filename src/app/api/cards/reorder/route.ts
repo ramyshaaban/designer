@@ -1,4 +1,5 @@
-import { auth } from "@/lib/auth";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 import { requireRole, getSessionContext } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
 import { NextResponse } from "next/server";
@@ -8,7 +9,7 @@ import { reorderCards } from "@/server/repositories/cards";
 const Body = z.object({ ids: z.array(z.string()).min(1) });
 
 export async function POST(req: Request) {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
   try {
     requireRole(session, ["admin", "editor"]);

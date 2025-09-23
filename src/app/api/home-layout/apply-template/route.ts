@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 import { getSessionContext, requireRole } from "@/lib/rbac";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
@@ -7,7 +8,7 @@ import { z } from "zod";
 const Body = z.object({ templateId: z.string().min(1) });
 
 export async function POST(req: Request) {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
   try {
     requireRole(session, ["admin", "editor"]);

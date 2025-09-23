@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 import { getSessionContext, requireRole } from "@/lib/rbac";
 import { rollbackLayout } from "@/server/repositories/layout";
 import { z } from "zod";
@@ -8,7 +9,7 @@ import { writeAudit } from "@/lib/audit";
 const Body = z.object({ version: z.number().int().positive() });
 
 export async function POST(req: Request) {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
   try {
     requireRole(session, ["admin", "editor"]);
