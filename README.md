@@ -11,6 +11,18 @@ Production-ready scaffold for a medical-education Designer.
 5. Seed: `pnpm run db:seed`.
 6. Dev: `pnpm dev` then sign in at `/signin` with `admin@demo.test` / `password`.
 
+### Deploy
+
+Vercel (recommended):
+- Create a Postgres database (Neon, Supabase, RDS, etc.).
+- Set project env vars in Vercel: `DATABASE_URL`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`.
+- Push to GitHub and import repo in Vercel. The included `vercel.json` runs `prisma migrate deploy` before build.
+- Optionally add `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN` secrets in GitHub to enable the included Actions workflow.
+
+Docker:
+- Build: `docker build -t designer-app .`
+- Run: `docker run -p 3000:3000 -e DATABASE_URL=... -e NEXTAUTH_URL=... -e NEXTAUTH_SECRET=... designer-app`
+
 ### Key Pages
 
 - `/designer`: Cards CRUD and reorder.
