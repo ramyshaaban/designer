@@ -1,17 +1,7 @@
 {
-  "functions": {
-    "api/**/*.ts": {
-      "runtime": "nodejs22.x"
-    }
-  },
   "buildCommand": "pnpm prisma:deploy && pnpm build",
   "installCommand": "pnpm install",
-  "framework": "nextjs",
-  "env": {
-    "NEXTAUTH_URL": "https://YOUR_DEPLOYMENT_URL",
-    "NEXTAUTH_SECRET": "REPLACE_ME",
-    "DATABASE_URL": "postgresql://USER:PASSWORD@HOST:PORT/DB?sslmode=require"
-  }
+  "framework": "nextjs"
 }
 
 
