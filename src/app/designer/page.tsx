@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { useState, useRef, useEffect } from "react";
 import React from "react";
-import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle } from "lucide-react";
+import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle, ChevronUp, ChevronDown, Share, Heart } from "lucide-react";
 
 type ContentType = 'video' | 'podcast' | 'infographic' | 'guideline' | 'article' | 'external-link';
 
@@ -27,6 +27,10 @@ type ContentItem = {
   order: number;
   createdAt: Date;
   updatedAt: Date;
+  // Crowdsourcing fields (for collections)
+  likes?: number;
+  isLiked?: boolean;
+  shares?: number;
 };
 
 type SpaceCard = {
@@ -59,6 +63,28 @@ type Space = {
   logo?: string; // URL or base64 for space logo
   cards: SpaceCard[]; // Main space cards (no individual colors)
   currentCollection?: string; // For nested collections
+  // Social fields
+  likes: number;
+  isLiked: boolean;
+  shares: number;
+};
+
+type CardTemplate = {
+  id: string;
+  name: string;
+  description: string;
+  icon: React.ComponentType<any>;
+  category: 'education' | 'clinical' | 'reference' | 'training';
+  items: Omit<ContentItem, 'id' | 'createdAt' | 'updatedAt'>[];
+};
+
+type CollectionTemplate = {
+  id: string;
+  name: string;
+  description: string;
+  icon: React.ComponentType<any>;
+  category: 'education' | 'clinical' | 'reference' | 'training';
+  cards: Omit<CollectionCard, 'id' | 'createdAt' | 'updatedAt'>[];
 };
 
 export default function DesignerPage() {
@@ -68,7 +94,10 @@ export default function DesignerPage() {
     description: "Customize your space by adding cards and content",
     backgroundColor: "#f8fafc", // Light blue background
     borderColor: "#93c5fd", // Blue border
-    cards: []
+    cards: [],
+    likes: 0,
+    isLiked: false,
+    shares: 0
   });
 
   // Load space data from localStorage on component mount
@@ -116,6 +145,8 @@ export default function DesignerPage() {
   const [showAddCardDialog, setShowAddCardDialog] = useState(false);
   const [showCollectionDialog, setShowCollectionDialog] = useState(false);
   const [showSpaceSettingsDialog, setShowSpaceSettingsDialog] = useState(false);
+  const [showTemplateDialog, setShowTemplateDialog] = useState(false);
+  const [showCollectionTemplateDialog, setShowCollectionTemplateDialog] = useState(false);
   const [isEditingSpaceTitle, setIsEditingSpaceTitle] = useState(false);
   const [showLogoUpload, setShowLogoUpload] = useState(false);
   const [currentCardId, setCurrentCardId] = useState<string | null>(null);
@@ -162,6 +193,329 @@ export default function DesignerPage() {
     };
     return emojis[type];
   };
+
+  // Card Templates
+  const cardTemplates: CardTemplate[] = [
+    {
+      id: 'new-resident',
+      name: 'New Resident Onboarding',
+      description: 'Essential resources for new residents',
+      icon: Users,
+      category: 'education',
+      items: [
+        {
+          type: 'content',
+          title: 'Orientation Video',
+          description: 'Welcome and introduction to the hospital',
+          contentType: 'video',
+          icon: PlayCircle,
+          isPublic: true,
+          order: 0
+        },
+        {
+          type: 'content',
+          title: 'Hospital Policies',
+          description: 'Important policies and procedures',
+          contentType: 'guideline',
+          icon: FileText,
+          isPublic: true,
+          order: 1
+        },
+        {
+          type: 'content',
+          title: 'Emergency Contacts',
+          description: 'Quick reference for emergency situations',
+          contentType: 'article',
+          icon: BookOpen,
+          isPublic: true,
+          order: 2
+        }
+      ]
+    },
+    {
+      id: 'medical-skills',
+      name: 'Medical Skills Hub',
+      description: 'Essential medical skills and procedures',
+      icon: Calendar,
+      category: 'clinical',
+      items: [
+        {
+          type: 'content',
+          title: 'Physical Examination Guide',
+          description: 'Comprehensive physical examination techniques',
+          contentType: 'video',
+          icon: PlayCircle,
+          isPublic: true,
+          order: 0
+        },
+        {
+          type: 'content',
+          title: 'Diagnostic Procedures',
+          description: 'Common diagnostic tests and procedures',
+          contentType: 'guideline',
+          icon: FileText,
+          isPublic: true,
+          order: 1
+        },
+        {
+          type: 'content',
+          title: 'Clinical Decision Making',
+          description: 'Evidence-based clinical decision making process',
+          contentType: 'infographic',
+          icon: Image,
+          isPublic: true,
+          order: 2
+        }
+      ]
+    },
+    {
+      id: 'rapid-reference',
+      name: 'Rapid Reference',
+      description: 'Quick access to essential information',
+      icon: BookOpen,
+      category: 'reference',
+      items: [
+        {
+          type: 'content',
+          title: 'Drug Interactions',
+          description: 'Common drug interaction checker',
+          contentType: 'external-link',
+          icon: ExternalLink,
+          isPublic: true,
+          externalUrl: 'https://example.com/drug-interactions',
+          order: 0
+        },
+        {
+          type: 'content',
+          title: 'Lab Values',
+          description: 'Normal lab value ranges',
+          contentType: 'infographic',
+          icon: Image,
+          isPublic: true,
+          order: 1
+        },
+        {
+          type: 'content',
+          title: 'Medical Calculator',
+          description: 'Common medical calculations',
+          contentType: 'external-link',
+          icon: ExternalLink,
+          isPublic: true,
+          externalUrl: 'https://example.com/medical-calculator',
+          order: 2
+        }
+      ]
+    },
+    {
+      id: 'training-modules',
+      name: 'Training Modules',
+      description: 'Continuing education and certification',
+      icon: Video,
+      category: 'training',
+      items: [
+        {
+          type: 'content',
+          title: 'CPR Certification',
+          description: 'Basic life support training',
+          contentType: 'video',
+          icon: PlayCircle,
+          isPublic: true,
+          order: 0
+        },
+        {
+          type: 'content',
+          title: 'Infection Control',
+          description: 'Preventing healthcare-associated infections',
+          contentType: 'video',
+          icon: PlayCircle,
+          isPublic: true,
+          order: 1
+        },
+        {
+          type: 'content',
+          title: 'Quiz: Safety Protocols',
+          description: 'Test your knowledge of safety procedures',
+          contentType: 'article',
+          icon: BookOpen,
+          isPublic: true,
+          order: 2
+        }
+      ]
+    }
+  ];
+
+  // Collection Templates
+  const collectionTemplates: CollectionTemplate[] = [
+    {
+      id: 'medical-education',
+      name: 'Medical Education Hub',
+      description: 'Comprehensive medical education resources',
+      icon: BookOpen,
+      category: 'education',
+      cards: [
+        {
+          title: 'High-Yield Summaries',
+          color: '#fef3c7', // Light yellow
+          items: [
+            {
+              type: 'content',
+              title: 'Cardiology Summary',
+              description: 'Essential cardiology concepts',
+              contentType: 'article',
+              icon: BookOpen,
+              isPublic: true,
+              order: 0,
+              id: 'temp-1',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              type: 'content',
+              title: 'Pharmacology Quick Reference',
+              description: 'Common medications and dosages',
+              contentType: 'infographic',
+              icon: Image,
+              isPublic: true,
+              order: 1,
+              id: 'temp-2',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ],
+          order: 0,
+          isExpanded: false
+        },
+        {
+          title: 'In-Depth Reviews',
+          color: '#dbeafe', // Light blue
+          items: [
+            {
+              type: 'content',
+              title: 'Pathophysiology Deep Dive',
+              description: 'Detailed disease mechanisms',
+              contentType: 'video',
+              icon: PlayCircle,
+              isPublic: true,
+              order: 0,
+              id: 'temp-3',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              type: 'content',
+              title: 'Research Literature Review',
+              description: 'Latest medical research findings',
+              contentType: 'article',
+              icon: BookOpen,
+              isPublic: true,
+              order: 1,
+              id: 'temp-4',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ],
+          order: 1,
+          isExpanded: false
+        },
+        {
+          title: 'Workup and Treatment',
+          color: '#dcfce7', // Light green
+          items: [
+            {
+              type: 'content',
+              title: 'Diagnostic Algorithms',
+              description: 'Step-by-step diagnostic processes',
+              contentType: 'infographic',
+              icon: Image,
+              isPublic: true,
+              order: 0,
+              id: 'temp-5',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              type: 'content',
+              title: 'Treatment Protocols',
+              description: 'Evidence-based treatment guidelines',
+              contentType: 'guideline',
+              icon: FileText,
+              isPublic: true,
+              order: 1,
+              id: 'temp-6',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ],
+          order: 2,
+          isExpanded: false
+        },
+        {
+          title: 'Technique Videos',
+          color: '#fce7f3', // Light pink
+          items: [
+            {
+              type: 'content',
+              title: 'Physical Examination Techniques',
+              description: 'Proper examination procedures',
+              contentType: 'video',
+              icon: PlayCircle,
+              isPublic: true,
+              order: 0,
+              id: 'temp-7',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              type: 'content',
+              title: 'Surgical Procedures',
+              description: 'Step-by-step surgical techniques',
+              contentType: 'video',
+              icon: PlayCircle,
+              isPublic: true,
+              order: 1,
+              id: 'temp-8',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ],
+          order: 3,
+          isExpanded: false
+        },
+        {
+          title: 'Test your Knowledge',
+          color: '#f3e8ff', // Light purple
+          items: [
+            {
+              type: 'content',
+              title: 'Practice Questions',
+              description: 'MCQ practice for medical exams',
+              contentType: 'article',
+              icon: BookOpen,
+              isPublic: true,
+              order: 0,
+              id: 'temp-9',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              type: 'content',
+              title: 'Case Studies Quiz',
+              description: 'Interactive case-based learning',
+              contentType: 'article',
+              icon: BookOpen,
+              isPublic: true,
+              order: 1,
+              id: 'temp-10',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ],
+          order: 4,
+          isExpanded: false
+        }
+      ]
+    }
+  ];
 
   const getColorOptions = () => [
     { value: "border-blue-300", label: "Blue" },
@@ -232,7 +586,10 @@ export default function DesignerPage() {
         description: "Customize your space by adding cards and content",
         backgroundColor: "#f8fafc",
         borderColor: "#93c5fd",
-        cards: []
+        cards: [],
+        likes: 0,
+        isLiked: false,
+        shares: 0
       });
     }
   };
@@ -364,6 +721,148 @@ export default function DesignerPage() {
     });
   };
 
+  const moveCardUp = (cardId: string) => {
+    const cards = [...space.cards];
+    const currentIndex = cards.findIndex(card => card.id === cardId);
+    
+    if (currentIndex > 0) {
+      // Swap with the card above
+      [cards[currentIndex], cards[currentIndex - 1]] = [cards[currentIndex - 1], cards[currentIndex]];
+      
+      // Update order values
+      cards.forEach((card, index) => {
+        card.order = index;
+      });
+      
+      setSpace({
+        ...space,
+        cards: cards
+      });
+    }
+  };
+
+  const moveCardDown = (cardId: string) => {
+    const cards = [...space.cards];
+    const currentIndex = cards.findIndex(card => card.id === cardId);
+    
+    if (currentIndex < cards.length - 1) {
+      // Swap with the card below
+      [cards[currentIndex], cards[currentIndex + 1]] = [cards[currentIndex + 1], cards[currentIndex]];
+      
+      // Update order values
+      cards.forEach((card, index) => {
+        card.order = index;
+      });
+      
+      setSpace({
+        ...space,
+        cards: cards
+      });
+    }
+  };
+
+  const toggleCollectionLike = () => {
+    if (currentCollection) {
+      setCurrentCollection({
+        ...currentCollection,
+        isLiked: !currentCollection.isLiked,
+        likes: (currentCollection.likes || 0) + (currentCollection.isLiked ? -1 : 1)
+      });
+    }
+  };
+
+  const shareCollection = () => {
+    if (currentCollection) {
+      // Update share count
+      setCurrentCollection({
+        ...currentCollection,
+        shares: (currentCollection.shares || 0) + 1
+      });
+
+      // Copy to clipboard or show share dialog
+      const shareText = `Check out this collection: ${currentCollection.title} - ${currentCollection.description}`;
+      navigator.clipboard.writeText(shareText).then(() => {
+        alert('Collection link copied to clipboard!');
+      }).catch(() => {
+        alert('Share: ' + shareText);
+      });
+    }
+  };
+
+  const toggleSpaceLike = () => {
+    setSpace({
+      ...space,
+      isLiked: !space.isLiked,
+      likes: space.isLiked ? space.likes - 1 : space.likes + 1
+    });
+  };
+
+  const shareSpace = () => {
+    // Update share count
+    setSpace({
+      ...space,
+      shares: space.shares + 1
+    });
+
+    // Copy to clipboard or show share dialog
+    const shareText = `Check out this space: ${space.name} - ${space.description}`;
+    navigator.clipboard.writeText(shareText).then(() => {
+      alert('Space link copied to clipboard!');
+    }).catch(() => {
+      alert('Share: ' + shareText);
+    });
+  };
+
+  const applyTemplate = (template: CardTemplate) => {
+    const newCard: SpaceCard = {
+      id: `card-${Date.now()}`,
+      title: template.name,
+      items: template.items.map((item, index) => ({
+        ...item,
+        id: `item-${Date.now()}-${index}`,
+        order: index,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      })),
+      order: space.cards.length,
+      isExpanded: false,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    setSpace({
+      ...space,
+      cards: [...space.cards, newCard]
+    });
+    setShowTemplateDialog(false);
+  };
+
+  const applyCollectionTemplate = (template: CollectionTemplate) => {
+    if (!currentCollection) return;
+
+    // Add all template cards to the current collection
+    const newCards: CollectionCard[] = template.cards.map((card, index) => ({
+      ...card,
+      id: `card-${Date.now()}-${index}`,
+      items: card.items.map((item, itemIndex) => ({
+        ...item,
+        id: `item-${Date.now()}-${index}-${itemIndex}`,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      })),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }));
+
+    // Update the current collection with the new cards
+    setCurrentCollection({
+      ...currentCollection,
+      children: [...(currentCollection.children || []), ...newCards]
+    });
+
+    setShowCollectionTemplateDialog(false);
+  };
+
   // Item management functions
   const addItem = (cardId: string) => {
     if (newItemTitle.trim()) {
@@ -471,7 +970,7 @@ export default function DesignerPage() {
       const updatedSpace = JSON.parse(JSON.stringify(space));
       
       // Function to recursively find and update a collection by path
-      const updateCollectionByPath = (cards: SpaceCard[], path: string[], updatedCollection: ContentItem): SpaceCard[] => {
+      const updateCollectionByPath = (cards: CollectionCard[], path: string[], updatedCollection: ContentItem): CollectionCard[] => {
         if (path.length === 0) return cards;
         
         const targetId = path[0];
@@ -560,7 +1059,7 @@ export default function DesignerPage() {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: space.backgroundColor }}>
+    <div className="min-h-screen bg-gray-50">
       <div className="max-w-md mx-auto bg-white min-h-screen">
         {/* Header */}
         <div className="sticky top-0 bg-white border-b p-4 z-10">
@@ -644,6 +1143,35 @@ export default function DesignerPage() {
               )}
             </div>
           </div>
+          
+          {/* Space Social Buttons - Only in Production Mode */}
+          {!isDesignMode && (
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleSpaceLike}
+                className={`flex items-center gap-1 px-3 py-1 bg-transparent hover:bg-gray-100 border ${
+                  space.isLiked ? 'border-red-300 text-red-600' : 'border-gray-300 text-gray-600'
+                }`}
+                title={`${space.likes} likes`}
+              >
+                <Heart className={`w-4 h-4 ${space.isLiked ? 'fill-current' : ''}`} />
+                <span className="text-sm">{space.likes}</span>
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={shareSpace}
+                className="flex items-center gap-1 px-3 py-1 bg-transparent hover:bg-gray-100 border border-gray-300 text-gray-600"
+                title={`${space.shares} shares`}
+              >
+                <Share className="w-4 h-4" />
+                <span className="text-sm">{space.shares}</span>
+              </Button>
+            </div>
+          )}
 
           {/* Settings and Save Buttons - only in design mode */}
           {isDesignMode && (
@@ -735,6 +1263,21 @@ export default function DesignerPage() {
                     Add New Card
                   </Button>
 
+                  {/* Use Template Button */}
+                  <Button
+                    onClick={() => setShowTemplateDialog(true)}
+                    variant="outline"
+                    className="w-full flex items-center gap-2 border hover:shadow-lg transition-all duration-200"
+                    style={{ 
+                      backgroundColor: space.backgroundColor,
+                      borderColor: space.borderColor,
+                      color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
+                    }}
+                  >
+                    <Layout className="w-4 h-4" />
+                    Use Template
+                  </Button>
+
                   {/* Cards */}
                   {space.cards
                     .sort((a, b) => a.order - b.order)
@@ -761,6 +1304,26 @@ export default function DesignerPage() {
                                 className="bg-transparent hover:bg-gray-100 border border-gray-300"
                               >
                                 <Edit className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => moveCardUp(card.id)}
+                                disabled={space.cards.findIndex(c => c.id === card.id) === 0}
+                                className="bg-transparent hover:bg-gray-100 border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                title="Move up"
+                              >
+                                <ChevronUp className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => moveCardDown(card.id)}
+                                disabled={space.cards.findIndex(c => c.id === card.id) === space.cards.length - 1}
+                                className="bg-transparent hover:bg-gray-100 border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                title="Move down"
+                              >
+                                <ChevronDown className="w-4 h-4" />
                               </Button>
                               <Button
                                 variant="ghost"
@@ -807,8 +1370,8 @@ export default function DesignerPage() {
                                               <span className="text-2xl">📄</span>
                                         }
                                       </div>
-                                      <div className="w-full">
-                                        <p className="text-xs font-medium leading-tight">{item.title}</p>
+                                      <div className="w-full h-12 flex flex-col justify-center">
+                                        <p className="text-xs font-medium leading-tight line-clamp-2">{item.title}</p>
                                         {item.type === "collection" && (
                                           <div className="bg-purple-100 px-1 py-0.5 rounded text-purple-600 font-medium text-xs mt-1">
                                             {getCollectionItemCount(item)} {getCollectionItemCount(item) === 1 ? 'item' : 'items'}
@@ -928,9 +1491,9 @@ export default function DesignerPage() {
                                           <span className="text-2xl">📄</span>
                                     }
                                   </div>
-                                  <div className="w-full">
-                                    <h4 className="text-xs font-medium truncate">{item.title}</h4>
-                                    <p className="text-xs text-gray-600 truncate leading-tight">{item.description}</p>
+                                  <div className="w-full h-12 flex flex-col justify-center">
+                                    <h4 className="text-xs font-medium line-clamp-2">{item.title}</h4>
+                                    <p className="text-xs text-gray-600 line-clamp-1 leading-tight">{item.description}</p>
                                     {item.externalUrl && (
                                       <a 
                                         href={item.externalUrl} 
@@ -1016,6 +1579,124 @@ export default function DesignerPage() {
                   Add Card
                 </Button>
               </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Template Selection Dialog */}
+        <Dialog open={showTemplateDialog} onOpenChange={setShowTemplateDialog}>
+          <DialogContent className="max-w-md mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)]">
+            <DialogHeader>
+              <DialogTitle>Choose a Card Template</DialogTitle>
+              <p className="text-sm text-gray-600">Select a pre-built card template to get started quickly</p>
+            </DialogHeader>
+            <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+              {cardTemplates.map((template) => (
+                <div
+                  key={template.id}
+                  className="border rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                  onClick={() => applyTemplate(template)}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0">
+                      <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                        <template.icon className="w-5 h-5 text-blue-600" />
+                      </div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium text-gray-900">{template.name}</h3>
+                      <p className="text-sm text-gray-600 mt-1">{template.description}</p>
+                      <div className="flex items-center gap-2 mt-2">
+                        <Badge variant="secondary" className="text-xs">
+                          {template.category}
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          {template.items.length} items
+                        </Badge>
+                      </div>
+                      <div className="mt-2">
+                        <p className="text-xs text-gray-500">Includes:</p>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {template.items.slice(0, 3).map((item, index) => (
+                            <span key={index} className="text-xs bg-gray-100 px-2 py-1 rounded">
+                              {item.title}
+                            </span>
+                          ))}
+                          {template.items.length > 3 && (
+                            <span className="text-xs bg-gray-100 px-2 py-1 rounded">
+                              +{template.items.length - 3} more
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-end gap-2 pt-4 border-t">
+              <Button variant="outline" onClick={() => setShowTemplateDialog(false)}>
+                Cancel
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Collection Template Selection Dialog */}
+        <Dialog open={showCollectionTemplateDialog} onOpenChange={setShowCollectionTemplateDialog}>
+          <DialogContent className="max-w-md mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)]">
+            <DialogHeader>
+              <DialogTitle>Choose a Collection Template</DialogTitle>
+              <p className="text-sm text-gray-600">Select a pre-built collection template with organized cards</p>
+            </DialogHeader>
+            <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+              {collectionTemplates.map((template) => (
+                <div
+                  key={template.id}
+                  className="border rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                  onClick={() => applyCollectionTemplate(template)}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0">
+                      <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
+                        <template.icon className="w-5 h-5 text-purple-600" />
+                      </div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium text-gray-900">{template.name}</h3>
+                      <p className="text-sm text-gray-600 mt-1">{template.description}</p>
+                      <div className="flex items-center gap-2 mt-2">
+                        <Badge variant="secondary" className="text-xs">
+                          {template.category}
+                        </Badge>
+                        <span className="text-xs text-gray-500">
+                          {template.cards.length} cards
+                        </span>
+                      </div>
+                      <div className="mt-2">
+                        <p className="text-xs text-gray-500">Includes:</p>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {template.cards.slice(0, 3).map((card, index) => (
+                            <span key={index} className="text-xs bg-purple-100 px-2 py-1 rounded text-purple-700">
+                              {card.title}
+                            </span>
+                          ))}
+                          {template.cards.length > 3 && (
+                            <span className="text-xs bg-purple-100 px-2 py-1 rounded text-purple-700">
+                              +{template.cards.length - 3} more
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-end gap-2 pt-4 border-t">
+              <Button variant="outline" onClick={() => setShowCollectionTemplateDialog(false)}>
+                Cancel
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -1202,7 +1883,7 @@ export default function DesignerPage() {
               <DialogHeader>
                 {isDesignMode ? (
                   <DialogTitle className="flex items-center gap-2">
-                    <span className="text-2xl">📁</span>
+                    <FolderOpen className="w-6 h-6 text-purple-600" />
                     {currentCollection.title}
                   </DialogTitle>
                 ) : (
@@ -1214,6 +1895,55 @@ export default function DesignerPage() {
                   </div>
                 )}
                 <p className="text-sm text-gray-600">{currentCollection.description}</p>
+                
+                {/* Crowdsourcing Buttons */}
+                <div className="flex items-center justify-center gap-3 mt-3">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={toggleCollectionLike}
+                    className={`flex items-center gap-1 px-3 py-1 bg-transparent hover:bg-gray-100 border ${
+                      currentCollection.isLiked ? 'border-red-300 text-red-600' : 'border-gray-300 text-gray-600'
+                    }`}
+                    title={`${currentCollection.likes || 0} likes`}
+                  >
+                    <Heart className={`w-4 h-4 ${currentCollection.isLiked ? 'fill-current' : ''}`} />
+                    <span className="text-sm">{currentCollection.likes || 0}</span>
+                  </Button>
+                  
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={shareCollection}
+                    className="flex items-center gap-1 px-3 py-1 bg-transparent hover:bg-gray-100 border border-gray-300 text-gray-600"
+                    title={`${currentCollection.shares || 0} shares`}
+                  >
+                    <Share className="w-4 h-4" />
+                    <span className="text-sm">{currentCollection.shares || 0}</span>
+                  </Button>
+                  
+                  {isDesignMode && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        // Delete collection from main space
+                        setSpace({
+                          ...space,
+                          cards: space.cards.map(card => ({
+                            ...card,
+                            items: card.items.filter(item => item.id !== currentCollection.id)
+                          }))
+                        });
+                        setShowCollectionDialog(false);
+                      }}
+                      className="flex items-center gap-1 px-3 py-1 bg-transparent hover:bg-gray-100 border border-red-300 text-red-600"
+                      title="Delete collection"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  )}
+                </div>
               </DialogHeader>
               
               <div className="space-y-4">
@@ -1238,29 +1968,31 @@ export default function DesignerPage() {
                                   className={`w-4 h-4 transition-transform ${card.isExpanded ? 'rotate-90' : ''}`} 
                                 />
                               </div>
-                              <div className="flex items-center gap-1">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => setEditingCard(card)}
-                                  className="bg-transparent hover:bg-gray-100 border border-gray-300"
-                                >
-                                  <Edit className="w-4 h-4" />
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => {
-                                    setCurrentCollection({
-                                      ...currentCollection,
-                                      children: currentCollection.children?.filter(c => c.id !== card.id)
-                                    });
-                                  }}
-                                  className="bg-transparent hover:bg-gray-100 text-red-600 hover:text-red-700 border border-red-300"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </div>
+                              {isDesignMode && (
+                                <div className="flex items-center gap-1">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => setEditingCard(card)}
+                                    className="bg-transparent hover:bg-gray-100 border border-gray-300"
+                                  >
+                                    <Edit className="w-4 h-4" />
+                                  </Button>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => {
+                                      setCurrentCollection({
+                                        ...currentCollection,
+                                        children: currentCollection.children?.filter(c => c.id !== card.id)
+                                      });
+                                    }}
+                                    className="bg-transparent hover:bg-gray-100 text-red-600 hover:text-red-700 border border-red-300"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              )}
                             </div>
                           </CardHeader>
                           {card.isExpanded && (
@@ -1293,10 +2025,11 @@ export default function DesignerPage() {
                                               <span className="text-2xl">📄</span>
                                         }
                                       </div>
-                                      <div className="w-full">
-                                        <p className="text-xs font-medium truncate">{item.title}</p>
-                                        <p className="text-xs text-gray-600 truncate leading-tight">{item.description}</p>
+                                      <div className="w-full h-12 flex flex-col justify-center">
+                                        <p className="text-xs font-medium line-clamp-2">{item.title}</p>
+                                        <p className="text-xs text-gray-600 line-clamp-1 leading-tight">{item.description}</p>
                                       </div>
+                                      
                                       {item.type === "collection" && (
                                         <div className="flex items-center gap-1 text-xs text-purple-600 font-medium">
                                           <span className="bg-purple-100 px-2 py-1 rounded-full">
@@ -1304,7 +2037,7 @@ export default function DesignerPage() {
                                           </span>
                                         </div>
                                       )}
-                                      {item.type !== 'collection' && (
+                                      {item.type !== 'collection' && isDesignMode && (
                                         <div className="flex gap-1 mt-2">
                                           <Button
                                             variant="ghost"
@@ -1350,20 +2083,22 @@ export default function DesignerPage() {
                               )}
                             </div>
 
-                            <div className="mt-4 pt-3 border-t">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="w-full"
-                                onClick={() => {
-                                  setCurrentCardId(card.id);
-                                  setShowAddItemDialog(true);
-                                }}
-                              >
-                                <Plus className="w-4 h-4 mr-2" />
-                                Add Item
-                              </Button>
-                            </div>
+                            {isDesignMode && (
+                              <div className="mt-4 pt-3 border-t">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="w-full"
+                                  onClick={() => {
+                                    setCurrentCardId(card.id);
+                                    setShowAddItemDialog(true);
+                                  }}
+                                >
+                                  <Plus className="w-4 h-4 mr-2" />
+                                  Add Item
+                                </Button>
+                              </div>
+                            )}
                           </CardContent>
                           )}
                         </Card>
@@ -1376,21 +2111,33 @@ export default function DesignerPage() {
                 )}
 
                 {/* Add Card Button */}
-                <div className="pt-4 border-t">
-                  <Button
-                    variant="outline"
-                    className="w-full border hover:shadow-lg transition-all duration-200"
-                    style={{ 
-                      backgroundColor: space.backgroundColor,
-                      borderColor: space.borderColor,
-                      color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
-                    }}
-                    onClick={() => setShowAddCardDialog(true)}
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add New Card
-                  </Button>
-                </div>
+                {isDesignMode && (
+                  <div className="pt-4 border-t">
+                    <Button
+                      variant="outline"
+                      className="w-full border hover:shadow-lg transition-all duration-200"
+                      style={{ 
+                        backgroundColor: space.backgroundColor,
+                        borderColor: space.borderColor,
+                        color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
+                      }}
+                      onClick={() => setShowAddCardDialog(true)}
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add New Card
+                    </Button>
+                    
+                    {/* Collection Template Button */}
+                    <Button
+                      variant="outline"
+                      className="w-full mt-2"
+                      onClick={() => setShowCollectionTemplateDialog(true)}
+                    >
+                      <Layout className="w-4 h-4 mr-2" />
+                      Use Collection Template
+                    </Button>
+                  </div>
+                )}
               </div>
 
               <div className="flex justify-between gap-2 pt-4">
