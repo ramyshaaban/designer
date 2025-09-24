@@ -1,4 +1,4 @@
-## Designer App
+## StayCurrentMD Space Designer
 
 Production-ready scaffold for a medical-education Designer.
 
@@ -20,8 +20,8 @@ Vercel (recommended):
 - Optionally add `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN` secrets in GitHub to enable the included Actions workflow.
 
 Docker:
-- Build: `docker build -t designer-app .`
-- Run: `docker run -p 3000:3000 -e DATABASE_URL=... -e NEXTAUTH_URL=... -e NEXTAUTH_SECRET=... designer-app`
+- Build: `docker build -t staycurrentmd-space-designer .`
+- Run: `docker run -p 3000:3000 -e DATABASE_URL=... -e NEXTAUTH_URL=... -e NEXTAUTH_SECRET=... staycurrentmd-space-designer`
 
 ### Key Pages
 
