@@ -1227,23 +1227,35 @@ export default function DesignerPage() {
             // Design Mode
             <div className="space-y-4">
               {space.cards.length === 0 ? (
-                // Empty Space - Add First Card
+                // Empty Space - Add First Card or Use Template
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">🏥</div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Your Space is Empty</h3>
-                  <p className="text-gray-600 mb-6">Start building your space by adding your first card.</p>
-                  <Button 
-                    onClick={() => setShowAddCardDialog(true)}
-                    className={`flex items-center gap-2 border transition-all duration-200 mx-auto`}
-                    style={{ 
-                      backgroundColor: space.backgroundColor,
-                      borderColor: space.borderColor,
-                      color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
-                    }}
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add Your First Card
-                  </Button>
+                  <p className="text-gray-600 mb-6">Start building your space by adding your first card or using a template.</p>
+                  
+                  <div className="flex flex-col gap-3 max-w-xs mx-auto">
+                    <Button 
+                      onClick={() => setShowAddCardDialog(true)}
+                      className={`flex items-center gap-2 border transition-all duration-200`}
+                      style={{ 
+                        backgroundColor: space.backgroundColor,
+                        borderColor: space.borderColor,
+                        color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
+                      }}
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add Your First Card
+                    </Button>
+                    
+                    <Button 
+                      variant="outline"
+                      onClick={() => setShowTemplateDialog(true)}
+                      className="flex items-center gap-2 border border-gray-300 hover:bg-gray-50 transition-all duration-200"
+                    >
+                      <Layout className="w-4 h-4" />
+                      Use Template
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 // Cards Grid
