@@ -355,7 +355,7 @@ export default function DesignerPage() {
       cards: [
         {
           title: 'High-Yield Summaries',
-          color: '#fef3c7', // Light yellow
+          color: '#d97706', // Dark amber
           items: [
             {
               type: 'content',
@@ -387,7 +387,7 @@ export default function DesignerPage() {
         },
         {
           title: 'In-Depth Reviews',
-          color: '#dbeafe', // Light blue
+          color: '#1e40af', // Dark blue
           items: [
             {
               type: 'content',
@@ -419,7 +419,7 @@ export default function DesignerPage() {
         },
         {
           title: 'Workup and Treatment',
-          color: '#dcfce7', // Light green
+          color: '#166534', // Dark green
           items: [
             {
               type: 'content',
@@ -451,7 +451,7 @@ export default function DesignerPage() {
         },
         {
           title: 'Technique Videos',
-          color: '#fce7f3', // Light pink
+          color: '#be185d', // Dark pink
           items: [
             {
               type: 'content',
@@ -483,7 +483,7 @@ export default function DesignerPage() {
         },
         {
           title: 'Test your Knowledge',
-          color: '#f3e8ff', // Light purple
+          color: '#7c3aed', // Dark purple
           items: [
             {
               type: 'content',
