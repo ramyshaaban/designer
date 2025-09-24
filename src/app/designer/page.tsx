@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { useState, useRef, useEffect } from "react";
 import React from "react";
-import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle, ChevronUp, ChevronDown, Share, Heart } from "lucide-react";
+import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle, ChevronUp, ChevronDown, Share, Heart, Search } from "lucide-react";
 
 type ContentType = 'video' | 'podcast' | 'infographic' | 'guideline' | 'article' | 'external-link';
 
@@ -154,6 +154,10 @@ export default function DesignerPage() {
   const [collectionPath, setCollectionPath] = useState<string[]>([]); // Track path to current collection
   const [draggedCard, setDraggedCard] = useState<string | null>(null);
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
+
+  // Search states
+  const [searchQuery, setSearchQuery] = useState("");
+  const [collectionSearchQuery, setCollectionSearchQuery] = useState("");
 
   // Form states
   const [newCardTitle, setNewCardTitle] = useState("");
@@ -604,6 +608,31 @@ export default function DesignerPage() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  // Search functionality
+  const filterCardsBySearch = (cards: SpaceCard[]) => {
+    if (!searchQuery.trim()) return cards;
+    
+    return cards.filter(card => 
+      card.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      card.items.some(item => 
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    );
+  };
+
+  const filterCollectionCardsBySearch = (cards: CollectionCard[]) => {
+    if (!collectionSearchQuery.trim()) return cards;
+    
+    return cards.filter(card => 
+      card.title.toLowerCase().includes(collectionSearchQuery.toLowerCase()) ||
+      card.items.some(item => 
+        item.title.toLowerCase().includes(collectionSearchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(collectionSearchQuery.toLowerCase())
+      )
+    );
   };
 
   // Populate form fields when editing an item
@@ -1260,6 +1289,17 @@ export default function DesignerPage() {
               ) : (
                 // Cards Grid
                 <div className="space-y-4">
+                  {/* Search Bar */}
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      placeholder="Search cards and content..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10 border-gray-300 focus:border-blue-500"
+                    />
+                  </div>
+                  
                   {/* Add Card Button */}
                   <Button
                     onClick={() => setShowAddCardDialog(true)}
@@ -1291,7 +1331,7 @@ export default function DesignerPage() {
                   </Button>
 
                   {/* Cards */}
-                  {space.cards
+                  {filterCardsBySearch(space.cards)
                     .sort((a, b) => a.order - b.order)
                     .map((card) => (
                       <Card
@@ -1447,6 +1487,17 @@ export default function DesignerPage() {
           ) : (
             // Production Mode
             <div className="space-y-4">
+              {/* Search Bar */}
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  placeholder="Search cards and content..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 border-gray-300 focus:border-blue-500"
+                />
+              </div>
+              
               {space.cards.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">🏥</div>
@@ -1454,7 +1505,7 @@ export default function DesignerPage() {
                   <p className="text-gray-600">Switch to Design Mode to start building your space.</p>
                 </div>
               ) : (
-                space.cards
+                filterCardsBySearch(space.cards)
                   .sort((a, b) => a.order - b.order)
                   .map((card) => (
                     <Card key={card.id} className="bg-white border transition-all duration-200" style={{ borderColor: space.borderColor }}>
@@ -1959,10 +2010,21 @@ export default function DesignerPage() {
               </DialogHeader>
               
               <div className="space-y-4">
+                {/* Collection Search Bar */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input
+                    placeholder="Search collection content..."
+                    value={collectionSearchQuery}
+                    onChange={(e) => setCollectionSearchQuery(e.target.value)}
+                    className="pl-10 border-gray-300 focus:border-blue-500"
+                  />
+                </div>
+                
                 {/* Collection Cards Management */}
                 {currentCollection.children && currentCollection.children.length > 0 ? (
                   <div className="space-y-3">
-                    {currentCollection.children
+                    {filterCollectionCardsBySearch(currentCollection.children)
                       .sort((a, b) => a.order - b.order)
                       .map((card) => (
                         <Card key={card.id} className="bg-white border transition-all duration-200" style={{ borderColor: card.color }}>
