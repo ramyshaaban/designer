@@ -3,18 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start -p $PORT",
+    "start": "node server.js",
     "lint": "eslint",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:deploy": "prisma migrate deploy || echo 'Migration skipped - no DATABASE_URL'",
-    "prisma:studio": "prisma studio",
-    "db:seed": "tsx prisma/seed.ts",
-    "test": "vitest run",
-    "test:ui": "vitest",
-    "e2e": "playwright test --reporter=line",
     "postinstall": "npx prisma generate"
   },
   "dependencies": {
@@ -41,15 +33,6 @@
     "tailwind-merge": "^3.3.1",
     "zod": "^4.1.11",
     "zustand": "^5.0.8"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@prisma/client",
-      "prisma",
-      "@prisma/engines",
-      "esbuild",
-      "sharp"
-    ]
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
