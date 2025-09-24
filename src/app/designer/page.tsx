@@ -246,7 +246,7 @@ export default function DesignerPage() {
         {/* Header */}
         <div className="sticky top-0 bg-white border-b p-4 z-10">
           <h1 className="text-xl font-bold text-gray-900 text-center">{space.name}</h1>
-          <p className="text-sm text-gray-600 text-center mt-1">Hospital Education Space</p>
+          <p className="text-sm text-gray-600 text-center mt-1">Hospital Education Space Designer</p>
           
           {/* Mode Toggle */}
           <div className="flex items-center justify-center mt-3">
