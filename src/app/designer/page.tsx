@@ -736,14 +736,23 @@ export default function DesignerPage() {
 
   const toggleCardExpansion = (cardId: string) => {
     console.log('Toggling card expansion for:', cardId);
+    console.log('Current collection:', currentCollection);
+    console.log('Current space cards:', space.cards);
+    
     if (currentCollection) {
+      console.log('Toggling collection card expansion');
       setCurrentCollection({
         ...currentCollection,
-        children: currentCollection.children?.map(card => 
-          card.id === cardId ? { ...card, isExpanded: !card.isExpanded, updatedAt: new Date() } : card
-        )
+        children: currentCollection.children?.map(card => {
+          if (card.id === cardId) {
+            console.log('Found card to toggle:', card, 'Current isExpanded:', card.isExpanded);
+            return { ...card, isExpanded: !card.isExpanded, updatedAt: new Date() };
+          }
+          return card;
+        })
       });
     } else {
+      console.log('Toggling main space card expansion');
       // Toggle expansion for main space cards
       setSpace({
         ...space,
@@ -884,6 +893,7 @@ export default function DesignerPage() {
     const newCards: CollectionCard[] = template.cards.map((card, index) => ({
       ...card,
       id: `card-${Date.now()}-${index}`,
+      isExpanded: false, // Ensure isExpanded property exists
       items: card.items.map((item, itemIndex) => ({
         ...item,
         id: `item-${Date.now()}-${index}-${itemIndex}`,
@@ -1040,9 +1050,28 @@ export default function DesignerPage() {
 
       const newCards = updateCollectionByPath(updatedSpace.cards, collectionPath, currentCollection);
       
+      // Ensure all collection cards have isExpanded property
+      const ensureExpansionProperty = (cards: CollectionCard[]): CollectionCard[] => {
+        return cards.map(card => ({
+          ...card,
+          isExpanded: card.isExpanded !== undefined ? card.isExpanded : false,
+          items: card.items.map(item => {
+            if (item.type === 'collection' && item.children) {
+              return {
+                ...item,
+                children: ensureExpansionProperty(item.children)
+              };
+            }
+            return item;
+          })
+        }));
+      };
+      
+      const cardsWithExpansion = ensureExpansionProperty(newCards);
+      
       setSpace({
         ...updatedSpace,
-        cards: newCards
+        cards: cardsWithExpansion
       });
     }
   };
