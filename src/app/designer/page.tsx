@@ -108,7 +108,17 @@ export default function DesignerPage() {
         try {
           const parsedSpace = JSON.parse(saved);
           console.log('Loaded space data:', parsedSpace);
-          setSpace(parsedSpace);
+          
+          // Ensure all cards have isExpanded property
+          const spaceWithExpansion = {
+            ...parsedSpace,
+            cards: parsedSpace.cards?.map((card: any) => ({
+              ...card,
+              isExpanded: card.isExpanded !== undefined ? card.isExpanded : false
+            })) || []
+          };
+          
+          setSpace(spaceWithExpansion);
         } catch (error) {
           console.error('Error parsing saved space data:', error);
         }
@@ -725,6 +735,7 @@ export default function DesignerPage() {
   };
 
   const toggleCardExpansion = (cardId: string) => {
+    console.log('Toggling card expansion for:', cardId);
     if (currentCollection) {
       setCurrentCollection({
         ...currentCollection,
@@ -853,7 +864,7 @@ export default function DesignerPage() {
         createdAt: new Date(),
         updatedAt: new Date()
       })),
-      order: space.cards.length,
+      order: space.cards.length + 1,
       isExpanded: false,
       createdAt: new Date(),
       updatedAt: new Date()
