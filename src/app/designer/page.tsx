@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { useState, useRef, useEffect } from "react";
 import React from "react";
-import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle, ChevronUp, ChevronDown, Share, Heart, Search, HelpCircle, ArrowRight, ArrowLeft, FileVideo, Headphones, File, BarChart3, ClipboardList, Newspaper, Gamepad2, Menu, Stethoscope } from "lucide-react";
+import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle, ChevronUp, ChevronDown, Share, Heart, Search, HelpCircle, ArrowRight, ArrowLeft, FileVideo, Headphones, File, BarChart3, ClipboardList, Newspaper, Gamepad2, Menu, Stethoscope, Star } from "lucide-react";
 import { AI_CONFIG } from '@/config/ai';
 
 type ContentType = 'video' | 'podcast' | 'document' | 'infographic' | 'guideline' | 'article' | 'interactive-content' | 'external-link' | 'menu-button';
@@ -2182,7 +2182,7 @@ Current context: The user is designing a medical education space and needs help 
         {/* Header */}
         <div className="sticky top-0 bg-white border-b p-4 z-10">
           {/* Mode Toggle - Above Everything */}
-          <div className="flex items-center justify-center mb-4" data-onboarding="mode-toggle">
+          <div className="flex items-center justify-center gap-2 mb-4" data-onboarding="mode-toggle">
             <Button
               variant={isDesignMode ? "default" : "outline"}
               onClick={() => setIsDesignMode(true)}
@@ -2306,15 +2306,15 @@ Current context: The user is designing a medical education space and needs help 
                 </div>
               )}
               
-              <div className="flex justify-end gap-2">
+              <div className="flex justify-end gap-2 flex-wrap">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={initializeAIDesigner}
-                className="bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border border-purple-200 text-purple-700"
+                className="bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border border-purple-200 text-purple-700 whitespace-nowrap"
                 title="AI Design Assistant"
               >
-                <div className="w-4 h-4 mr-2">🤖</div>
+                <Star className="w-4 h-4 mr-2" />
                 AI Designer
               </Button>
               <Button
@@ -2322,7 +2322,7 @@ Current context: The user is designing a medical education space and needs help 
                 size="sm"
                 onClick={saveSpaceData}
                 disabled={isSaving}
-                className={`bg-transparent hover:bg-gray-100 border ${hasUnsavedChanges ? 'border-orange-300 bg-orange-50' : 'border-gray-300'}`}
+                className={`bg-transparent hover:bg-gray-100 border ${hasUnsavedChanges ? 'border-orange-300 bg-orange-50' : 'border-gray-300'} whitespace-nowrap`}
                 data-onboarding="save-button"
               >
                 {isSaving ? (
@@ -2341,7 +2341,7 @@ Current context: The user is designing a medical education space and needs help 
                 variant="outline"
                 size="sm"
                 onClick={() => setShowVersionDialog(true)}
-                className="bg-transparent hover:bg-gray-100 border border-gray-300"
+                className="bg-transparent hover:bg-gray-100 border border-gray-300 whitespace-nowrap"
               >
                 <Save className="w-4 h-4 mr-2" />
                 Save Version
@@ -2353,15 +2353,6 @@ Current context: The user is designing a medical education space and needs help 
                 className="bg-transparent hover:bg-gray-100 border border-gray-300"
               >
                 <Settings className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => resetOnboarding()}
-                className="bg-transparent hover:bg-gray-100 border border-gray-300"
-                title="Start Tutorial"
-              >
-                <HelpCircle className="w-4 h-4" />
               </Button>
               </div>
             </div>
@@ -3883,10 +3874,10 @@ Current context: The user is designing a medical education space and needs help 
         <Dialog open={showAIDesigner} onOpenChange={setShowAIDesigner}>
           <DialogContent className="max-w-2xl mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)] h-[80vh] flex flex-col">
             <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <div className="w-6 h-6">🤖</div>
-                AI Design Assistant
-              </DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <Star className="w-6 h-6" />
+              AI Design Assistant
+            </DialogTitle>
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <span>Powered by:</span>
                 <Select value={selectedAiProvider} onValueChange={(value: 'openai' | 'gemini') => setSelectedAiProvider(value)}>
