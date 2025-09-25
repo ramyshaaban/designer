@@ -1354,6 +1354,9 @@ export default function DesignerPage() {
       // Generate a unique version ID
       const versionId = `version-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
       
+      // Generate a clean slug from the version name
+      const versionSlug = versionName.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+      
       // Create version data
       const versionData = {
         id: versionId,
@@ -1370,7 +1373,6 @@ export default function DesignerPage() {
       localStorage.setItem('designer-versions', JSON.stringify(savedVersions));
 
       // Generate shareable URL with cleaner structure
-      const versionSlug = versionName.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
       const versionUrl = `https://scmd.ramyshaaban.com/${versionSlug}`;
 
       // Update saved versions list
