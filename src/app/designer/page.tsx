@@ -653,24 +653,33 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
     // Add magic effect - show loading state
     setIsSpaceAiLoading(true);
     
-    // Parse AI suggestions and create space cards
-    if (suggestion.toLowerCase().includes('neuroblastoma') || suggestion.toLowerCase().includes('pediatric') && suggestion.toLowerCase().includes('oncology')) {
-      createNeuroblastomaTemplate();
-    } else if (suggestion.toLowerCase().includes('emergency') || suggestion.toLowerCase().includes('trauma')) {
-      createEmergencyMedicineTemplate();
-    } else if (suggestion.toLowerCase().includes('surgery') || suggestion.toLowerCase().includes('surgical')) {
-      createSurgeryTemplate();
-    } else if (suggestion.toLowerCase().includes('cardiology') || suggestion.toLowerCase().includes('heart')) {
-      createCardiologyTemplate();
-    } else if (suggestion.toLowerCase().includes('pediatrics') || suggestion.toLowerCase().includes('pediatric')) {
-      createPediatricsTemplate();
-    } else if (suggestion.toLowerCase().includes('neurology') || suggestion.toLowerCase().includes('brain')) {
-      createNeurologyTemplate();
-    } else if (suggestion.toLowerCase().includes('clinical decision') || suggestion.toLowerCase().includes('decision making')) {
-      createClinicalDecisionMakingTemplate();
+    // Parse AI suggestions and create space cards based on the actual suggestion content
+    // Try to extract card titles from the AI suggestion
+    const cardTitles = extractCardTitlesFromSuggestion(suggestion);
+    
+    if (cardTitles.length > 0) {
+      // Create cards based on AI suggestion
+      createCardsFromAISuggestion(cardTitles);
     } else {
-      // Default medical education template
-      createDefaultMedicalTemplate();
+      // Fallback to keyword-based templates
+      if (suggestion.toLowerCase().includes('neuroblastoma') || suggestion.toLowerCase().includes('pediatric') && suggestion.toLowerCase().includes('oncology')) {
+        createNeuroblastomaTemplate();
+      } else if (suggestion.toLowerCase().includes('emergency') || suggestion.toLowerCase().includes('trauma')) {
+        createEmergencyMedicineTemplate();
+      } else if (suggestion.toLowerCase().includes('surgery') || suggestion.toLowerCase().includes('surgical')) {
+        createSurgeryTemplate();
+      } else if (suggestion.toLowerCase().includes('cardiology') || suggestion.toLowerCase().includes('heart')) {
+        createCardiologyTemplate();
+      } else if (suggestion.toLowerCase().includes('pediatrics') || suggestion.toLowerCase().includes('pediatric')) {
+        createPediatricsTemplate();
+      } else if (suggestion.toLowerCase().includes('neurology') || suggestion.toLowerCase().includes('brain')) {
+        createNeurologyTemplate();
+      } else if (suggestion.toLowerCase().includes('clinical decision') || suggestion.toLowerCase().includes('decision making')) {
+        createClinicalDecisionMakingTemplate();
+      } else {
+        // Default medical education template
+        createDefaultMedicalTemplate();
+      }
     }
     
     // Auto-close AI Designer after applying suggestion
@@ -682,14 +691,143 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
     }, 1500); // 1.5 second delay to show the magic effect
   };
 
+  // Helper function to extract card titles from AI suggestion
+  const extractCardTitlesFromSuggestion = (suggestion: string): string[] => {
+    const cardTitles: string[] = [];
+    
+    // Look for patterns like "1. Card Title", "• Card Title", "- Card Title", etc.
+    const patterns = [
+      /^\d+\.\s*(.+)$/gm,           // "1. Card Title"
+      /^[•·]\s*(.+)$/gm,            // "• Card Title"
+      /^-\s*(.+)$/gm,               // "- Card Title"
+      /^\*\s*(.+)$/gm,              // "* Card Title"
+    ];
+    
+    for (const pattern of patterns) {
+      const matches = suggestion.match(pattern);
+      if (matches) {
+        for (const match of matches) {
+          const title = match.replace(/^\d+\.\s*|[•·*-]\s*/, '').trim();
+          if (title && title.length > 3 && title.length < 50) {
+            cardTitles.push(title);
+          }
+        }
+      }
+    }
+    
+    // If no patterns found, try to extract from common medical card patterns
+    if (cardTitles.length === 0) {
+      const medicalPatterns = [
+        'Featured Content',
+        'Featured Categories', 
+        'Other Resources',
+        'Residents Resources',
+        'Quick Access',
+        'Emergency Protocols'
+      ];
+      
+      for (const pattern of medicalPatterns) {
+        if (suggestion.toLowerCase().includes(pattern.toLowerCase())) {
+          cardTitles.push(pattern);
+        }
+      }
+    }
+    
+    return cardTitles.slice(0, 6); // Limit to 6 cards max
+  };
+
+  // Helper function to create cards from AI suggestion
+  const createCardsFromAISuggestion = (cardTitles: string[]) => {
+    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
+    
+    const newCards: SpaceCard[] = cardTitles.map((title, index) => ({
+      id: `ai-card-${Date.now()}-${index}`,
+      title: title,
+      description: `AI-generated card: ${title}`,
+      color: colors[index % colors.length],
+      order: space.cards.length + index,
+      items: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      order: index,
+      isExpanded: false
+    }));
+
+    setSpace(prev => ({
+      ...prev,
+      cards: [...prev.cards, ...newCards]
+    }));
+  };
+
+  // Helper function to create collection cards from AI suggestion
+  const createCollectionCardsFromAISuggestion = (collectionId: string, cardTitles: string[]) => {
+    // Find the collection in the space
+    const findCollectionInCards = (cards: SpaceCard[]): ContentItem | null => {
+      for (const card of cards) {
+        for (const item of card.items) {
+          if (item.id === collectionId) {
+            return item;
+          }
+          if (item.type === 'collection' && item.children) {
+            const found = findCollectionInCards(item.children);
+            if (found) return found;
+          }
+        }
+      }
+      return null;
+    };
+
+    const collection = findCollectionInCards(space.cards);
+    if (!collection || collection.type !== 'collection') return;
+
+    const colors = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
+    
+    const newCards: CollectionCard[] = cardTitles.map((title, index) => ({
+      id: `collection-card-${Date.now()}-${index}`,
+      title: title,
+      description: `AI-generated collection card: ${title}`,
+      color: colors[index % colors.length],
+      order: (collection.children?.length || 0) + index,
+      items: [],
+      isExpanded: false,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }));
+
+    // Update the collection with new cards
+    setSpace(prev => ({
+      ...prev,
+      cards: prev.cards.map(card => ({
+        ...card,
+        items: card.items.map(item => {
+          if (item.id === collectionId && item.type === 'collection') {
+            return {
+              ...item,
+              children: [...(item.children || []), ...newCards]
+            };
+          }
+          return item;
+        })
+      }))
+    }));
+  };
+
   const applyCollectionAISuggestion = (suggestion: string) => {
     console.log('Applying Collection AI suggestion:', suggestion);
     
     // Add magic effect - show loading state
     setIsCollectionAiLoading(true);
     
-    // Generate collection cards based on suggestion
-    generateCollectionTemplate(collectionAiContext.targetId!, suggestion);
+    // Parse AI suggestions and create collection cards based on the actual suggestion content
+    const cardTitles = extractCardTitlesFromSuggestion(suggestion);
+    
+    if (cardTitles.length > 0) {
+      // Create collection cards based on AI suggestion
+      createCollectionCardsFromAISuggestion(collectionAiContext.targetId!, cardTitles);
+    } else {
+      // Fallback to keyword-based templates
+      generateCollectionTemplate(collectionAiContext.targetId!, suggestion);
+    }
     
     // Auto-close AI Designer after applying suggestion
     setTimeout(() => {
