@@ -641,6 +641,408 @@ export default function DesignerPage() {
           isExpanded: false
         }
       ]
+    },
+    {
+      id: 'clinical-workflow',
+      name: 'Clinical Workflow',
+      description: 'Complete clinical workflow from diagnosis to treatment',
+      icon: Users,
+      category: 'clinical',
+      cards: [
+        {
+          title: 'Topic Overview',
+          color: '#dc2626', // Dark red
+          items: [
+            {
+              type: 'content',
+              title: 'Disease Overview',
+              description: 'Comprehensive disease introduction',
+              contentType: 'article',
+              icon: BookOpen,
+              isPublic: true,
+              order: 0,
+              id: 'cw-1',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              type: 'content',
+              title: 'Epidemiology & Risk Factors',
+              description: 'Population data and risk assessment',
+              contentType: 'infographic',
+              icon: Image,
+              isPublic: true,
+              order: 1,
+              id: 'cw-2',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ],
+          order: 0,
+          isExpanded: false
+        },
+        {
+          title: 'Workup Algorithm',
+          color: '#ea580c', // Dark orange
+          items: [
+            {
+              type: 'content',
+              title: 'Diagnostic Algorithm',
+              description: 'Step-by-step diagnostic process',
+              contentType: 'infographic',
+              icon: Image,
+              isPublic: true,
+              order: 0,
+              id: 'cw-3',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              type: 'content',
+              title: 'Laboratory Tests',
+              description: 'Essential lab work and interpretation',
+              contentType: 'guideline',
+              icon: FileText,
+              isPublic: true,
+              order: 1,
+              id: 'cw-4',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ],
+          order: 1,
+          isExpanded: false
+        },
+        {
+          title: 'Preoperative',
+          color: '#ca8a04', // Dark yellow
+          items: [
+            {
+              type: 'content',
+              title: 'Preoperative Assessment',
+              description: 'Patient evaluation and preparation',
+              contentType: 'guideline',
+              icon: FileText,
+              isPublic: true,
+              order: 0,
+              id: 'cw-5',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              type: 'content',
+              title: 'Consent & Documentation',
+              description: 'Legal requirements and forms',
+              contentType: 'article',
+              icon: BookOpen,
+              isPublic: true,
+              order: 1,
+              id: 'cw-6',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ],
+          order: 2,
+          isExpanded: false
+        },
+        {
+          title: 'Technique Videos',
+          color: '#7c2d12', // Dark brown
+          items: [
+            {
+              type: 'content',
+              title: 'Surgical Technique',
+              description: 'Step-by-step surgical procedure',
+              contentType: 'video',
+              icon: PlayCircle,
+              isPublic: true,
+              order: 0,
+              id: 'cw-7',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              type: 'content',
+              title: 'Instrumentation Guide',
+              description: 'Tools and equipment overview',
+              contentType: 'video',
+              icon: PlayCircle,
+              isPublic: true,
+              order: 1,
+              id: 'cw-8',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ],
+          order: 3,
+          isExpanded: false
+        },
+        {
+          title: 'Postoperative',
+          color: '#1f2937', // Dark gray
+          items: [
+            {
+              type: 'content',
+              title: 'Recovery Protocols',
+              description: 'Post-surgical care guidelines',
+              contentType: 'guideline',
+              icon: FileText,
+              isPublic: true,
+              order: 0,
+              id: 'cw-9',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              type: 'content',
+              title: 'Complication Management',
+              description: 'Recognizing and treating complications',
+              contentType: 'article',
+              icon: BookOpen,
+              isPublic: true,
+              order: 1,
+              id: 'cw-10',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ],
+          order: 4,
+          isExpanded: false
+        },
+        {
+          title: 'Patient Education Materials',
+          color: '#059669', // Dark emerald
+          items: [
+            {
+              type: 'content',
+              title: 'Patient Handouts',
+              description: 'Educational materials for patients',
+              contentType: 'article',
+              icon: BookOpen,
+              isPublic: true,
+              order: 0,
+              id: 'cw-11',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              type: 'content',
+              title: 'Recovery Timeline',
+              description: 'Expected recovery milestones',
+              contentType: 'infographic',
+              icon: Image,
+              isPublic: true,
+              order: 1,
+              id: 'cw-12',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ],
+          order: 5,
+          isExpanded: false
+        },
+        {
+          title: 'Key Articles',
+          color: '#7c3aed', // Dark purple
+          items: [
+            {
+              type: 'content',
+              title: 'Recent Research',
+              description: 'Latest clinical studies and findings',
+              contentType: 'article',
+              icon: BookOpen,
+              isPublic: true,
+              order: 0,
+              id: 'cw-13',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              type: 'content',
+              title: 'Evidence-Based Guidelines',
+              description: 'Current treatment recommendations',
+              contentType: 'guideline',
+              icon: FileText,
+              isPublic: true,
+              order: 1,
+              id: 'cw-14',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ],
+          order: 6,
+          isExpanded: false
+        }
+      ]
+    },
+    {
+      id: 'curriculum',
+      name: 'Curriculum',
+      description: 'Structured learning curriculum with objectives and assessments',
+      icon: Calendar,
+      category: 'education',
+      cards: [
+        {
+          title: 'Learning Objectives',
+          color: '#1e40af', // Dark blue
+          items: [
+            {
+              type: 'content',
+              title: 'Course Objectives',
+              description: 'What students will learn',
+              contentType: 'article',
+              icon: BookOpen,
+              isPublic: true,
+              order: 0,
+              id: 'cur-1',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              type: 'content',
+              title: 'Learning Outcomes',
+              description: 'Expected competencies',
+              contentType: 'infographic',
+              icon: Image,
+              isPublic: true,
+              order: 1,
+              id: 'cur-2',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ],
+          order: 0,
+          isExpanded: false
+        },
+        {
+          title: 'Learning Materials',
+          color: '#059669', // Dark emerald
+          items: [
+            {
+              type: 'content',
+              title: 'Core Readings',
+              description: 'Essential textbooks and articles',
+              contentType: 'article',
+              icon: BookOpen,
+              isPublic: true,
+              order: 0,
+              id: 'cur-3',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              type: 'content',
+              title: 'Video Lectures',
+              description: 'Recorded presentations and demos',
+              contentType: 'video',
+              icon: PlayCircle,
+              isPublic: true,
+              order: 1,
+              id: 'cur-4',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ],
+          order: 1,
+          isExpanded: false
+        },
+        {
+          title: 'Interactive Scenarios',
+          color: '#dc2626', // Dark red
+          items: [
+            {
+              type: 'content',
+              title: 'Case Studies',
+              description: 'Real-world clinical scenarios',
+              contentType: 'article',
+              icon: BookOpen,
+              isPublic: true,
+              order: 0,
+              id: 'cur-5',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              type: 'content',
+              title: 'Simulation Exercises',
+              description: 'Interactive learning activities',
+              contentType: 'video',
+              icon: PlayCircle,
+              isPublic: true,
+              order: 1,
+              id: 'cur-6',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ],
+          order: 2,
+          isExpanded: false
+        },
+        {
+          title: 'Assessment',
+          color: '#7c2d12', // Dark brown
+          items: [
+            {
+              type: 'content',
+              title: 'Quizzes & Tests',
+              description: 'Knowledge assessment tools',
+              contentType: 'article',
+              icon: BookOpen,
+              isPublic: true,
+              order: 0,
+              id: 'cur-7',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              type: 'content',
+              title: 'Practical Exams',
+              description: 'Skills-based evaluations',
+              contentType: 'guideline',
+              icon: FileText,
+              isPublic: true,
+              order: 1,
+              id: 'cur-8',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ],
+          order: 3,
+          isExpanded: false
+        },
+        {
+          title: 'CME',
+          color: '#7c3aed', // Dark purple
+          items: [
+            {
+              type: 'content',
+              title: 'CME Credits',
+              description: 'Continuing medical education',
+              contentType: 'article',
+              icon: BookOpen,
+              isPublic: true,
+              order: 0,
+              id: 'cur-9',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              type: 'content',
+              title: 'Certification Requirements',
+              description: 'Professional development standards',
+              contentType: 'guideline',
+              icon: FileText,
+              isPublic: true,
+              order: 1,
+              id: 'cur-10',
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ],
+          order: 4,
+          isExpanded: false
+        }
+      ]
     }
   ];
 
