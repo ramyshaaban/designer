@@ -215,6 +215,126 @@ export default function DesignerPage() {
     console.log('Tutorial restarted - starting main space tour');
   };
 
+  // AI Designer functions
+  const initializeAIDesigner = () => {
+    setShowAIDesigner(true);
+    if (aiMessages.length === 0) {
+      const welcomeMessage = {
+        id: 'welcome',
+        role: 'assistant' as const,
+        content: `Hello! I'm your AI Design Assistant. I can help you create amazing medical education spaces by suggesting:
+
+🎯 **Cards & Content**: What types of cards would work best for your space
+📚 **Templates**: Pre-built templates for different medical specialties
+🗂️ **Collections**: Organized content collections with suggested cards
+🎨 **Creative Ideas**: Custom suggestions based on your specific needs
+
+What kind of medical education space are you looking to create? Tell me about your specialty, audience, or specific learning goals!`,
+        timestamp: new Date()
+      };
+      setAiMessages([welcomeMessage]);
+    }
+  };
+
+  const sendAIMessage = async (message: string) => {
+    if (!message.trim()) return;
+
+    const userMessage = {
+      id: `user-${Date.now()}`,
+      role: 'user' as const,
+      content: message.trim(),
+      timestamp: new Date()
+    };
+
+    setAiMessages(prev => [...prev, userMessage]);
+    setAiInput('');
+    setIsAiLoading(true);
+
+    try {
+      // This would integrate with your OpenAI or Gemini API
+      const response = await generateAIResponse(message, selectedAiProvider);
+      
+      const assistantMessage = {
+        id: `assistant-${Date.now()}`,
+        role: 'assistant' as const,
+        content: response,
+        timestamp: new Date()
+      };
+
+      setAiMessages(prev => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('AI Error:', error);
+      const errorMessage = {
+        id: `error-${Date.now()}`,
+        role: 'assistant' as const,
+        content: 'Sorry, I encountered an error. Please try again or check your API configuration.',
+        timestamp: new Date()
+      };
+      setAiMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
+
+  const generateAIResponse = async (message: string, provider: 'openai' | 'gemini'): Promise<string> => {
+    // This is a placeholder - you'll need to implement actual API calls
+    // For now, I'll create a smart response based on keywords
+    
+    const lowerMessage = message.toLowerCase();
+    
+    if (lowerMessage.includes('card') || lowerMessage.includes('content')) {
+      return `Great! Let me suggest some card types for your medical education space:
+
+**📹 Video Cards**: Perfect for surgical procedures, patient consultations, or educational lectures
+**🎧 Podcast Cards**: Ideal for medical discussions, case studies, or continuing education
+**📄 Document Cards**: Great for guidelines, protocols, research papers, or study materials
+**📊 Infographic Cards**: Excellent for visual learning, statistics, or complex medical concepts
+**🔗 External Link Cards**: Useful for referencing external resources or tools
+
+What specific type of content are you planning to include? I can suggest more specific card configurations based on your needs!`;
+    }
+    
+    if (lowerMessage.includes('template') || lowerMessage.includes('specialty')) {
+      return `I can suggest templates for various medical specialties! Here are some popular options:
+
+**🏥 Emergency Medicine**: Triage protocols, trauma management, critical care procedures
+**💊 Internal Medicine**: Disease management, diagnostic algorithms, treatment guidelines
+**🔬 Surgery**: Pre-op checklists, surgical techniques, post-op care
+**👶 Pediatrics**: Growth charts, vaccination schedules, developmental milestones
+**🧠 Neurology**: Neurological exams, diagnostic criteria, treatment protocols
+**❤️ Cardiology**: ECG interpretation, cardiac procedures, heart failure management
+
+Which specialty interests you most? I can create a detailed template with specific cards and content suggestions!`;
+    }
+    
+    if (lowerMessage.includes('collection') || lowerMessage.includes('organize')) {
+      return `Collections are perfect for organizing related content! Here are some collection ideas:
+
+**📚 Study Materials**: Group related articles, videos, and documents together
+**🎯 Case Studies**: Organize patient cases with supporting materials
+**📋 Procedures**: Step-by-step guides with videos and checklists
+**🔬 Research**: Latest studies and evidence-based practices
+**👥 Team Resources**: Shared knowledge for your medical team
+
+What type of content would you like to organize into collections? I can suggest specific card types and content for each collection!`;
+    }
+    
+    return `I understand you're looking to create a medical education space! To give you the best suggestions, could you tell me more about:
+
+1. **Your medical specialty or focus area**
+2. **Your target audience** (students, residents, practicing physicians, etc.)
+3. **Specific learning goals** you want to achieve
+4. **Types of content** you plan to include
+
+This will help me suggest the most relevant cards, templates, and collections for your space!`;
+  };
+
+  const applyAISuggestion = (suggestion: string) => {
+    // This function would parse AI suggestions and apply them to the space
+    console.log('Applying AI suggestion:', suggestion);
+    // Implementation would depend on the specific suggestion type
+  };
+
   // Manual save function instead of automatic saving
   const saveSpaceData = async () => {
     setIsSaving(true);
@@ -288,6 +408,13 @@ export default function DesignerPage() {
   const [currentOnboardingStep, setCurrentOnboardingStep] = useState(0);
   const [onboardingTour, setOnboardingTour] = useState<OnboardingTour | null>(null);
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
+
+  // AI Designer state
+  const [showAIDesigner, setShowAIDesigner] = useState(false);
+  const [aiMessages, setAiMessages] = useState<Array<{id: string, role: 'user' | 'assistant', content: string, timestamp: Date}>>([]);
+  const [aiInput, setAiInput] = useState('');
+  const [isAiLoading, setIsAiLoading] = useState(false);
+  const [selectedAiProvider, setSelectedAiProvider] = useState<'openai' | 'gemini'>('openai');
 
   // Force re-render when switching modes to ensure state consistency
   useEffect(() => {
@@ -2175,6 +2302,16 @@ export default function DesignerPage() {
               <Button
                 variant="outline"
                 size="sm"
+                onClick={initializeAIDesigner}
+                className="bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border border-purple-200 text-purple-700"
+                title="AI Design Assistant"
+              >
+                <div className="w-4 h-4 mr-2">🤖</div>
+                AI Designer
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={saveSpaceData}
                 disabled={isSaving}
                 className={`bg-transparent hover:bg-gray-100 border ${hasUnsavedChanges ? 'border-orange-300 bg-orange-50' : 'border-gray-300'}`}
@@ -3728,6 +3865,133 @@ export default function DesignerPage() {
                 </Button>
                 <Button variant="outline" onClick={() => setShowSpaceSettingsDialog(false)}>
                   Close
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* AI Designer Dialog */}
+        <Dialog open={showAIDesigner} onOpenChange={setShowAIDesigner}>
+          <DialogContent className="max-w-2xl mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)] h-[80vh] flex flex-col">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <div className="w-6 h-6">🤖</div>
+                AI Design Assistant
+              </DialogTitle>
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <span>Powered by:</span>
+                <Select value={selectedAiProvider} onValueChange={(value: 'openai' | 'gemini') => setSelectedAiProvider(value)}>
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="openai">OpenAI</SelectItem>
+                    <SelectItem value="gemini">Gemini</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </DialogHeader>
+            
+            {/* Chat Messages */}
+            <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50">
+              {aiMessages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[80%] p-3 rounded-lg ${
+                      message.role === 'user'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-white border border-gray-200'
+                    }`}
+                  >
+                    <div className="whitespace-pre-wrap text-sm">{message.content}</div>
+                    <div className={`text-xs mt-1 ${
+                      message.role === 'user' ? 'text-blue-100' : 'text-gray-500'
+                    }`}>
+                      {message.timestamp.toLocaleTimeString()}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              
+              {isAiLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-white border border-gray-200 p-3 rounded-lg">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                      AI is thinking...
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            {/* Input Area */}
+            <div className="flex gap-2 p-4 border-t">
+              <Input
+                value={aiInput}
+                onChange={(e) => setAiInput(e.target.value)}
+                placeholder="Ask me about cards, templates, collections, or any design ideas..."
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendAIMessage(aiInput);
+                  }
+                }}
+                disabled={isAiLoading}
+                className="flex-1"
+              />
+              <Button
+                onClick={() => sendAIMessage(aiInput)}
+                disabled={!aiInput.trim() || isAiLoading}
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+              >
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+            
+            {/* Quick Actions */}
+            <div className="p-4 border-t bg-gray-50">
+              <div className="text-sm font-medium text-gray-700 mb-2">Quick Actions:</div>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => sendAIMessage("Suggest card types for emergency medicine")}
+                  disabled={isAiLoading}
+                  className="text-xs"
+                >
+                  🏥 Emergency Cards
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => sendAIMessage("Create a surgery template")}
+                  disabled={isAiLoading}
+                  className="text-xs"
+                >
+                  🔬 Surgery Template
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => sendAIMessage("Suggest collections for medical students")}
+                  disabled={isAiLoading}
+                  className="text-xs"
+                >
+                  📚 Student Collections
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => sendAIMessage("Help me organize my content")}
+                  disabled={isAiLoading}
+                  className="text-xs"
+                >
+                  🗂️ Organize Content
                 </Button>
               </div>
             </div>
