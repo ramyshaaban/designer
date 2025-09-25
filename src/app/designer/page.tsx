@@ -1613,12 +1613,16 @@ export default function DesignerPage() {
                                       </div>
                                       <div className="w-full h-12 flex flex-col justify-center">
                                         <p className="text-xs font-medium leading-tight line-clamp-2">{item.title}</p>
-                                        {item.type === "collection" && (
-                                          <div className="bg-purple-100 px-1 py-0.5 rounded text-purple-600 font-medium text-xs mt-1">
-                                            {getCollectionItemCount(item)} {getCollectionItemCount(item) === 1 ? 'item' : 'items'}
-                                          </div>
-                                        )}
+                                        <p className="text-xs text-gray-600 line-clamp-1 leading-tight">{item.description}</p>
                                       </div>
+                                      
+                                      {item.type === "collection" && (
+                                        <div className="flex items-center gap-1 text-xs text-purple-600 font-medium">
+                                          <span className="bg-purple-100 px-2 py-1 rounded-full">
+                                            {getCollectionItemCount(item)} {getCollectionItemCount(item) === 1 ? 'item' : 'items'}
+                                          </span>
+                                        </div>
+                                      )}
                                       {item.type !== 'collection' && (
                                         <div className="flex gap-1 mt-2">
                                           <Button
@@ -2280,11 +2284,11 @@ export default function DesignerPage() {
                                   >
                                     <div className="flex flex-col items-center text-center space-y-2 h-full justify-center">
                                       <div className="rounded-lg border flex items-center justify-center bg-white" style={{ borderColor: space.borderColor, width: '100px', height: '100px' }}>
-                                        {item.type === 'collection' ? <FolderOpen className="w-8 h-8" style={{ strokeWidth: 1 }} /> : 
+                                        {item.type === 'collection' ? <FolderOpen className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} /> : 
                                           typeof item.icon === 'string' ? 
                                             <span className="text-2xl">{item.icon}</span> : 
                                             typeof item.icon === 'object' && item.contentType ?
-                                              React.createElement(getContentTypeIcon(item.contentType), { className: "w-8 h-8", style: { strokeWidth: 1 } }) :
+                                              React.createElement(getContentTypeIcon(item.contentType), { className: "w-8 h-8", style: { color: space.borderColor, strokeWidth: 1 } }) :
                                               <span className="text-2xl">📄</span>
                                         }
                                       </div>
