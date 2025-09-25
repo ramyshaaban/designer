@@ -2247,7 +2247,7 @@ export default function DesignerPage() {
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4 flex justify-center">
                     <img 
-                      src="http://ramyshaaban.com/lab/SCMD.png" 
+                      src="https://ramyshaaban.com/lab/SCMD.png" 
                       alt="SCMD Icon" 
                       className="w-16 h-16 object-contain"
                       onError={(e) => {
@@ -2630,7 +2630,7 @@ export default function DesignerPage() {
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4 flex justify-center">
                     <img 
-                      src="http://ramyshaaban.com/lab/SCMD.png" 
+                      src="https://ramyshaaban.com/lab/SCMD.png" 
                       alt="SCMD Icon" 
                       className="w-16 h-16 object-contain"
                       onError={(e) => {
