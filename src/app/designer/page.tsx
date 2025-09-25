@@ -2129,7 +2129,8 @@ export default function DesignerPage() {
                             </div>
                           ) : (
                             // Regular card rendering
-                            <div className="grid grid-cols-3 gap-2" data-onboarding="content-grid">
+                            <div>
+                              <div className="grid grid-cols-3 gap-2" data-onboarding="content-grid">
                               {card.items.length === 0 ? (
                                 <div className="col-span-3 text-center py-4">
                                   <p className="text-sm text-gray-500 italic">No items yet</p>
@@ -2262,6 +2263,7 @@ export default function DesignerPage() {
                               Add Item
                             </Button>
                           </div>
+                            </div>
                           )}
                         </CardContent>
                       </Card>
@@ -2414,22 +2416,6 @@ export default function DesignerPage() {
                               </div>
                             ))
                             )}
-                          </div>
-
-                          <div className="mt-4 pt-3 border-t">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="w-full"
-                              onClick={() => {
-                                setCurrentCardId(card.id);
-                                setShowAddItemDialog(true);
-                              }}
-                              data-onboarding="add-item-button"
-                            >
-                              <Plus className="w-4 h-4 mr-2" />
-                              Add Item
-                            </Button>
                           </div>
                           )}
                         </CardContent>
