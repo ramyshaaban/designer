@@ -3300,6 +3300,7 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
                               </Button>
                             </div>
                           </div>
+                          )}
                         </CardContent>
                       </Card>
                     ))}
