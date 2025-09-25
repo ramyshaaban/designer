@@ -1771,7 +1771,6 @@ export default function DesignerPage() {
     if (currentStep.id !== step.id) return null;
 
     const [targetElement, setTargetElement] = useState<HTMLElement | null>(null);
-    const [spotlightStyle, setSpotlightStyle] = useState<React.CSSProperties>({});
 
     useEffect(() => {
       // Add a small delay to ensure DOM elements are fully rendered
@@ -1779,43 +1778,10 @@ export default function DesignerPage() {
         const element = document.querySelector(currentStep.target) as HTMLElement;
         if (element) {
           setTargetElement(element);
-          const rect = element.getBoundingClientRect();
-          const padding = 8; // Add some padding around the highlighted element
-          
-          console.log('Highlighting element:', currentStep.target, 'Rect:', rect);
-          
-          setSpotlightStyle({
-            position: 'fixed',
-            top: rect.top - padding,
-            left: rect.left - padding,
-            width: rect.width + (padding * 2),
-            height: rect.height + (padding * 2),
-            borderRadius: '8px',
-            border: '2px solid #3b82f6',
-            backgroundColor: 'transparent', // Make center transparent
-            boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.75), 0 0 20px rgba(59, 130, 246, 0.5)',
-            zIndex: 9999,
-            pointerEvents: 'none',
-            transition: 'all 0.3s ease-in-out'
-          });
+          console.log('Highlighting element:', currentStep.target, 'Rect:', element.getBoundingClientRect());
         } else {
           console.warn('Element not found for target:', currentStep.target);
-          // Fallback: center the spotlight
-          setSpotlightStyle({
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            width: '200px',
-            height: '100px',
-            borderRadius: '8px',
-            border: '2px solid #3b82f6',
-            backgroundColor: 'transparent', // Make center transparent
-            boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.75), 0 0 20px rgba(59, 130, 246, 0.5)',
-            zIndex: 9999,
-            pointerEvents: 'none',
-            transform: 'translate(-50%, -50%)',
-            transition: 'all 0.3s ease-in-out'
-          });
+          setTargetElement(null);
         }
       }, 100); // 100ms delay
 
@@ -1875,12 +1841,68 @@ export default function DesignerPage() {
 
     return (
       <div className="fixed inset-0 z-50 pointer-events-none">
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-black bg-opacity-60 pointer-events-auto" />
+        {/* Dark Overlay - Top */}
+        <div 
+          className="absolute bg-black bg-opacity-75 pointer-events-auto"
+          style={{
+            top: 0,
+            left: 0,
+            right: 0,
+            height: targetElement ? `${targetElement.getBoundingClientRect().top - 8}px` : '50%',
+            zIndex: 9998
+          }}
+        />
         
-        {/* Spotlight Effect */}
-        <div style={spotlightStyle} />
+        {/* Dark Overlay - Bottom */}
+        <div 
+          className="absolute bg-black bg-opacity-75 pointer-events-auto"
+          style={{
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: targetElement ? `${window.innerHeight - targetElement.getBoundingClientRect().bottom - 8}px` : '50%',
+            zIndex: 9998
+          }}
+        />
         
+        {/* Dark Overlay - Left */}
+        <div 
+          className="absolute bg-black bg-opacity-75 pointer-events-auto"
+          style={{
+            top: targetElement ? `${targetElement.getBoundingClientRect().top - 8}px` : 0,
+            left: 0,
+            width: targetElement ? `${targetElement.getBoundingClientRect().left - 8}px` : '50%',
+            height: targetElement ? `${targetElement.getBoundingClientRect().height + 16}px` : '100%',
+            zIndex: 9998
+          }}
+        />
+        
+        {/* Dark Overlay - Right */}
+        <div 
+          className="absolute bg-black bg-opacity-75 pointer-events-auto"
+          style={{
+            top: targetElement ? `${targetElement.getBoundingClientRect().top - 8}px` : 0,
+            right: 0,
+            width: targetElement ? `${window.innerWidth - targetElement.getBoundingClientRect().right - 8}px` : '50%',
+            height: targetElement ? `${targetElement.getBoundingClientRect().height + 16}px` : '100%',
+            zIndex: 9998
+          }}
+        />
+        
+        {/* Highlight Border */}
+        {targetElement && (
+          <div 
+            className="absolute border-2 border-blue-500 rounded-lg pointer-events-none"
+            style={{
+              top: targetElement.getBoundingClientRect().top - 8,
+              left: targetElement.getBoundingClientRect().left - 8,
+              width: targetElement.getBoundingClientRect().width + 16,
+              height: targetElement.getBoundingClientRect().height + 16,
+              zIndex: 9999,
+              boxShadow: '0 0 20px rgba(59, 130, 246, 0.8)'
+            }}
+          />
+        )}
         
         {/* Tooltip */}
         <div 
