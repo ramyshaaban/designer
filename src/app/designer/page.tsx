@@ -1924,23 +1924,6 @@ export default function DesignerPage() {
           </>
         )}
         
-        {/* Highlight Area */}
-        {targetElement && (
-          <div 
-            className="absolute pointer-events-none"
-            style={{
-              top: targetElement.getBoundingClientRect().top - 8,
-              left: targetElement.getBoundingClientRect().left - 8,
-              width: targetElement.getBoundingClientRect().width + 16,
-              height: targetElement.getBoundingClientRect().height + 16,
-              borderRadius: '12px',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              zIndex: 9999,
-              boxShadow: '0 0 20px rgba(255, 255, 255, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1)'
-            }}
-          />
-        )}
         
         {/* Tooltip */}
         <div 
