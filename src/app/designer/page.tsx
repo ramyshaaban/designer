@@ -349,15 +349,17 @@ export default function DesignerPage() {
   // Load version from URL parameter
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // Check for version in query parameter (legacy support)
+      // Check for version in query parameter (supports both ID and slug)
       const urlParams = new URLSearchParams(window.location.search);
-      const versionId = urlParams.get('version');
+      const versionParam = urlParams.get('version');
       
-      if (versionId) {
-        console.log('Loading version from URL parameter:', versionId);
-        loadVersion(versionId);
+      if (versionParam) {
+        console.log('Loading version from URL parameter:', versionParam);
+        // Try to load by slug first, then by ID
+        loadVersionBySlug(versionParam);
+        // If slug loading fails, it will fall back to default space
       } else {
-        // Check for version in path (new format)
+        // Check for version in path (production format)
         const pathSegments = window.location.pathname.split('/').filter(Boolean);
         if (pathSegments.length > 0 && pathSegments[0] !== 'designer') {
           const versionSlug = pathSegments[0];
@@ -1345,14 +1347,27 @@ export default function DesignerPage() {
   // Helper function to get the base URL for version links
   const getBaseUrl = () => {
     if (typeof window !== 'undefined') {
-      // For local development, use localhost
+      // For local development, use localhost with designer route
       if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return `http://localhost:${window.location.port || '3001'}`;
+        return `http://localhost:${window.location.port || '3001'}/designer`;
       }
       // For production, use the custom domain
       return 'https://scmd.ramyshaaban.com';
     }
-    return 'http://localhost:3001'; // fallback
+    return 'http://localhost:3001/designer'; // fallback
+  };
+
+  // Helper function to generate version URL
+  const getVersionUrl = (slug: string) => {
+    if (typeof window !== 'undefined') {
+      // For local development, use query parameter
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return `${getBaseUrl()}?version=${slug}`;
+      }
+      // For production, use path segments
+      return `https://scmd.ramyshaaban.com/${slug}`;
+    }
+    return `${getBaseUrl()}?version=${slug}`; // fallback
   };
 
   // Versioning functions
@@ -1386,7 +1401,7 @@ export default function DesignerPage() {
       localStorage.setItem('designer-versions', JSON.stringify(savedVersions));
 
       // Generate shareable URL with cleaner structure
-      const versionUrl = `${getBaseUrl()}/${versionSlug}`;
+      const versionUrl = getVersionUrl(versionSlug);
 
       // Update saved versions list
       setSavedVersions(prev => [...prev, {
@@ -1469,7 +1484,7 @@ export default function DesignerPage() {
         name: v.name,
         description: v.description,
         timestamp: new Date(v.timestamp),
-        url: v.slug ? `${getBaseUrl()}/${v.slug}` : `${window.location.origin}${window.location.pathname}?version=${v.id}`
+        url: v.slug ? getVersionUrl(v.slug) : `${window.location.origin}${window.location.pathname}?version=${v.id}`
       }));
       setSavedVersions(versionsList);
     } catch (error) {
