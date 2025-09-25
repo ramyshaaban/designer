@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { useState, useRef, useEffect } from "react";
 import React from "react";
-import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle, ChevronUp, ChevronDown, Share, Heart, Search, HelpCircle, ArrowRight, ArrowLeft, FileVideo, Headphones, File, BarChart3, ClipboardList, Newspaper, Gamepad2, Menu } from "lucide-react";
+import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle, ChevronUp, ChevronDown, Share, Heart, Search, HelpCircle, ArrowRight, ArrowLeft, FileVideo, Headphones, File, BarChart3, ClipboardList, Newspaper, Gamepad2, Menu, Stethoscope } from "lucide-react";
 
 type ContentType = 'video' | 'podcast' | 'document' | 'infographic' | 'guideline' | 'article' | 'interactive-content' | 'external-link' | 'menu-button';
 
@@ -2245,7 +2245,9 @@ export default function DesignerPage() {
               {space.cards.length === 0 ? (
                 // Empty Space - Add First Card or Use Template
                 <div className="text-center py-12">
-                  <div className="text-6xl mb-4">🏥</div>
+                  <div className="text-6xl mb-4 flex justify-center">
+                    <Stethoscope className="w-16 h-16 text-gray-400" />
+                  </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Your Space is Empty</h3>
                   <p className="text-gray-600 mb-6">Start building your space by adding your first card or using a template.</p>
                   
@@ -2616,7 +2618,9 @@ export default function DesignerPage() {
               
               {space.cards.length === 0 ? (
                 <div className="text-center py-12">
-                  <div className="text-6xl mb-4">🏥</div>
+                  <div className="text-6xl mb-4 flex justify-center">
+                    <Stethoscope className="w-16 h-16 text-gray-400" />
+                  </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Space is Empty</h3>
                   <p className="text-gray-600">Switch to Design Mode to start building your space.</p>
                 </div>
