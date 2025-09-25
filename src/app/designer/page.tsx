@@ -1843,7 +1843,7 @@ export default function DesignerPage() {
       <div className="fixed inset-0 z-50 pointer-events-none">
         {/* Dark Overlay - Top */}
         <div 
-          className="absolute bg-black bg-opacity-75 pointer-events-auto"
+          className="absolute bg-black bg-opacity-50 pointer-events-auto"
           style={{
             top: 0,
             left: 0,
@@ -1855,7 +1855,7 @@ export default function DesignerPage() {
         
         {/* Dark Overlay - Bottom */}
         <div 
-          className="absolute bg-black bg-opacity-75 pointer-events-auto"
+          className="absolute bg-black bg-opacity-50 pointer-events-auto"
           style={{
             bottom: 0,
             left: 0,
@@ -1867,7 +1867,7 @@ export default function DesignerPage() {
         
         {/* Dark Overlay - Left */}
         <div 
-          className="absolute bg-black bg-opacity-75 pointer-events-auto"
+          className="absolute bg-black bg-opacity-50 pointer-events-auto"
           style={{
             top: targetElement ? `${targetElement.getBoundingClientRect().top - 8}px` : 0,
             left: 0,
@@ -1879,7 +1879,7 @@ export default function DesignerPage() {
         
         {/* Dark Overlay - Right */}
         <div 
-          className="absolute bg-black bg-opacity-75 pointer-events-auto"
+          className="absolute bg-black bg-opacity-50 pointer-events-auto"
           style={{
             top: targetElement ? `${targetElement.getBoundingClientRect().top - 8}px` : 0,
             right: 0,
@@ -1892,14 +1892,15 @@ export default function DesignerPage() {
         {/* Highlight Border */}
         {targetElement && (
           <div 
-            className="absolute border-2 border-blue-500 rounded-lg pointer-events-none"
+            className="absolute border border-blue-500 pointer-events-none"
             style={{
-              top: targetElement.getBoundingClientRect().top - 8,
-              left: targetElement.getBoundingClientRect().left - 8,
-              width: targetElement.getBoundingClientRect().width + 16,
-              height: targetElement.getBoundingClientRect().height + 16,
+              top: targetElement.getBoundingClientRect().top - 4,
+              left: targetElement.getBoundingClientRect().left - 4,
+              width: targetElement.getBoundingClientRect().width + 8,
+              height: targetElement.getBoundingClientRect().height + 8,
+              borderRadius: getComputedStyle(targetElement).borderRadius || '8px',
               zIndex: 9999,
-              boxShadow: '0 0 20px rgba(59, 130, 246, 0.8)'
+              boxShadow: '0 0 15px rgba(59, 130, 246, 0.6)'
             }}
           />
         )}
