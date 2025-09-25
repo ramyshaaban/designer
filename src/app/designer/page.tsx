@@ -156,6 +156,30 @@ export default function DesignerPage() {
     }
   };
 
+  // Contextual onboarding - trigger based on UI state
+  const triggerContextualOnboarding = () => {
+    if (!showOnboarding) return;
+
+    // If space settings dialog is open, show space branding tour
+    if (showSpaceSettingsDialog && onboardingTour?.id !== 'space-settings-tour') {
+      const spaceSettingsTour = onboardingTours.find(t => t.id === 'space-settings-tour');
+      if (spaceSettingsTour) {
+        setOnboardingTour(spaceSettingsTour);
+        setCurrentOnboardingStep(0);
+        console.log('Switched to space settings tour');
+      }
+    }
+    // If we're back to main space and not in any dialog, show main tour
+    else if (!showSpaceSettingsDialog && !showTemplateDialog && !showCollectionTemplateDialog && onboardingTour?.id !== 'main-space-tour') {
+      const mainTour = onboardingTours.find(t => t.id === 'main-space-tour');
+      if (mainTour) {
+        setOnboardingTour(mainTour);
+        setCurrentOnboardingStep(0);
+        console.log('Switched back to main space tour');
+      }
+    }
+  };
+
   const nextOnboardingStep = () => {
     if (onboardingTour && currentOnboardingStep < onboardingTour.steps.length - 1) {
       setCurrentOnboardingStep(currentOnboardingStep + 1);
@@ -380,6 +404,11 @@ export default function DesignerPage() {
       }
     }
   }, []);
+
+  // Trigger contextual onboarding when UI state changes
+  useEffect(() => {
+    triggerContextualOnboarding();
+  }, [showSpaceSettingsDialog, showTemplateDialog, showCollectionTemplateDialog, showOnboarding]);
 
   // Helper functions
   const getContentTypeIcon = (type: ContentType) => {
@@ -903,10 +932,10 @@ export default function DesignerPage() {
           skipable: true
         },
         {
-          id: 'space-color',
-          title: 'Space Branding',
-          description: 'Click the palette icon to customize your space color. This will brand all your cards and buttons.',
-          target: '[data-onboarding="space-color"]',
+          id: 'space-settings-button',
+          title: 'Space Settings',
+          description: 'Click the gear icon to open space settings where you can customize your space branding, colors, and more.',
+          target: '[data-onboarding="space-settings-button"]',
           position: 'bottom',
           skipable: true
         },
@@ -924,6 +953,45 @@ export default function DesignerPage() {
           title: 'Save Your Work',
           description: 'Always save your changes! Click this button to save your space to your browser\'s local storage.',
           target: '[data-onboarding="save-button"]',
+          position: 'bottom',
+          skipable: true
+        }
+      ]
+    },
+    {
+      id: 'space-settings-tour',
+      name: 'Space Settings Tour',
+      description: 'Learn how to customize your space branding',
+      steps: [
+        {
+          id: 'space-title-input',
+          title: 'Space Title',
+          description: 'Edit your space title here. This will be displayed at the top of your space.',
+          target: '[data-onboarding="space-title-input"]',
+          position: 'bottom',
+          skipable: true
+        },
+        {
+          id: 'space-description',
+          title: 'Space Description',
+          description: 'Add a description for your space. This helps others understand what your space is about.',
+          target: '[data-onboarding="space-description"]',
+          position: 'bottom',
+          skipable: true
+        },
+        {
+          id: 'space-color-picker',
+          title: 'Space Color',
+          description: 'Choose a color for your space. This will brand all your cards, buttons, and UI elements with your chosen color.',
+          target: '[data-onboarding="space-color-picker"]',
+          position: 'bottom',
+          skipable: true
+        },
+        {
+          id: 'space-logo',
+          title: 'Space Logo',
+          description: 'Upload a logo for your space. This will appear next to your space title.',
+          target: '[data-onboarding="space-logo"]',
           position: 'bottom',
           skipable: true
         }
@@ -3559,6 +3627,7 @@ export default function DesignerPage() {
               <div>
                 <label className="text-sm font-medium">Space Title</label>
                 <Input
+                  data-onboarding="space-title-input"
                   placeholder="Enter space title"
                   value={space.name}
                   onChange={(e) => setSpace({ ...space, name: e.target.value })}
@@ -3567,6 +3636,7 @@ export default function DesignerPage() {
               <div>
                 <label className="text-sm font-medium">Description</label>
                 <Textarea
+                  data-onboarding="space-description"
                   placeholder="Enter space description"
                   value={space.description}
                   onChange={(e) => setSpace({ ...space, description: e.target.value })}
@@ -3577,6 +3647,7 @@ export default function DesignerPage() {
                 <label className="text-sm font-medium">Space Background Color</label>
                 <div className="flex items-center gap-3 mt-2">
                   <input
+                    data-onboarding="space-color-picker"
                     type="color"
                     value={space.backgroundColor}
                     onChange={(e) => {
