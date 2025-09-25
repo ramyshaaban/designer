@@ -180,12 +180,21 @@ export default function DesignerPage() {
   // Load version from URL parameter
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // Check for version in query parameter (legacy support)
       const urlParams = new URLSearchParams(window.location.search);
       const versionId = urlParams.get('version');
       
       if (versionId) {
-        console.log('Loading version from URL:', versionId);
+        console.log('Loading version from URL parameter:', versionId);
         loadVersion(versionId);
+      } else {
+        // Check for version in path (new format)
+        const pathSegments = window.location.pathname.split('/').filter(Boolean);
+        if (pathSegments.length > 0 && pathSegments[0] !== 'designer') {
+          const versionSlug = pathSegments[0];
+          console.log('Loading version from path slug:', versionSlug);
+          loadVersionBySlug(versionSlug);
+        }
       }
       
       // Load saved versions list
@@ -1347,6 +1356,7 @@ export default function DesignerPage() {
       // Create version data
       const versionData = {
         id: versionId,
+        slug: versionSlug,
         name: versionName.trim(),
         description: versionDescription.trim(),
         space: space,
@@ -1358,9 +1368,9 @@ export default function DesignerPage() {
       savedVersions.push(versionData);
       localStorage.setItem('designer-versions', JSON.stringify(savedVersions));
 
-      // Generate shareable URL
-      const baseUrl = window.location.origin + window.location.pathname;
-      const versionUrl = `${baseUrl}?version=${versionId}`;
+      // Generate shareable URL with cleaner structure
+      const versionSlug = versionName.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+      const versionUrl = `https://scmd.ramyshaaban.com/${versionSlug}`;
 
       // Update saved versions list
       setSavedVersions(prev => [...prev, {
@@ -1396,6 +1406,26 @@ export default function DesignerPage() {
     }
   };
 
+  const loadVersionBySlug = (slug: string) => {
+    try {
+      const savedVersions = JSON.parse(localStorage.getItem('designer-versions') || '[]');
+      const version = savedVersions.find((v: any) => v.slug === slug);
+      
+      if (version) {
+        setSpace(version.space);
+        setCurrentVersionId(version.id); // Set the current version ID
+        console.log('Loaded version by slug:', version.name, 'Slug:', slug);
+        alert(`Version "${version.name}" loaded successfully! Changes will be saved to this version.`);
+      } else {
+        console.log('Version not found for slug:', slug);
+        // If no version found, continue with default space
+      }
+    } catch (error) {
+      console.error('Error loading version by slug:', error);
+      // If error, continue with default space
+    }
+  };
+
   const loadVersion = (versionId: string) => {
     try {
       const savedVersions = JSON.parse(localStorage.getItem('designer-versions') || '[]');
@@ -1423,7 +1453,7 @@ export default function DesignerPage() {
         name: v.name,
         description: v.description,
         timestamp: new Date(v.timestamp),
-        url: `${window.location.origin}${window.location.pathname}?version=${v.id}`
+        url: v.slug ? `https://scmd.ramyshaaban.com/${v.slug}` : `${window.location.origin}${window.location.pathname}?version=${v.id}`
       }));
       setSavedVersions(versionsList);
     } catch (error) {
