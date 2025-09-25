@@ -188,6 +188,7 @@ export default function DesignerPage() {
     setShowOnboarding(true);
     setOnboardingTour(onboardingTours[0]);
     setCurrentOnboardingStep(0);
+    console.log('Tutorial restarted - starting main space tour');
   };
 
   // Manual save function instead of automatic saving
@@ -3589,9 +3590,22 @@ export default function DesignerPage() {
                 <Trash2 className="w-4 h-4 mr-2" />
                 Clear Data
               </Button>
-              <Button variant="outline" onClick={() => setShowSpaceSettingsDialog(false)}>
-                Close
-              </Button>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    resetOnboarding();
+                    setShowSpaceSettingsDialog(false);
+                  }}
+                  className="text-blue-600 border-blue-300 hover:bg-blue-50"
+                >
+                  <HelpCircle className="w-4 h-4 mr-2" />
+                  Restart Tutorial
+                </Button>
+                <Button variant="outline" onClick={() => setShowSpaceSettingsDialog(false)}>
+                  Close
+                </Button>
+              </div>
             </div>
           </DialogContent>
         </Dialog>
