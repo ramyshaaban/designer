@@ -151,13 +151,30 @@ export default function DesignerPage() {
           };
           
           setSpace(spaceWithExpansion);
+          setLastSavedState(saved); // Initialize saved state
         } catch (error) {
           console.error('Error parsing saved space data:', error);
         }
       } else {
         console.log('No saved space data found, using default');
+        // Initialize saved state with default space
+        setLastSavedState(JSON.stringify(space));
       }
     }
+  }, []);
+
+  // Handle page refresh warning
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+        return 'You have unsaved changes. Are you sure you want to leave?';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, []);
 
   // Load version from URL parameter
@@ -188,6 +205,13 @@ export default function DesignerPage() {
     console.log('Space state changed:', space);
     console.log('Cards with isExpanded:', space.cards.map(card => ({ id: card.id, title: card.title, isExpanded: card.isExpanded })));
   }, [space]);
+
+
+
+  // Track changes to space
+  const markAsChanged = () => {
+    setHasUnsavedChanges(true);
+  };
 
   // Onboarding functions
   const startOnboarding = (tourId: string) => {
@@ -240,6 +264,10 @@ export default function DesignerPage() {
       if (typeof window !== 'undefined') {
         console.log('Saving space data:', space);
         localStorage.setItem('designer-space', JSON.stringify(space));
+        
+        // Update saved state and clear unsaved changes flag
+        setLastSavedState(JSON.stringify(space));
+        setHasUnsavedChanges(false);
         
         // If we're working on a version, also save to that version
         if (currentVersionId) {
@@ -331,6 +359,10 @@ export default function DesignerPage() {
   const [newItemMenuButtonTarget, setNewItemMenuButtonTarget] = useState("");
   const [showMenuButtonSearch, setShowMenuButtonSearch] = useState(false);
   const [menuButtonSearchQuery, setMenuButtonSearchQuery] = useState("");
+  
+  // Unsaved changes tracking
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [lastSavedState, setLastSavedState] = useState<string>("");
   const [showPortalDialog, setShowPortalDialog] = useState(false);
   const [portalSearchQuery, setPortalSearchQuery] = useState("");
 
@@ -1117,6 +1149,7 @@ export default function DesignerPage() {
           ...currentCollection,
           children: [...(currentCollection.children || []), newCard]
         });
+        markAsChanged();
         } else {
           // Create a SpaceCard for main space
           const newCard: SpaceCard = {
@@ -1134,6 +1167,7 @@ export default function DesignerPage() {
           ...space,
           cards: [...space.cards, newCard]
         });
+        markAsChanged();
       }
       
       setNewCardTitle("");
@@ -1485,6 +1519,7 @@ export default function DesignerPage() {
               : card
           )
         });
+        markAsChanged();
       } else {
         // Add or update item in main space card
         setSpace({
@@ -1501,6 +1536,7 @@ export default function DesignerPage() {
               : card
           )
         });
+        markAsChanged();
       }
 
       // Reset form
@@ -1859,13 +1895,24 @@ export default function DesignerPage() {
 
           {/* Settings and Save Buttons - only in design mode */}
           {isDesignMode && (
-            <div className="flex justify-end gap-2 mb-2">
+            <div className="space-y-2">
+              {/* Unsaved changes warning */}
+              {hasUnsavedChanges && (
+                <div className="bg-orange-50 border border-orange-200 rounded-md p-2 text-sm text-orange-800">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                    You have unsaved changes. Don't forget to save your work!
+                  </div>
+                </div>
+              )}
+              
+              <div className="flex justify-end gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={saveSpaceData}
                 disabled={isSaving}
-                className="bg-transparent hover:bg-gray-100 border border-gray-300"
+                className={`bg-transparent hover:bg-gray-100 border ${hasUnsavedChanges ? 'border-orange-300 bg-orange-50' : 'border-gray-300'}`}
                 data-onboarding="save-button"
               >
                 {isSaving ? (
@@ -1876,7 +1923,7 @@ export default function DesignerPage() {
                 ) : (
                   <>
                     <Save className="w-4 h-4 mr-2" />
-                    Save
+                    Save {hasUnsavedChanges && <span className="text-orange-600">•</span>}
                   </>
                 )}
               </Button>
@@ -1906,6 +1953,7 @@ export default function DesignerPage() {
               >
                 <HelpCircle className="w-4 h-4" />
               </Button>
+              </div>
             </div>
           )}
 
