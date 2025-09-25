@@ -5508,10 +5508,12 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         </Dialog>
 
         {/* AI Designer Dialogs - Replaced with separate dialogs */}
-        <Dialog open={showAIDesigner} onOpenChange={setShowAIDesigner}>
+        
+        {/* Space AI Designer Dialog */}
+        <Dialog open={showSpaceAIDesigner} onOpenChange={setShowSpaceAIDesigner}>
           <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[90vh] !h-[90vh] flex flex-col !top-[5vh] !left-[2.5vw] !translate-x-0 !translate-y-0">
             {/* AI Magic Effect Overlay */}
-            {isAiLoading && (
+            {isSpaceAiLoading && (
               <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
                 <div className="text-center">
                   <div className="relative">
@@ -5527,10 +5529,10 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                     </div>
                   </div>
                   <div className="mt-4 text-lg font-semibold text-purple-700">
-                    ✨ Creating Magic Content ✨
+                    ✨ Creating Space Organization ✨
                   </div>
                   <div className="text-sm text-purple-600 mt-1">
-                    Applying AI suggestions...
+                    Applying space-level suggestions...
                   </div>
                 </div>
               </div>
@@ -5557,7 +5559,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
             
           {/* Chat Messages */}
           <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50">
-            {aiMessages.map((message) => (
+            {spaceAiMessages.map((message) => (
               <div
                 key={message.id}
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
@@ -5594,12 +5596,12 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
               </div>
             ))}
             
-            {isAiLoading && (
+            {isSpaceAiLoading && (
               <div className="flex justify-start">
                 <div className="bg-white border border-gray-200 p-3 rounded-lg">
                   <div className="flex items-center gap-2 text-sm text-gray-600">
                     <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
-                    AI is thinking...
+                    AI Space Designer is thinking...
                   </div>
                 </div>
               </div>
@@ -5609,21 +5611,21 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
             {/* Input Area */}
             <div className="flex gap-2 p-4 border-t">
               <Input
-                value={aiInput}
-                onChange={(e) => setAiInput(e.target.value)}
-                placeholder="Ask me about cards, templates, collections, or any design ideas..."
+                value={spaceAiInput}
+                onChange={(e) => setSpaceAiInput(e.target.value)}
+                placeholder="Ask me about space organization, medical specialties, or learning goals..."
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
-                    sendAIMessage(aiInput);
+                    sendSpaceAIMessage(spaceAiInput);
                   }
                 }}
-                disabled={isAiLoading}
+                disabled={isSpaceAiLoading}
                 className="flex-1"
               />
               <Button
-                onClick={() => sendAIMessage(aiInput)}
-                disabled={!aiInput.trim() || isAiLoading}
+                onClick={() => sendSpaceAIMessage(spaceAiInput)}
+                disabled={!spaceAiInput.trim() || isSpaceAiLoading}
                 className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
               >
                 <ArrowRight className="w-4 h-4" />
@@ -5634,101 +5636,42 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
           <div className="p-4 border-t bg-gray-50">
             <div className="text-sm font-medium text-gray-700 mb-2">Quick Actions:</div>
             <div className="flex flex-wrap gap-2">
-              {aiContext.location === 'space' && (
-                <>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => sendAIMessage("Create an emergency medicine template with triage protocols and critical care procedures")}
-                    disabled={isAiLoading}
-                    className="text-xs"
-                  >
-                    🏥 Emergency Medicine
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => sendAIMessage("Create a surgery template with preoperative assessment and surgical techniques")}
-                    disabled={isAiLoading}
-                    className="text-xs"
-                  >
-                    🔬 Surgery Template
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => sendAIMessage("Create a cardiology template with ECG interpretation and arrhythmia recognition")}
-                    disabled={isAiLoading}
-                    className="text-xs"
-                  >
-                    ❤️ Cardiology Template
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => sendAIMessage("Create a pediatrics template with growth charts and developmental milestones")}
-                    disabled={isAiLoading}
-                    className="text-xs"
-                  >
-                    👶 Pediatrics Template
-                  </Button>
-                </>
-              )}
-              
-              {aiContext.location === 'card' && (
-                <>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => sendAIMessage("Add video content for surgical procedures and patient consultations")}
-                    disabled={isAiLoading}
-                    className="text-xs"
-                  >
-                    📹 Video Content
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => sendAIMessage("Add article content with guidelines and protocols")}
-                    disabled={isAiLoading}
-                    className="text-xs"
-                  >
-                    📄 Article Content
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => sendAIMessage("Add infographic content for visual learning")}
-                    disabled={isAiLoading}
-                    className="text-xs"
-                  >
-                    📊 Infographic Content
-                  </Button>
-                </>
-              )}
-              
-              {aiContext.location === 'collection' && (
-                <>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => sendAIMessage("Create cards for learning objectives and assessment")}
-                    disabled={isAiLoading}
-                    className="text-xs"
-                  >
-                    🎯 Learning Cards
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => sendAIMessage("Create cards for case studies and interactive scenarios")}
-                    disabled={isAiLoading}
-                    className="text-xs"
-                  >
-                    📚 Case Study Cards
-                  </Button>
-                </>
-              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => sendSpaceAIMessage("Create an emergency medicine template with triage protocols and critical care procedures")}
+                disabled={isSpaceAiLoading}
+                className="text-xs"
+              >
+                🚨 Emergency Medicine Template
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => sendSpaceAIMessage("Create a surgery template with preoperative assessment and technique videos")}
+                disabled={isSpaceAiLoading}
+                className="text-xs"
+              >
+                ⚕️ Surgery Template
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => sendSpaceAIMessage("Create a cardiology template with diagnostic tools and treatment protocols")}
+                disabled={isSpaceAiLoading}
+                className="text-xs"
+              >
+                ❤️ Cardiology Template
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => sendSpaceAIMessage("Create a pediatrics template with growth charts and developmental milestones")}
+                disabled={isSpaceAiLoading}
+                className="text-xs"
+              >
+                👶 Pediatrics Template
+              </Button>
             </div>
           </div>
           </DialogContent>
