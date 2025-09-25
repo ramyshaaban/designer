@@ -217,23 +217,56 @@ export default function DesignerPage() {
   };
 
   // AI Designer functions
-  const initializeAIDesigner = () => {
+  const initializeAIDesigner = (context: { location: 'space' | 'card' | 'collection', targetId?: string, targetTitle?: string }) => {
+    setAiContext(context);
     setShowAIDesigner(true);
     if (aiMessages.length === 0) {
-      const welcomeMessage = {
-        id: 'welcome',
-        role: 'assistant' as const,
-        content: `Hello! I'm your AI Design Assistant. I can help you create amazing medical education spaces by suggesting:
+      let welcomeMessage = '';
+      
+      if (context.location === 'space') {
+        welcomeMessage = `Hello! I'm your AI Design Assistant for your medical education space "${space.name}". 
 
-🎯 **Cards & Content**: What types of cards would work best for your space
-📚 **Templates**: Pre-built templates for different medical specialties
-🗂️ **Collections**: Organized content collections with suggested cards
+I can help you create amazing content by suggesting:
+
+🎯 **Card Templates**: Pre-built card structures for different medical specialties
+📚 **Content Ideas**: Specific content suggestions for your cards
+🗂️ **Collection Templates**: Organized content collections with suggested cards
 🎨 **Creative Ideas**: Custom suggestions based on your specific needs
 
-What kind of medical education space are you looking to create? Tell me about your specialty, audience, or specific learning goals!`,
+What would you like me to help you create? Tell me about your medical specialty, target audience, or specific learning goals!`;
+      } else if (context.location === 'card') {
+        welcomeMessage = `Hello! I'm here to help you populate the "${context.targetTitle}" card with amazing content!
+
+I can suggest:
+
+📹 **Video Content**: Surgical procedures, patient consultations, educational lectures
+🎧 **Podcast Content**: Medical discussions, case studies, continuing education
+📄 **Document Content**: Guidelines, protocols, research papers, study materials
+📊 **Infographic Content**: Visual learning materials, statistics, medical concepts
+🔗 **External Links**: Useful resources and tools
+📁 **Collections**: Organized sub-collections within this card
+
+What type of content would work best for this card? Tell me about your specialty or learning objectives!`;
+      } else if (context.location === 'collection') {
+        welcomeMessage = `Hello! I'm here to help you design the "${context.targetTitle}" collection!
+
+I can suggest:
+
+🎯 **Card Templates**: Pre-built card structures for this collection
+📚 **Content Organization**: How to structure content within cards
+🗂️ **Sub-collections**: Nested organization for complex topics
+🎨 **Learning Paths**: Sequential content for progressive learning
+
+What kind of collection are you building? Tell me about the medical topic or learning goals!`;
+      }
+      
+      const message = {
+        id: 'welcome',
+        role: 'assistant' as const,
+        content: welcomeMessage,
         timestamp: new Date()
       };
-      setAiMessages([welcomeMessage]);
+      setAiMessages([message]);
     }
   };
 
@@ -280,6 +313,32 @@ What kind of medical education space are you looking to create? Tell me about yo
   const generateAIResponse = async (message: string, provider: 'openai' | 'gemini'): Promise<string> => {
     if (provider === 'openai') {
       try {
+        const systemPrompt = `You are an AI Design Assistant for a medical education app called "StayCurrentMD Space Designer". 
+
+Current Context:
+- Location: ${aiContext.location}
+- Target: ${aiContext.targetTitle || 'Main Space'}
+- Space Name: ${space.name}
+
+Your role is to help users create amazing medical education content by suggesting:
+
+1. **Card Templates**: Pre-built card structures for different medical specialties
+2. **Content Ideas**: Specific content suggestions for cards
+3. **Collection Templates**: Organized content collections with suggested cards
+4. **Creative Ideas**: Custom suggestions based on user needs
+
+Guidelines:
+- Always provide specific, actionable suggestions
+- Focus on medical education and healthcare learning
+- Suggest realistic content that would be valuable for medical professionals
+- Be encouraging and helpful
+- Use emojis to make responses engaging
+- Keep responses concise but informative
+- Ask clarifying questions when needed
+- When suggesting templates or content, be specific about what should be included
+
+Current context: The user is working on ${aiContext.location === 'space' ? 'the main space' : aiContext.location === 'card' ? `the "${aiContext.targetTitle}" card` : `the "${aiContext.targetTitle}" collection`} and needs help with content creation.`;
+
         const response = await fetch(AI_CONFIG.OPENAI_API_URL, {
           method: 'POST',
           headers: {
@@ -291,25 +350,7 @@ What kind of medical education space are you looking to create? Tell me about yo
             messages: [
               {
                 role: 'system',
-                content: `You are an AI Design Assistant for a medical education app called "StayCurrentMD Space Designer". 
-
-Your role is to help users create amazing medical education spaces by suggesting:
-
-1. **Cards & Content Types**: Video, Podcast, Document, Infographic, Guideline, Article, Interactive Content, External Link, Menu Button
-2. **Templates**: Pre-built templates for different medical specialties (Emergency Medicine, Surgery, Internal Medicine, Pediatrics, Neurology, Cardiology, etc.)
-3. **Collections**: Organized content collections with suggested cards and structure
-4. **Creative Ideas**: Custom suggestions based on user needs
-
-Guidelines:
-- Always provide specific, actionable suggestions
-- Focus on medical education and healthcare learning
-- Suggest realistic content that would be valuable for medical professionals
-- Be encouraging and helpful
-- Use emojis to make responses engaging
-- Keep responses concise but informative
-- Ask clarifying questions when needed
-
-Current context: The user is designing a medical education space and needs help with cards, templates, or collections.`
+                content: systemPrompt
               },
               {
                 role: 'user',
@@ -423,6 +464,11 @@ Current context: The user is designing a medical education space and needs help 
   const [aiInput, setAiInput] = useState('');
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [selectedAiProvider, setSelectedAiProvider] = useState<'openai' | 'gemini'>('openai');
+  const [aiContext, setAiContext] = useState<{
+    location: 'space' | 'card' | 'collection';
+    targetId?: string;
+    targetTitle?: string;
+  }>({ location: 'space' });
 
   // Force re-render when switching modes to ensure state consistency
   useEffect(() => {
@@ -2209,6 +2255,15 @@ Current context: The user is designing a medical education space and needs help 
               <Eye className="w-4 h-4 mr-2" />
               Production Mode
             </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => resetOnboarding()}
+              className="bg-transparent hover:bg-gray-100 border border-gray-300"
+              title="Start Tutorial"
+            >
+              <HelpCircle className="w-4 h-4" />
+            </Button>
           </div>
 
           {/* Space Logo and Title */}
@@ -2389,7 +2444,10 @@ Current context: The user is designing a medical education space and needs help 
                       onError={(e) => {
                         // Fallback to stethoscope icon if image fails to load
                         e.currentTarget.style.display = 'none';
-                        e.currentTarget.nextElementSibling.style.display = 'block';
+                        const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+                        if (nextElement) {
+                          nextElement.style.display = 'block';
+                        }
                       }}
                     />
                     <Stethoscope className="w-32 h-32 text-gray-400 hidden" />
@@ -2420,6 +2478,15 @@ Current context: The user is designing a medical education space and needs help 
                       <Layout className="w-4 h-4" />
                       Use Template
                     </Button>
+
+                    <Button 
+                      variant="outline"
+                      onClick={() => initializeAIDesigner({ location: 'space' })}
+                      className="flex items-center gap-2 border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700 transition-all duration-200"
+                    >
+                      <Star className="w-4 h-4" />
+                      AI Designer
+                    </Button>
                   </div>
                 </div>
               ) : (
@@ -2437,19 +2504,30 @@ Current context: The user is designing a medical education space and needs help 
                   </div>
                   
                   {/* Add Card Button */}
-                  <Button
-                    onClick={() => setShowAddCardDialog(true)}
-                    variant="outline"
-                    className="w-full flex items-center gap-2 border hover:shadow-lg transition-all duration-200"
-                    style={{ 
-                      backgroundColor: space.backgroundColor,
-                      borderColor: space.borderColor,
-                      color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
-                    }}
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add New Card
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => setShowAddCardDialog(true)}
+                      variant="outline"
+                      className="flex-1 flex items-center gap-2 border hover:shadow-lg transition-all duration-200"
+                      style={{ 
+                        backgroundColor: space.backgroundColor,
+                        borderColor: space.borderColor,
+                        color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
+                      }}
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add New Card
+                    </Button>
+                    
+                    <Button
+                      onClick={() => initializeAIDesigner({ location: 'space' })}
+                      variant="outline"
+                      className="flex items-center gap-2 border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700 transition-all duration-200"
+                      title="AI Designer for Space"
+                    >
+                      <Star className="w-4 h-4" />
+                    </Button>
+                  </div>
 
                   {/* Add Portals Card Button - Only show if no portals card exists */}
                   {!hasPortalsCard() && (
@@ -2726,10 +2804,11 @@ Current context: The user is designing a medical education space and needs help 
                           </div>
 
                           <div className="mt-4 pt-3 border-t">
+                          <div className="flex gap-2">
                             <Button
                               variant="outline"
                               size="sm"
-                              className="w-full"
+                              className="flex-1"
                               onClick={() => {
                                 setCurrentCardId(card.id);
                                 setShowAddItemDialog(true);
@@ -2739,9 +2818,21 @@ Current context: The user is designing a medical education space and needs help 
                               <Plus className="w-4 h-4 mr-2" />
                               Add Item
                             </Button>
+                            
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => initializeAIDesigner({ 
+                                location: 'card', 
+                                targetId: card.id, 
+                                targetTitle: card.title 
+                              })}
+                              className="border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700"
+                              title={`AI Designer for ${card.title}`}
+                            >
+                              <Star className="w-4 h-4" />
+                            </Button>
                           </div>
-                            </div>
-                          )}
                         </CardContent>
                       </Card>
                     ))}
@@ -2772,7 +2863,10 @@ Current context: The user is designing a medical education space and needs help 
                       onError={(e) => {
                         // Fallback to stethoscope icon if image fails to load
                         e.currentTarget.style.display = 'none';
-                        e.currentTarget.nextElementSibling.style.display = 'block';
+                        const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+                        if (nextElement) {
+                          nextElement.style.display = 'block';
+                        }
                       }}
                     />
                     <Stethoscope className="w-32 h-32 text-gray-400 hidden" />
@@ -3691,18 +3785,34 @@ Current context: The user is designing a medical education space and needs help 
 
                             {isDesignMode && (
                               <div className="mt-4 pt-3 border-t">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="w-full"
-                                  onClick={() => {
-                                    setCurrentCardId(card.id);
-                                    setShowAddItemDialog(true);
-                                  }}
-                                >
-                                  <Plus className="w-4 h-4 mr-2" />
-                                  Add Item
-                                </Button>
+                                <div className="flex gap-2">
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex-1"
+                                    onClick={() => {
+                                      setCurrentCardId(card.id);
+                                      setShowAddItemDialog(true);
+                                    }}
+                                  >
+                                    <Plus className="w-4 h-4 mr-2" />
+                                    Add Item
+                                  </Button>
+                                  
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => initializeAIDesigner({ 
+                                      location: 'card', 
+                                      targetId: card.id, 
+                                      targetTitle: card.title 
+                                    })}
+                                    className="border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700"
+                                    title={`AI Designer for ${card.title}`}
+                                  >
+                                    <Star className="w-4 h-4" />
+                                  </Button>
+                                </div>
                               </div>
                             )}
                           </CardContent>
@@ -3718,25 +3828,40 @@ Current context: The user is designing a medical education space and needs help 
 
                 {/* Add Card Button */}
                 {isDesignMode && (
-                  <div className="pt-4 border-t">
-                    <Button
-                      variant="outline"
-                      className="w-full border hover:shadow-lg transition-all duration-200"
-                      style={{ 
-                        backgroundColor: space.backgroundColor,
-                        borderColor: space.borderColor,
-                        color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
-                      }}
-                      onClick={() => setShowAddCardDialog(true)}
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add New Card
-                    </Button>
+                  <div className="pt-4 border-t space-y-2">
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        className="flex-1 border hover:shadow-lg transition-all duration-200"
+                        style={{ 
+                          backgroundColor: space.backgroundColor,
+                          borderColor: space.borderColor,
+                          color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
+                        }}
+                        onClick={() => setShowAddCardDialog(true)}
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add New Card
+                      </Button>
+                      
+                      <Button
+                        variant="outline"
+                        onClick={() => initializeAIDesigner({ 
+                          location: 'collection', 
+                          targetId: currentCollection.id, 
+                          targetTitle: currentCollection.title 
+                        })}
+                        className="border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700"
+                        title={`AI Designer for ${currentCollection.title}`}
+                      >
+                        <Star className="w-4 h-4" />
+                      </Button>
+                    </div>
                     
                     {/* Collection Template Button */}
                     <Button
                       variant="outline"
-                      className="w-full mt-2"
+                      className="w-full"
                       onClick={() => setShowCollectionTemplateDialog(true)}
                     >
                       <Layout className="w-4 h-4 mr-2" />
