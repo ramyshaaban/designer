@@ -1342,6 +1342,19 @@ export default function DesignerPage() {
     });
   };
 
+  // Helper function to get the base URL for version links
+  const getBaseUrl = () => {
+    if (typeof window !== 'undefined') {
+      // For local development, use localhost
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return `http://localhost:${window.location.port || '3001'}`;
+      }
+      // For production, use the custom domain
+      return 'https://scmd.ramyshaaban.com';
+    }
+    return 'http://localhost:3001'; // fallback
+  };
+
   // Versioning functions
   const saveVersion = async () => {
     if (!versionName.trim()) {
@@ -1373,7 +1386,7 @@ export default function DesignerPage() {
       localStorage.setItem('designer-versions', JSON.stringify(savedVersions));
 
       // Generate shareable URL with cleaner structure
-      const versionUrl = `https://scmd.ramyshaaban.com/${versionSlug}`;
+      const versionUrl = `${getBaseUrl()}/${versionSlug}`;
 
       // Update saved versions list
       setSavedVersions(prev => [...prev, {
@@ -1456,7 +1469,7 @@ export default function DesignerPage() {
         name: v.name,
         description: v.description,
         timestamp: new Date(v.timestamp),
-        url: v.slug ? `https://scmd.ramyshaaban.com/${v.slug}` : `${window.location.origin}${window.location.pathname}?version=${v.id}`
+        url: v.slug ? `${getBaseUrl()}/${v.slug}` : `${window.location.origin}${window.location.pathname}?version=${v.id}`
       }));
       setSavedVersions(versionsList);
     } catch (error) {
