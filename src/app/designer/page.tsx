@@ -1893,18 +1893,20 @@ export default function DesignerPage() {
           }}
         />
         
-        {/* Highlight Border */}
+        {/* Highlight Area */}
         {targetElement && (
           <div 
-            className="absolute border border-blue-500 pointer-events-none"
+            className="absolute pointer-events-none"
             style={{
-              top: targetElement.getBoundingClientRect().top - 4,
-              left: targetElement.getBoundingClientRect().left - 4,
-              width: targetElement.getBoundingClientRect().width + 8,
-              height: targetElement.getBoundingClientRect().height + 8,
-              borderRadius: getComputedStyle(targetElement).borderRadius || '8px',
+              top: targetElement.getBoundingClientRect().top - 8,
+              left: targetElement.getBoundingClientRect().left - 8,
+              width: targetElement.getBoundingClientRect().width + 16,
+              height: targetElement.getBoundingClientRect().height + 16,
+              borderRadius: '12px',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
               zIndex: 9999,
-              boxShadow: '0 0 15px rgba(59, 130, 246, 0.6)'
+              boxShadow: '0 0 20px rgba(255, 255, 255, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1)'
             }}
           />
         )}
