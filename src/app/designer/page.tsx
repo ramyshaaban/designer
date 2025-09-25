@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { useState, useRef, useEffect } from "react";
 import React from "react";
-import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle, ChevronUp, ChevronDown, Share, Heart, Search } from "lucide-react";
+import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle, ChevronUp, ChevronDown, Share, Heart, Search, HelpCircle, ArrowRight, ArrowLeft } from "lucide-react";
 
 type ContentType = 'video' | 'podcast' | 'infographic' | 'guideline' | 'article' | 'external-link';
 
@@ -87,6 +87,23 @@ type CollectionTemplate = {
   cards: Omit<CollectionCard, 'id' | 'createdAt' | 'updatedAt'>[];
 };
 
+type OnboardingStep = {
+  id: string;
+  title: string;
+  description: string;
+  target: string; // CSS selector or element ID
+  position: 'top' | 'bottom' | 'left' | 'right';
+  action?: string; // Optional action to perform
+  skipable?: boolean;
+};
+
+type OnboardingTour = {
+  id: string;
+  name: string;
+  description: string;
+  steps: OnboardingStep[];
+};
+
 export default function DesignerPage() {
   const [space, setSpace] = useState<Space>({
     id: "space-1",
@@ -141,8 +158,59 @@ export default function DesignerPage() {
       
       // Load saved versions list
       loadSavedVersions();
+      
+      // Check if onboarding has been completed
+      const onboardingCompleted = localStorage.getItem('designer-onboarding-completed');
+      if (!onboardingCompleted) {
+        setShowOnboarding(true);
+        setOnboardingTour(onboardingTours[0]); // Start with main space tour
+      }
     }
   }, []);
+
+  // Onboarding functions
+  const startOnboarding = (tourId: string) => {
+    const tour = onboardingTours.find(t => t.id === tourId);
+    if (tour) {
+      setOnboardingTour(tour);
+      setCurrentOnboardingStep(0);
+      setShowOnboarding(true);
+    }
+  };
+
+  const nextOnboardingStep = () => {
+    if (onboardingTour && currentOnboardingStep < onboardingTour.steps.length - 1) {
+      setCurrentOnboardingStep(currentOnboardingStep + 1);
+    } else {
+      completeOnboarding();
+    }
+  };
+
+  const previousOnboardingStep = () => {
+    if (currentOnboardingStep > 0) {
+      setCurrentOnboardingStep(currentOnboardingStep - 1);
+    }
+  };
+
+  const skipOnboarding = () => {
+    completeOnboarding();
+  };
+
+  const completeOnboarding = () => {
+    setShowOnboarding(false);
+    setOnboardingTour(null);
+    setCurrentOnboardingStep(0);
+    setOnboardingCompleted(true);
+    localStorage.setItem('designer-onboarding-completed', 'true');
+  };
+
+  const resetOnboarding = () => {
+    localStorage.removeItem('designer-onboarding-completed');
+    setOnboardingCompleted(false);
+    setShowOnboarding(true);
+    setOnboardingTour(onboardingTours[0]);
+    setCurrentOnboardingStep(0);
+  };
 
   // Manual save function instead of automatic saving
   const saveSpaceData = async () => {
@@ -207,6 +275,12 @@ export default function DesignerPage() {
   const [savedVersions, setSavedVersions] = useState<Array<{id: string, name: string, description: string, timestamp: Date, url: string}>>([]);
   const [isSavingVersion, setIsSavingVersion] = useState(false);
   const [currentVersionId, setCurrentVersionId] = useState<string | null>(null);
+  
+  // Onboarding state
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [currentOnboardingStep, setCurrentOnboardingStep] = useState(0);
+  const [onboardingTour, setOnboardingTour] = useState<OnboardingTour | null>(null);
+  const [onboardingCompleted, setOnboardingCompleted] = useState(false);
 
   // Form states
   const [newCardTitle, setNewCardTitle] = useState("");
@@ -565,6 +639,128 @@ export default function DesignerPage() {
           ],
           order: 4,
           isExpanded: false
+        }
+      ]
+    }
+  ];
+
+  // Onboarding tours
+  const onboardingTours: OnboardingTour[] = [
+    {
+      id: 'main-space-tour',
+      name: 'Main Space Tour',
+      description: 'Learn how to use the main space features',
+      steps: [
+        {
+          id: 'space-title',
+          title: 'Space Title',
+          description: 'This is your space title. Click to edit it and customize your space name.',
+          target: '[data-onboarding="space-title"]',
+          position: 'bottom',
+          skipable: true
+        },
+        {
+          id: 'mode-toggle',
+          title: 'Design & Production Modes',
+          description: 'Switch between Design Mode (for editing) and Production Mode (for viewing). Design Mode lets you add, edit, and organize content.',
+          target: '[data-onboarding="mode-toggle"]',
+          position: 'bottom',
+          skipable: true
+        },
+        {
+          id: 'space-color',
+          title: 'Space Branding',
+          description: 'Click the palette icon to customize your space color. This will brand all your cards and buttons.',
+          target: '[data-onboarding="space-color"]',
+          position: 'bottom',
+          skipable: true
+        },
+        {
+          id: 'add-card-button',
+          title: 'Add Your First Card',
+          description: 'Click here to create your first card. Cards are containers that hold your content and collections.',
+          target: '[data-onboarding="add-card-button"]',
+          position: 'top',
+          action: 'highlight-add-card',
+          skipable: true
+        },
+        {
+          id: 'save-button',
+          title: 'Save Your Work',
+          description: 'Always save your changes! Click this button to save your space to your browser\'s local storage.',
+          target: '[data-onboarding="save-button"]',
+          position: 'bottom',
+          skipable: true
+        }
+      ]
+    },
+    {
+      id: 'card-management-tour',
+      name: 'Card Management Tour',
+      description: 'Learn how to manage cards and their content',
+      steps: [
+        {
+          id: 'card-expansion',
+          title: 'Card Expansion',
+          description: 'Cards start minimized. Click anywhere on a card to expand it and see its contents.',
+          target: '[data-onboarding="card-expansion"]',
+          position: 'top',
+          skipable: true
+        },
+        {
+          id: 'card-actions',
+          title: 'Card Actions',
+          description: 'Use these buttons to reorder cards (up/down arrows), edit card details, or delete cards.',
+          target: '[data-onboarding="card-actions"]',
+          position: 'left',
+          skipable: true
+        },
+        {
+          id: 'add-item-button',
+          title: 'Add Content',
+          description: 'Click this button to add content (videos, articles, etc.) or create collections (folders) inside this card.',
+          target: '[data-onboarding="add-item-button"]',
+          position: 'top',
+          skipable: true
+        },
+        {
+          id: 'content-grid',
+          title: 'Content Grid',
+          description: 'Your content appears in a 3-column grid. Each item shows an icon, title, and description.',
+          target: '[data-onboarding="content-grid"]',
+          position: 'top',
+          skipable: true
+        }
+      ]
+    },
+    {
+      id: 'collection-tour',
+      name: 'Collection Management Tour',
+      description: 'Learn how to work with collections',
+      steps: [
+        {
+          id: 'collection-item',
+          title: 'Collection Item',
+          description: 'Collections are folders that can contain more cards and content. Click on a collection to open it.',
+          target: '[data-onboarding="collection-item"]',
+          position: 'top',
+          skipable: true
+        },
+        {
+          id: 'collection-count',
+          title: 'Item Counter',
+          description: 'This shows how many content items are inside the collection (not counting sub-collections).',
+          target: '[data-onboarding="collection-count"]',
+          position: 'top',
+          skipable: true
+        },
+        {
+          id: 'collection-dialog',
+          title: 'Collection Workspace',
+          description: 'When you open a collection, you get a full workspace just like the main space. You can add cards, content, and even sub-collections here.',
+          target: '[data-onboarding="collection-dialog"]',
+          position: 'top',
+          skipable: true
         }
       ]
     }
@@ -1267,13 +1463,86 @@ export default function DesignerPage() {
     setDraggedCard(null);
   };
 
+  // Onboarding Pointer Component
+  const OnboardingPointer = ({ step, isVisible }: { step: OnboardingStep; isVisible: boolean }) => {
+    if (!isVisible || !onboardingTour) return null;
+
+    const currentStep = onboardingTour.steps[currentOnboardingStep];
+    if (currentStep.id !== step.id) return null;
+
+    return (
+      <div className="fixed inset-0 z-50 pointer-events-none">
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black bg-opacity-50 pointer-events-auto" />
+        
+        {/* Pointer */}
+        <div className="absolute pointer-events-none" style={{
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)'
+        }}>
+          <div className="bg-white rounded-lg shadow-lg p-4 max-w-sm pointer-events-auto">
+            <div className="flex items-start justify-between mb-2">
+              <h3 className="font-semibold text-gray-900">{currentStep.title}</h3>
+              <button
+                onClick={skipOnboarding}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 mb-4">{currentStep.description}</p>
+            
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={previousOnboardingStep}
+                  disabled={currentOnboardingStep === 0}
+                  className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-50"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <span className="text-xs text-gray-500">
+                  {currentOnboardingStep + 1} of {onboardingTour.steps.length}
+                </span>
+                <button
+                  onClick={nextOnboardingStep}
+                  className="p-1 text-gray-400 hover:text-gray-600"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+              
+              <div className="flex space-x-2">
+                {currentStep.skipable && (
+                  <button
+                    onClick={skipOnboarding}
+                    className="text-xs text-gray-500 hover:text-gray-700"
+                  >
+                    Skip
+                  </button>
+                )}
+                <button
+                  onClick={nextOnboardingStep}
+                  className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
+                >
+                  {currentOnboardingStep === onboardingTour.steps.length - 1 ? 'Finish' : 'Next'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-md mx-auto bg-white min-h-screen">
         {/* Header */}
         <div className="sticky top-0 bg-white border-b p-4 z-10">
           {/* Mode Toggle - Above Everything */}
-          <div className="flex items-center justify-center mb-4">
+          <div className="flex items-center justify-center mb-4" data-onboarding="mode-toggle">
             <Button
               variant={isDesignMode ? "default" : "outline"}
               onClick={() => setIsDesignMode(true)}
@@ -1327,29 +1596,31 @@ export default function DesignerPage() {
               </div>
               
               {/* Space Title */}
-              {isEditingSpaceTitle ? (
-                <Input
-                  value={space.name}
-                  onChange={(e) => setSpace({ ...space, name: e.target.value })}
-                  onBlur={() => setIsEditingSpaceTitle(false)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      updateSpaceTitle(space.name);
-                    } else if (e.key === 'Escape') {
-                      setIsEditingSpaceTitle(false);
-                    }
-                  }}
-                  className="text-xl font-bold border-0 border-b-2 border-gray-300 focus:border-blue-500 bg-transparent p-0 text-center"
-                  autoFocus
-                />
-              ) : (
-                <h1 
-                  className="text-xl font-bold text-gray-900 cursor-pointer hover:text-gray-600 transition-colors"
-                  onClick={() => setIsEditingSpaceTitle(true)}
-                >
-                  {space.name}
-                </h1>
-              )}
+              <div data-onboarding="space-title">
+                {isEditingSpaceTitle ? (
+                  <Input
+                    value={space.name}
+                    onChange={(e) => setSpace({ ...space, name: e.target.value })}
+                    onBlur={() => setIsEditingSpaceTitle(false)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        updateSpaceTitle(space.name);
+                      } else if (e.key === 'Escape') {
+                        setIsEditingSpaceTitle(false);
+                      }
+                    }}
+                    className="text-xl font-bold border-0 border-b-2 border-gray-300 focus:border-blue-500 bg-transparent p-0 text-center"
+                    autoFocus
+                  />
+                ) : (
+                  <h1 
+                    className="text-xl font-bold text-gray-900 cursor-pointer hover:text-gray-600 transition-colors"
+                    onClick={() => setIsEditingSpaceTitle(true)}
+                  >
+                    {space.name}
+                  </h1>
+                )}
+              </div>
             </div>
           </div>
           
@@ -1391,6 +1662,7 @@ export default function DesignerPage() {
                 onClick={saveSpaceData}
                 disabled={isSaving}
                 className="bg-transparent hover:bg-gray-100 border border-gray-300"
+                data-onboarding="save-button"
               >
                 {isSaving ? (
                   <>
@@ -1420,6 +1692,15 @@ export default function DesignerPage() {
                 className="bg-transparent hover:bg-gray-100 border border-gray-300"
               >
                 <Settings className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => resetOnboarding()}
+                className="bg-transparent hover:bg-gray-100 border border-gray-300"
+                title="Start Tutorial"
+              >
+                <HelpCircle className="w-4 h-4" />
               </Button>
             </div>
           )}
@@ -1460,6 +1741,7 @@ export default function DesignerPage() {
                         borderColor: space.borderColor,
                         color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
                       }}
+                      data-onboarding="add-card-button"
                     >
                       <Plus className="w-4 h-4" />
                       Add Your First Card
@@ -1537,7 +1819,7 @@ export default function DesignerPage() {
                         <CardHeader className="pb-3">
                           <div className="flex items-center justify-between">
                             <CardTitle className="text-lg">{card.title}</CardTitle>
-                            <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-1" data-onboarding="card-actions">
                               <Button
                                 variant="ghost"
                                 size="sm"
@@ -1579,7 +1861,7 @@ export default function DesignerPage() {
                         </CardHeader>
 
                         <CardContent>
-                          <div className="grid grid-cols-3 gap-2">
+                          <div className="grid grid-cols-3 gap-2" data-onboarding="content-grid">
                             {card.items.length === 0 ? (
                               <div className="col-span-3 text-center py-4">
                                 <p className="text-sm text-gray-500 italic">No items yet</p>
@@ -1621,7 +1903,7 @@ export default function DesignerPage() {
                                         </div>
                                         {/* Item count inside container for collections */}
                                         {item.type === 'collection' && (
-                                          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 z-20">
+                                          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 z-20" data-onboarding="collection-count">
                                             <div className="bg-purple-100 text-purple-600 text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap">
                                               {getCollectionItemCount(item)} {getCollectionItemCount(item) === 1 ? 'item' : 'items'}
                                             </div>
@@ -1706,6 +1988,7 @@ export default function DesignerPage() {
                                 setCurrentCardId(card.id);
                                 setShowAddItemDialog(true);
                               }}
+                              data-onboarding="add-item-button"
                             >
                               <Plus className="w-4 h-4 mr-2" />
                               Add Item
@@ -1747,6 +2030,7 @@ export default function DesignerPage() {
                           <div 
                             className="flex items-center gap-2 cursor-pointer flex-1"
                             onClick={() => toggleCardExpansion(card.id)}
+                            data-onboarding="card-expansion"
                           >
                             <CardTitle className="text-lg">{card.title}</CardTitle>
                             <Badge variant="secondary" className="text-xs">
@@ -2189,7 +2473,7 @@ export default function DesignerPage() {
             }
             setShowCollectionDialog(open);
           }}>
-            <DialogContent className="max-w-md mx-auto max-h-[90vh] overflow-y-auto w-full max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)]">
+            <DialogContent className="max-w-md mx-auto max-h-[90vh] overflow-y-auto w-full max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)]" data-onboarding="collection-dialog">
               <DialogHeader>
                 {isDesignMode ? (
                   <DialogTitle className="flex items-center gap-2">
@@ -2321,21 +2605,22 @@ export default function DesignerPage() {
                             <div className="grid grid-cols-3 gap-2">
                               {card.items && card.items.length > 0 ? (
                                 card.items.map((item) => (
-                                  <div 
-                                    key={item.id} 
-                                    className={`relative group rounded-lg p-2 transition-colors cursor-pointer ${
-                                      item.type === 'collection' 
-                                        ? 'bg-gradient-to-br from-purple-50 to-blue-50' 
-                                        : ''
-                                    }`}
-                                    onClick={() => {
-                                    if (item.type === 'collection') {
-                                      setCurrentCollection(item);
-                                      setCollectionPath([...collectionPath, item.id]);
-                                      setShowCollectionDialog(true);
-                                    }
-                                  }}
-                                  >
+                                      <div 
+                                        key={item.id} 
+                                        className={`relative group rounded-lg p-2 transition-colors cursor-pointer ${
+                                          item.type === 'collection' 
+                                            ? 'bg-gradient-to-br from-purple-50 to-blue-50' 
+                                            : ''
+                                        }`}
+                                        onClick={() => {
+                                          if (item.type === 'collection') {
+                                            setCurrentCollection(item);
+                                            setCollectionPath([...collectionPath, item.id]);
+                                            setShowCollectionDialog(true);
+                                          }
+                                        }}
+                                        data-onboarding="collection-item"
+                                      >
                                     <div className="flex flex-col items-center text-center space-y-2 h-full justify-center">
                                       <div className={`rounded-lg border flex items-center justify-center bg-white relative ${item.type === 'collection' ? 'shadow-lg' : ''}`} style={{ borderColor: space.borderColor, width: '100px', height: '100px', minHeight: '100px', maxHeight: '100px' }}>
                                         {/* Stack effect for collections */}
@@ -2676,6 +2961,13 @@ export default function DesignerPage() {
             </div>
           </DialogContent>
         </Dialog>
+        
+        {/* Onboarding Pointers */}
+        {showOnboarding && onboardingTour && (
+          <>
+            <OnboardingPointer step={onboardingTour.steps[currentOnboardingStep]} isVisible={true} />
+          </>
+        )}
       </div>
     </div>
   );
