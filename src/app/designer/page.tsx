@@ -1762,71 +1762,179 @@ export default function DesignerPage() {
     setDraggedCard(null);
   };
 
-  // Onboarding Pointer Component
+  // Enhanced Onboarding Component with Spotlight
   const OnboardingPointer = ({ step, isVisible }: { step: OnboardingStep; isVisible: boolean }) => {
     if (!isVisible || !onboardingTour) return null;
 
     const currentStep = onboardingTour.steps[currentOnboardingStep];
     if (currentStep.id !== step.id) return null;
 
+    const [targetElement, setTargetElement] = useState<HTMLElement | null>(null);
+    const [spotlightStyle, setSpotlightStyle] = useState<React.CSSProperties>({});
+
+    useEffect(() => {
+      const element = document.querySelector(currentStep.target) as HTMLElement;
+      if (element) {
+        setTargetElement(element);
+        const rect = element.getBoundingClientRect();
+        const padding = 8; // Add some padding around the highlighted element
+        
+        setSpotlightStyle({
+          position: 'fixed',
+          top: rect.top - padding,
+          left: rect.left - padding,
+          width: rect.width + (padding * 2),
+          height: rect.height + (padding * 2),
+          borderRadius: '8px',
+          border: '2px solid #3b82f6',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.75), 0 0 20px rgba(59, 130, 246, 0.5)',
+          zIndex: 1000,
+          pointerEvents: 'none',
+          transition: 'all 0.3s ease-in-out'
+        });
+      }
+    }, [currentStep.target, currentOnboardingStep]);
+
+    const getTooltipPosition = () => {
+      if (!targetElement) return { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' };
+      
+      const rect = targetElement.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      
+      // Determine position based on step preference and available space
+      let position = currentStep.position || 'bottom';
+      
+      // Adjust position if element is near edges
+      if (rect.right > viewportWidth - 300) position = 'left';
+      if (rect.left < 300) position = 'right';
+      if (rect.bottom > viewportHeight - 200) position = 'top';
+      
+      const tooltipWidth = 320;
+      const tooltipHeight = 200;
+      const offset = 20;
+      
+      switch (position) {
+        case 'top':
+          return {
+            top: rect.top - tooltipHeight - offset,
+            left: Math.max(20, Math.min(rect.left + rect.width/2 - tooltipWidth/2, viewportWidth - tooltipWidth - 20)),
+            transform: 'none'
+          };
+        case 'bottom':
+          return {
+            top: rect.bottom + offset,
+            left: Math.max(20, Math.min(rect.left + rect.width/2 - tooltipWidth/2, viewportWidth - tooltipWidth - 20)),
+            transform: 'none'
+          };
+        case 'left':
+          return {
+            top: Math.max(20, Math.min(rect.top + rect.height/2 - tooltipHeight/2, viewportHeight - tooltipHeight - 20)),
+            left: rect.left - tooltipWidth - offset,
+            transform: 'none'
+          };
+        case 'right':
+          return {
+            top: Math.max(20, Math.min(rect.top + rect.height/2 - tooltipHeight/2, viewportHeight - tooltipHeight - 20)),
+            left: rect.right + offset,
+            transform: 'none'
+          };
+        default:
+          return { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' };
+      }
+    };
+
+    const tooltipStyle = getTooltipPosition();
+
     return (
       <div className="fixed inset-0 z-50 pointer-events-none">
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-black bg-opacity-50 pointer-events-auto" />
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black bg-opacity-60 pointer-events-auto" />
         
-        {/* Pointer */}
-        <div className="absolute pointer-events-none" style={{
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)'
-        }}>
-          <div className="bg-white rounded-lg shadow-lg p-4 max-w-sm pointer-events-auto">
-            <div className="flex items-start justify-between mb-2">
-              <h3 className="font-semibold text-gray-900">{currentStep.title}</h3>
+        {/* Spotlight Effect */}
+        <div style={spotlightStyle} />
+        
+        {/* Tooltip */}
+        <div 
+          className="absolute bg-white rounded-xl shadow-2xl border border-gray-200 pointer-events-auto"
+          style={{
+            ...tooltipStyle,
+            width: '320px',
+            maxWidth: '90vw'
+          }}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 border-b border-gray-100">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <h3 className="font-semibold text-gray-900 text-lg">{currentStep.title}</h3>
+            </div>
+            <button
+              onClick={skipOnboarding}
+              className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          
+          {/* Content */}
+          <div className="p-4">
+            <p className="text-gray-700 text-sm leading-relaxed mb-4">{currentStep.description}</p>
+            
+            {/* Progress */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-2">
+                <span className="text-xs text-gray-500">
+                  Step {currentOnboardingStep + 1} of {onboardingTour.steps.length}
+                </span>
+              </div>
+              <div className="flex space-x-1">
+                {onboardingTour.steps.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`w-2 h-2 rounded-full ${
+                      index === currentOnboardingStep ? 'bg-blue-500' : 'bg-gray-300'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+            
+            {/* Actions */}
+            <div className="flex items-center justify-between">
               <button
                 onClick={skipOnboarding}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
               >
-                <X className="w-4 h-4" />
+                Skip Tour
               </button>
-            </div>
-            <p className="text-sm text-gray-600 mb-4">{currentStep.description}</p>
-            
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={previousOnboardingStep}
-                  disabled={currentOnboardingStep === 0}
-                  className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-50"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-                <span className="text-xs text-gray-500">
-                  {currentOnboardingStep + 1} of {onboardingTour.steps.length}
-                </span>
-                <button
-                  onClick={nextOnboardingStep}
-                  className="p-1 text-gray-400 hover:text-gray-600"
-                >
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
               
-              <div className="flex space-x-2">
-                {currentStep.skipable && (
+              <div className="flex items-center space-x-2">
+                {currentOnboardingStep > 0 && (
                   <button
-                    onClick={skipOnboarding}
-                    className="text-xs text-gray-500 hover:text-gray-700"
+                    onClick={previousOnboardingStep}
+                    className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors"
                   >
-                    Skip
+                    Previous
                   </button>
                 )}
-                <button
-                  onClick={nextOnboardingStep}
-                  className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
-                >
-                  {currentOnboardingStep === onboardingTour.steps.length - 1 ? 'Finish' : 'Next'}
-                </button>
+                
+                {currentOnboardingStep < onboardingTour.steps.length - 1 ? (
+                  <button
+                    onClick={nextOnboardingStep}
+                    className="px-4 py-1.5 text-sm bg-blue-500 text-white hover:bg-blue-600 rounded-md transition-colors"
+                  >
+                    Next
+                  </button>
+                ) : (
+                  <button
+                    onClick={completeOnboarding}
+                    className="px-4 py-1.5 text-sm bg-green-500 text-white hover:bg-green-600 rounded-md transition-colors"
+                  >
+                    Complete
+                  </button>
+                )}
               </div>
             </div>
           </div>
