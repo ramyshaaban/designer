@@ -5059,7 +5059,7 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
 
         {/* AI Designer Dialog */}
         <Dialog open={showAIDesigner} onOpenChange={setShowAIDesigner}>
-          <DialogContent className="max-w-2xl mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)] h-[80vh] flex flex-col relative">
+          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[90vh] !h-[90vh] flex flex-col !top-[5vh] !left-[2.5vw] !translate-x-0 !translate-y-0">
             {/* AI Magic Effect Overlay */}
             {isAiLoading && (
               <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
