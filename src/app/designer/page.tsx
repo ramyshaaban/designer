@@ -1843,48 +1843,52 @@ export default function DesignerPage() {
       <div className="fixed inset-0 z-50 pointer-events-none">
         {/* Dark Overlay - Top */}
         <div 
-          className="absolute bg-black bg-opacity-50 pointer-events-auto"
+          className="absolute pointer-events-auto"
           style={{
             top: 0,
             left: 0,
             right: 0,
             height: targetElement ? `${targetElement.getBoundingClientRect().top - 8}px` : '50%',
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
             zIndex: 9998
           }}
         />
         
         {/* Dark Overlay - Bottom */}
         <div 
-          className="absolute bg-black bg-opacity-50 pointer-events-auto"
+          className="absolute pointer-events-auto"
           style={{
             bottom: 0,
             left: 0,
             right: 0,
             height: targetElement ? `${window.innerHeight - targetElement.getBoundingClientRect().bottom - 8}px` : '50%',
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
             zIndex: 9998
           }}
         />
         
         {/* Dark Overlay - Left */}
         <div 
-          className="absolute bg-black bg-opacity-50 pointer-events-auto"
+          className="absolute pointer-events-auto"
           style={{
             top: targetElement ? `${targetElement.getBoundingClientRect().top - 8}px` : 0,
             left: 0,
             width: targetElement ? `${targetElement.getBoundingClientRect().left - 8}px` : '50%',
             height: targetElement ? `${targetElement.getBoundingClientRect().height + 16}px` : '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
             zIndex: 9998
           }}
         />
         
         {/* Dark Overlay - Right */}
         <div 
-          className="absolute bg-black bg-opacity-50 pointer-events-auto"
+          className="absolute pointer-events-auto"
           style={{
             top: targetElement ? `${targetElement.getBoundingClientRect().top - 8}px` : 0,
             right: 0,
             width: targetElement ? `${window.innerWidth - targetElement.getBoundingClientRect().right - 8}px` : '50%',
             height: targetElement ? `${targetElement.getBoundingClientRect().height + 16}px` : '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
             zIndex: 9998
           }}
         />
