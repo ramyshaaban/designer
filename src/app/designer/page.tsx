@@ -1818,7 +1818,7 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
       'external-link': ExternalLink,
       'menu-button': Menu
     };
-    return icons[type];
+    return icons[type] || FileText; // Fallback to FileText if type is not found
   };
 
   const getContentTypeEmoji = (type: ContentType) => {
@@ -3938,8 +3938,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
                                               typeof item.icon === 'string' ? 
                                                 <span className="text-2xl">{item.icon}</span> : 
                                                 typeof item.icon === 'object' && item.contentType ?
-                                                  React.createElement(getContentTypeIcon(item.contentType), { className: "w-8 h-8", style: { color: space.borderColor, strokeWidth: 1 } }) :
-                                                  <span className="text-2xl">📄</span>
+                                                  React.createElement(getContentTypeIcon(item.contentType) || FileText, { className: "w-8 h-8", style: { color: space.borderColor, strokeWidth: 1 } }) :
+                                                  <FileText className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} />
                                             }
                                           </div>
                                           {/* Item count inside container for collections */}
@@ -4187,8 +4187,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
                                         typeof item.icon === 'string' ? 
                                           <span className="text-2xl flex items-center justify-center">{item.icon}</span> : 
                                           typeof item.icon === 'object' && item.contentType ?
-                                            React.createElement(getContentTypeIcon(item.contentType), { className: "w-8 h-8", style: { color: space.borderColor, strokeWidth: 1 } }) :
-                                            <span className="text-2xl flex items-center justify-center">📄</span>
+                                            React.createElement(getContentTypeIcon(item.contentType) || FileText, { className: "w-8 h-8", style: { color: space.borderColor, strokeWidth: 1 } }) :
+                                            <FileText className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} />
                                       }
                                     </div>
                                     {/* Item count inside container for collections */}
@@ -4927,8 +4927,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
                                             typeof item.icon === 'string' ? 
                                               <span className="text-2xl">{item.icon}</span> : 
                                               typeof item.icon === 'object' && item.contentType ?
-                                                React.createElement(getContentTypeIcon(item.contentType), { className: "w-8 h-8", style: { color: space.borderColor, strokeWidth: 1 } }) :
-                                                <span className="text-2xl">📄</span>
+                                                React.createElement(getContentTypeIcon(item.contentType) || FileText, { className: "w-8 h-8", style: { color: space.borderColor, strokeWidth: 1 } }) :
+                                                <FileText className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} />
                                           }
                                         </div>
                                         {/* Item count inside container for collections */}
