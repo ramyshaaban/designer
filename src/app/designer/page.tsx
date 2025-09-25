@@ -1841,65 +1841,88 @@ export default function DesignerPage() {
 
     return (
       <div className="fixed inset-0 z-50 pointer-events-none">
-        {/* Dark Overlay - Top */}
+        {/* Dark Overlay with Rounded Cutout */}
         <div 
           className="absolute pointer-events-auto"
           style={{
             top: 0,
             left: 0,
             right: 0,
-            height: targetElement ? `${targetElement.getBoundingClientRect().top - 8}px` : '50%',
-            backgroundColor: 'rgba(0, 0, 0, 0.4)',
-            zIndex: 9998,
-            borderBottomLeftRadius: targetElement ? '12px' : '0px',
-            borderBottomRightRadius: targetElement ? '12px' : '0px'
-          }}
-        />
-        
-        {/* Dark Overlay - Bottom */}
-        <div 
-          className="absolute pointer-events-auto"
-          style={{
             bottom: 0,
-            left: 0,
-            right: 0,
-            height: targetElement ? `${window.innerHeight - targetElement.getBoundingClientRect().bottom - 8}px` : '50%',
             backgroundColor: 'rgba(0, 0, 0, 0.4)',
             zIndex: 9998,
-            borderTopLeftRadius: targetElement ? '12px' : '0px',
-            borderTopRightRadius: targetElement ? '12px' : '0px'
+            clipPath: targetElement ? `polygon(
+              0% 0%, 
+              0% 100%, 
+              ${targetElement.getBoundingClientRect().left - 8}px 100%, 
+              ${targetElement.getBoundingClientRect().left - 8}px ${targetElement.getBoundingClientRect().top - 8}px, 
+              ${targetElement.getBoundingClientRect().right + 8}px ${targetElement.getBoundingClientRect().top - 8}px, 
+              ${targetElement.getBoundingClientRect().right + 8}px ${targetElement.getBoundingClientRect().bottom + 8}px, 
+              ${targetElement.getBoundingClientRect().left - 8}px ${targetElement.getBoundingClientRect().bottom + 8}px, 
+              ${targetElement.getBoundingClientRect().left - 8}px 100%, 
+              100% 100%, 
+              100% 0%
+            )` : 'none'
           }}
         />
         
-        {/* Dark Overlay - Left */}
-        <div 
-          className="absolute pointer-events-auto"
-          style={{
-            top: targetElement ? `${targetElement.getBoundingClientRect().top - 8}px` : 0,
-            left: 0,
-            width: targetElement ? `${targetElement.getBoundingClientRect().left - 8}px` : '50%',
-            height: targetElement ? `${targetElement.getBoundingClientRect().height + 16}px` : '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.4)',
-            zIndex: 9998,
-            borderTopRightRadius: targetElement ? '12px' : '0px',
-            borderBottomRightRadius: targetElement ? '12px' : '0px'
-          }}
-        />
-        
-        {/* Dark Overlay - Right */}
-        <div 
-          className="absolute pointer-events-auto"
-          style={{
-            top: targetElement ? `${targetElement.getBoundingClientRect().top - 8}px` : 0,
-            right: 0,
-            width: targetElement ? `${window.innerWidth - targetElement.getBoundingClientRect().right - 8}px` : '50%',
-            height: targetElement ? `${targetElement.getBoundingClientRect().height + 16}px` : '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.4)',
-            zIndex: 9998,
-            borderTopLeftRadius: targetElement ? '12px' : '0px',
-            borderBottomLeftRadius: targetElement ? '12px' : '0px'
-          }}
-        />
+        {/* Rounded Corner Overlays */}
+        {targetElement && (
+          <>
+            {/* Top-left corner */}
+            <div 
+              className="absolute pointer-events-auto"
+              style={{
+                top: targetElement.getBoundingClientRect().top - 8,
+                left: targetElement.getBoundingClientRect().left - 8,
+                width: '12px',
+                height: '12px',
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                borderRadius: '12px 0 0 0',
+                zIndex: 9998
+              }}
+            />
+            {/* Top-right corner */}
+            <div 
+              className="absolute pointer-events-auto"
+              style={{
+                top: targetElement.getBoundingClientRect().top - 8,
+                right: window.innerWidth - targetElement.getBoundingClientRect().right - 8,
+                width: '12px',
+                height: '12px',
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                borderRadius: '0 12px 0 0',
+                zIndex: 9998
+              }}
+            />
+            {/* Bottom-left corner */}
+            <div 
+              className="absolute pointer-events-auto"
+              style={{
+                bottom: window.innerHeight - targetElement.getBoundingClientRect().bottom - 8,
+                left: targetElement.getBoundingClientRect().left - 8,
+                width: '12px',
+                height: '12px',
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                borderRadius: '0 0 0 12px',
+                zIndex: 9998
+              }}
+            />
+            {/* Bottom-right corner */}
+            <div 
+              className="absolute pointer-events-auto"
+              style={{
+                bottom: window.innerHeight - targetElement.getBoundingClientRect().bottom - 8,
+                right: window.innerWidth - targetElement.getBoundingClientRect().right - 8,
+                width: '12px',
+                height: '12px',
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                borderRadius: '0 0 12px 0',
+                zIndex: 9998
+              }}
+            />
+          </>
+        )}
         
         {/* Highlight Area */}
         {targetElement && (
