@@ -1774,27 +1774,52 @@ export default function DesignerPage() {
     const [spotlightStyle, setSpotlightStyle] = useState<React.CSSProperties>({});
 
     useEffect(() => {
-      const element = document.querySelector(currentStep.target) as HTMLElement;
-      if (element) {
-        setTargetElement(element);
-        const rect = element.getBoundingClientRect();
-        const padding = 8; // Add some padding around the highlighted element
-        
-        setSpotlightStyle({
-          position: 'fixed',
-          top: rect.top - padding,
-          left: rect.left - padding,
-          width: rect.width + (padding * 2),
-          height: rect.height + (padding * 2),
-          borderRadius: '8px',
-          border: '2px solid #3b82f6',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+      // Add a small delay to ensure DOM elements are fully rendered
+      const timer = setTimeout(() => {
+        const element = document.querySelector(currentStep.target) as HTMLElement;
+        if (element) {
+          setTargetElement(element);
+          const rect = element.getBoundingClientRect();
+          const padding = 8; // Add some padding around the highlighted element
+          
+          console.log('Highlighting element:', currentStep.target, 'Rect:', rect);
+          
+          setSpotlightStyle({
+            position: 'fixed',
+            top: rect.top - padding,
+            left: rect.left - padding,
+            width: rect.width + (padding * 2),
+            height: rect.height + (padding * 2),
+            borderRadius: '8px',
+            border: '2px solid #3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
           boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.75), 0 0 20px rgba(59, 130, 246, 0.5)',
-          zIndex: 1000,
+          zIndex: 9999,
           pointerEvents: 'none',
-          transition: 'all 0.3s ease-in-out'
-        });
-      }
+            transition: 'all 0.3s ease-in-out'
+          });
+        } else {
+          console.warn('Element not found for target:', currentStep.target);
+          // Fallback: center the spotlight
+          setSpotlightStyle({
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            width: '200px',
+            height: '100px',
+            borderRadius: '8px',
+            border: '2px solid #3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.75), 0 0 20px rgba(59, 130, 246, 0.5)',
+          zIndex: 9999,
+          pointerEvents: 'none',
+            transform: 'translate(-50%, -50%)',
+            transition: 'all 0.3s ease-in-out'
+          });
+        }
+      }, 100); // 100ms delay
+
+      return () => clearTimeout(timer);
     }, [currentStep.target, currentOnboardingStep]);
 
     const getTooltipPosition = () => {
