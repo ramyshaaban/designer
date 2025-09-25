@@ -2249,14 +2249,14 @@ export default function DesignerPage() {
                     <img 
                       src="https://ptp.yox.mybluehost.me/lab/SCMD.png" 
                       alt="SCMD Icon" 
-                      className="w-16 h-16 object-contain"
+                      className="w-32 h-32 object-contain"
                       onError={(e) => {
                         // Fallback to stethoscope icon if image fails to load
                         e.currentTarget.style.display = 'none';
                         e.currentTarget.nextElementSibling.style.display = 'block';
                       }}
                     />
-                    <Stethoscope className="w-16 h-16 text-gray-400 hidden" />
+                    <Stethoscope className="w-32 h-32 text-gray-400 hidden" />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Your Space is Empty</h3>
                   <p className="text-gray-600 mb-6">Start building your space by adding your first card or using a template.</p>
@@ -2632,14 +2632,14 @@ export default function DesignerPage() {
                     <img 
                       src="https://ptp.yox.mybluehost.me/lab/SCMD.png" 
                       alt="SCMD Icon" 
-                      className="w-16 h-16 object-contain"
+                      className="w-32 h-32 object-contain"
                       onError={(e) => {
                         // Fallback to stethoscope icon if image fails to load
                         e.currentTarget.style.display = 'none';
                         e.currentTarget.nextElementSibling.style.display = 'block';
                       }}
                     />
-                    <Stethoscope className="w-16 h-16 text-gray-400 hidden" />
+                    <Stethoscope className="w-32 h-32 text-gray-400 hidden" />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Space is Empty</h3>
                   <p className="text-gray-600">Switch to Design Mode to start building your space.</p>
