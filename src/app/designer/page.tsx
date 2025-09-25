@@ -379,9 +379,438 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
   };
 
   const applyAISuggestion = (suggestion: string) => {
-    // This function would parse AI suggestions and apply them to the space
     console.log('Applying AI suggestion:', suggestion);
-    // Implementation would depend on the specific suggestion type
+    
+    // Parse AI suggestions and create elements based on context
+    if (aiContext.location === 'space') {
+      // Generate space-level templates
+      if (suggestion.toLowerCase().includes('emergency') || suggestion.toLowerCase().includes('trauma')) {
+        createEmergencyMedicineTemplate();
+      } else if (suggestion.toLowerCase().includes('surgery') || suggestion.toLowerCase().includes('surgical')) {
+        createSurgeryTemplate();
+      } else if (suggestion.toLowerCase().includes('cardiology') || suggestion.toLowerCase().includes('heart')) {
+        createCardiologyTemplate();
+      } else if (suggestion.toLowerCase().includes('pediatrics') || suggestion.toLowerCase().includes('pediatric')) {
+        createPediatricsTemplate();
+      } else if (suggestion.toLowerCase().includes('neurology') || suggestion.toLowerCase().includes('brain')) {
+        createNeurologyTemplate();
+      } else {
+        // Default medical education template
+        createDefaultMedicalTemplate();
+      }
+    } else if (aiContext.location === 'card') {
+      // Generate content for specific card
+      generateCardContent(aiContext.targetId!, suggestion);
+    } else if (aiContext.location === 'collection') {
+      // Generate collection templates
+      generateCollectionTemplate(aiContext.targetId!, suggestion);
+    }
+  };
+
+  // Template creation functions
+  const createEmergencyMedicineTemplate = () => {
+    const emergencyCards = [
+      {
+        id: `emergency-${Date.now()}-1`,
+        title: 'Triage Protocols',
+        description: 'Emergency triage guidelines and protocols',
+        color: '#ef4444',
+        order: space.cards.length,
+        items: [
+          {
+            id: `emergency-item-${Date.now()}-1`,
+            type: 'content' as const,
+            title: 'ESI Triage System',
+            description: 'Emergency Severity Index triage guidelines',
+            contentType: 'guideline' as const,
+            icon: ClipboardList as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            id: `emergency-item-${Date.now()}-2`,
+            type: 'content' as const,
+            title: 'Trauma Triage Protocol',
+            description: 'Step-by-step trauma triage procedures',
+            contentType: 'video' as const,
+            icon: PlayCircle as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isExpanded: false
+      },
+      {
+        id: `emergency-${Date.now()}-2`,
+        title: 'Critical Care Procedures',
+        description: 'Essential emergency procedures and techniques',
+        color: '#dc2626',
+        order: space.cards.length + 1,
+        items: [
+          {
+            id: `emergency-item-${Date.now()}-3`,
+            type: 'content' as const,
+            title: 'Airway Management',
+            description: 'Emergency airway techniques and protocols',
+            contentType: 'video' as const,
+            icon: PlayCircle as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            id: `emergency-item-${Date.now()}-4`,
+            type: 'content' as const,
+            title: 'Shock Management',
+            description: 'Recognition and treatment of shock states',
+            contentType: 'article' as const,
+            icon: Newspaper as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ];
+
+    setSpace(prev => ({
+      ...prev,
+      cards: [...prev.cards, ...emergencyCards]
+    }));
+  };
+
+  const createSurgeryTemplate = () => {
+    const surgeryCards = [
+      {
+        id: `surgery-${Date.now()}-1`,
+        title: 'Preoperative Assessment',
+        description: 'Pre-surgical evaluation and preparation',
+        color: '#059669',
+        order: space.cards.length,
+        items: [
+          {
+            id: `surgery-item-${Date.now()}-1`,
+            type: 'content' as const,
+            title: 'Pre-op Checklist',
+            description: 'Comprehensive preoperative checklist',
+            contentType: 'guideline' as const,
+            icon: ClipboardList as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            id: `surgery-item-${Date.now()}-2`,
+            type: 'content' as const,
+            title: 'Risk Assessment',
+            description: 'Surgical risk evaluation protocols',
+            contentType: 'article' as const,
+            icon: Newspaper as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isExpanded: false
+      },
+      {
+        id: `surgery-${Date.now()}-2`,
+        title: 'Surgical Techniques',
+        description: 'Core surgical procedures and methods',
+        color: '#047857',
+        order: space.cards.length + 1,
+        items: [
+          {
+            id: `surgery-item-${Date.now()}-3`,
+            type: 'content' as const,
+            title: 'Laparoscopic Techniques',
+            description: 'Minimally invasive surgical procedures',
+            contentType: 'video' as const,
+            icon: PlayCircle as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            id: `surgery-item-${Date.now()}-4`,
+            type: 'content' as const,
+            title: 'Suture Techniques',
+            description: 'Essential suturing methods and materials',
+            contentType: 'video' as const,
+            icon: PlayCircle as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ];
+
+    setSpace(prev => ({
+      ...prev,
+      cards: [...prev.cards, ...surgeryCards]
+    }));
+  };
+
+  const createCardiologyTemplate = () => {
+    const cardiologyCards = [
+      {
+        id: `cardio-${Date.now()}-1`,
+        title: 'ECG Interpretation',
+        description: 'Electrocardiogram reading and analysis',
+        color: '#dc2626',
+        order: space.cards.length,
+        items: [
+          {
+            id: `cardio-item-${Date.now()}-1`,
+            type: 'content' as const,
+            title: 'Basic ECG Patterns',
+            description: 'Fundamental ECG waveform interpretation',
+            contentType: 'infographic' as const,
+            icon: BarChart3 as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            id: `cardio-item-${Date.now()}-2`,
+            type: 'content' as const,
+            title: 'Arrhythmia Recognition',
+            description: 'Identifying common cardiac arrhythmias',
+            contentType: 'video' as const,
+            icon: PlayCircle as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ];
+
+    setSpace(prev => ({
+      ...prev,
+      cards: [...prev.cards, ...cardiologyCards]
+    }));
+  };
+
+  const createPediatricsTemplate = () => {
+    const pediatricsCards = [
+      {
+        id: `peds-${Date.now()}-1`,
+        title: 'Growth & Development',
+        description: 'Pediatric growth charts and milestones',
+        color: '#f59e0b',
+        order: space.cards.length,
+        items: [
+          {
+            id: `peds-item-${Date.now()}-1`,
+            type: 'content' as const,
+            title: 'Growth Charts',
+            description: 'WHO and CDC growth reference charts',
+            contentType: 'infographic' as const,
+            icon: BarChart3 as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            id: `peds-item-${Date.now()}-2`,
+            type: 'content' as const,
+            title: 'Developmental Milestones',
+            description: 'Key developmental stages and markers',
+            contentType: 'guideline' as const,
+            icon: ClipboardList as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ];
+
+    setSpace(prev => ({
+      ...prev,
+      cards: [...prev.cards, ...pediatricsCards]
+    }));
+  };
+
+  const createNeurologyTemplate = () => {
+    const neurologyCards = [
+      {
+        id: `neuro-${Date.now()}-1`,
+        title: 'Neurological Examination',
+        description: 'Comprehensive neurological assessment',
+        color: '#7c3aed',
+        order: space.cards.length,
+        items: [
+          {
+            id: `neuro-item-${Date.now()}-1`,
+            type: 'content' as const,
+            title: 'Cranial Nerve Exam',
+            description: 'Systematic cranial nerve assessment',
+            contentType: 'video' as const,
+            icon: PlayCircle as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            id: `neuro-item-${Date.now()}-2`,
+            type: 'content' as const,
+            title: 'Motor Function Assessment',
+            description: 'Motor strength and coordination testing',
+            contentType: 'article' as const,
+            icon: Newspaper as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ];
+
+    setSpace(prev => ({
+      ...prev,
+      cards: [...prev.cards, ...neurologyCards]
+    }));
+  };
+
+  const createDefaultMedicalTemplate = () => {
+    const defaultCards = [
+      {
+        id: `default-${Date.now()}-1`,
+        title: 'Clinical Guidelines',
+        description: 'Evidence-based clinical practice guidelines',
+        color: '#3b82f6',
+        order: space.cards.length,
+        items: [
+          {
+            id: `default-item-${Date.now()}-1`,
+            type: 'content' as const,
+            title: 'Treatment Protocols',
+            description: 'Standard treatment protocols and procedures',
+            contentType: 'guideline' as const,
+            icon: ClipboardList as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isExpanded: false
+      },
+      {
+        id: `default-${Date.now()}-2`,
+        title: 'Educational Resources',
+        description: 'Learning materials and study resources',
+        color: '#6366f1',
+        order: space.cards.length + 1,
+        items: [
+          {
+            id: `default-item-${Date.now()}-2`,
+            type: 'content' as const,
+            title: 'Case Studies',
+            description: 'Clinical case studies and analysis',
+            contentType: 'article' as const,
+            icon: Newspaper as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ];
+
+    setSpace(prev => ({
+      ...prev,
+      cards: [...prev.cards, ...defaultCards]
+    }));
+  };
+
+  const generateCardContent = (cardId: string, suggestion: string) => {
+    const card = space.cards.find(c => c.id === cardId);
+    if (!card) return;
+
+    // Generate content based on suggestion keywords
+    const newItems: ContentItem[] = [];
+    
+    if (suggestion.toLowerCase().includes('video')) {
+      newItems.push({
+        id: `ai-content-${Date.now()}-1`,
+        type: 'content',
+        title: 'Educational Video',
+        description: 'AI-generated video content suggestion',
+        contentType: 'video',
+        icon: PlayCircle as any,
+        isPublic: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+    }
+    
+    if (suggestion.toLowerCase().includes('article') || suggestion.toLowerCase().includes('document')) {
+      newItems.push({
+        id: `ai-content-${Date.now()}-2`,
+        type: 'content',
+        title: 'Research Article',
+        description: 'AI-generated article content suggestion',
+        contentType: 'article',
+        icon: Newspaper as any,
+        isPublic: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+    }
+    
+    if (suggestion.toLowerCase().includes('guideline') || suggestion.toLowerCase().includes('protocol')) {
+      newItems.push({
+        id: `ai-content-${Date.now()}-3`,
+        type: 'content',
+        title: 'Clinical Guideline',
+        description: 'AI-generated guideline content suggestion',
+        contentType: 'guideline',
+        icon: ClipboardList as any,
+        isPublic: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+    }
+
+    if (newItems.length > 0) {
+      setSpace(prev => ({
+        ...prev,
+        cards: prev.cards.map(c => 
+          c.id === cardId 
+            ? { ...c, items: [...c.items, ...newItems] }
+            : c
+        )
+      }));
+    }
+  };
+
+  const generateCollectionTemplate = (collectionId: string, suggestion: string) => {
+    // This would generate cards within a collection
+    // Implementation depends on collection structure
+    console.log('Generating collection template for:', collectionId, suggestion);
   };
 
   // Manual save function instead of automatic saving
@@ -4017,41 +4446,56 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
               </div>
             </DialogHeader>
             
-            {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50">
-              {aiMessages.map((message) => (
+          {/* Chat Messages */}
+          <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50">
+            {aiMessages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
                 <div
-                  key={message.id}
-                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`max-w-[80%] p-3 rounded-lg ${
+                    message.role === 'user'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-white border border-gray-200'
+                  }`}
                 >
-                  <div
-                    className={`max-w-[80%] p-3 rounded-lg ${
-                      message.role === 'user'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-white border border-gray-200'
-                    }`}
-                  >
-                    <div className="whitespace-pre-wrap text-sm">{message.content}</div>
-                    <div className={`text-xs mt-1 ${
-                      message.role === 'user' ? 'text-blue-100' : 'text-gray-500'
-                    }`}>
-                      {message.timestamp.toLocaleTimeString()}
+                  <div className="whitespace-pre-wrap text-sm">{message.content}</div>
+                  <div className={`text-xs mt-1 ${
+                    message.role === 'user' ? 'text-blue-100' : 'text-gray-500'
+                  }`}>
+                    {message.timestamp.toLocaleTimeString()}
+                  </div>
+                  
+                  {/* Apply Suggestion Button for AI messages */}
+                  {message.role === 'assistant' && message.id !== 'welcome' && (
+                    <div className="mt-3 pt-2 border-t border-gray-200">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => applyAISuggestion(message.content)}
+                        className="w-full bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border border-purple-200 text-purple-700"
+                      >
+                        <Star className="w-4 h-4 mr-2" />
+                        Apply This Suggestion
+                      </Button>
                     </div>
+                  )}
+                </div>
+              </div>
+            ))}
+            
+            {isAiLoading && (
+              <div className="flex justify-start">
+                <div className="bg-white border border-gray-200 p-3 rounded-lg">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                    AI is thinking...
                   </div>
                 </div>
-              ))}
-              
-              {isAiLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-white border border-gray-200 p-3 rounded-lg">
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
-                      AI is thinking...
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
+          </div>
             
             {/* Input Area */}
             <div className="flex gap-2 p-4 border-t">
@@ -4077,48 +4521,107 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
               </Button>
             </div>
             
-            {/* Quick Actions */}
-            <div className="p-4 border-t bg-gray-50">
-              <div className="text-sm font-medium text-gray-700 mb-2">Quick Actions:</div>
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => sendAIMessage("Suggest card types for emergency medicine")}
-                  disabled={isAiLoading}
-                  className="text-xs"
-                >
-                  🏥 Emergency Cards
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => sendAIMessage("Create a surgery template")}
-                  disabled={isAiLoading}
-                  className="text-xs"
-                >
-                  🔬 Surgery Template
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => sendAIMessage("Suggest collections for medical students")}
-                  disabled={isAiLoading}
-                  className="text-xs"
-                >
-                  📚 Student Collections
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => sendAIMessage("Help me organize my content")}
-                  disabled={isAiLoading}
-                  className="text-xs"
-                >
-                  🗂️ Organize Content
-                </Button>
-              </div>
+          {/* Quick Actions */}
+          <div className="p-4 border-t bg-gray-50">
+            <div className="text-sm font-medium text-gray-700 mb-2">Quick Actions:</div>
+            <div className="flex flex-wrap gap-2">
+              {aiContext.location === 'space' && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => sendAIMessage("Create an emergency medicine template with triage protocols and critical care procedures")}
+                    disabled={isAiLoading}
+                    className="text-xs"
+                  >
+                    🏥 Emergency Medicine
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => sendAIMessage("Create a surgery template with preoperative assessment and surgical techniques")}
+                    disabled={isAiLoading}
+                    className="text-xs"
+                  >
+                    🔬 Surgery Template
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => sendAIMessage("Create a cardiology template with ECG interpretation and arrhythmia recognition")}
+                    disabled={isAiLoading}
+                    className="text-xs"
+                  >
+                    ❤️ Cardiology Template
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => sendAIMessage("Create a pediatrics template with growth charts and developmental milestones")}
+                    disabled={isAiLoading}
+                    className="text-xs"
+                  >
+                    👶 Pediatrics Template
+                  </Button>
+                </>
+              )}
+              
+              {aiContext.location === 'card' && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => sendAIMessage("Add video content for surgical procedures and patient consultations")}
+                    disabled={isAiLoading}
+                    className="text-xs"
+                  >
+                    📹 Video Content
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => sendAIMessage("Add article content with guidelines and protocols")}
+                    disabled={isAiLoading}
+                    className="text-xs"
+                  >
+                    📄 Article Content
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => sendAIMessage("Add infographic content for visual learning")}
+                    disabled={isAiLoading}
+                    className="text-xs"
+                  >
+                    📊 Infographic Content
+                  </Button>
+                </>
+              )}
+              
+              {aiContext.location === 'collection' && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => sendAIMessage("Create cards for learning objectives and assessment")}
+                    disabled={isAiLoading}
+                    className="text-xs"
+                  >
+                    🎯 Learning Cards
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => sendAIMessage("Create cards for case studies and interactive scenarios")}
+                    disabled={isAiLoading}
+                    className="text-xs"
+                  >
+                    📚 Case Study Cards
+                  </Button>
+                </>
+              )}
             </div>
+          </div>
           </DialogContent>
         </Dialog>
 
