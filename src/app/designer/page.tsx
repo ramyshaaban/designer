@@ -1446,7 +1446,6 @@ export default function DesignerPage() {
         setSpace(version.space);
         setCurrentVersionId(version.id); // Set the current version ID
         console.log('Loaded version by slug:', version.name, 'Slug:', slug);
-        alert(`Version "${version.name}" loaded successfully! Changes will be saved to this version.`);
       } else {
         console.log('Version not found for slug:', slug);
         // If no version found, continue with default space
@@ -1466,7 +1465,6 @@ export default function DesignerPage() {
         setSpace(version.space);
         setCurrentVersionId(versionId); // Set the current version ID
         console.log('Loaded version:', version.name, 'ID:', versionId);
-        alert(`Version "${version.name}" loaded successfully! Changes will be saved to this version.`);
       } else {
         alert('Version not found');
       }
