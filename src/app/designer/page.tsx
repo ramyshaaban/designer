@@ -1350,15 +1350,6 @@ export default function DesignerPage() {
                   {space.name}
                 </h1>
               )}
-              
-              {/* Version Indicator */}
-              {currentVersionId && (
-                <div className="flex items-center justify-center mt-2">
-                  <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                    📁 Working on Version
-                  </div>
-                </div>
-              )}
             </div>
           </div>
           
