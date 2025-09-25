@@ -952,6 +952,7 @@ export default function DesignerPage() {
     console.log('Toggling card expansion for:', cardId);
     console.log('Current collection:', currentCollection);
     console.log('Current space cards:', space.cards);
+    console.log('Current mode:', isDesignMode ? 'Design' : 'Production');
     
     if (currentCollection) {
       console.log('Toggling collection card expansion');
@@ -959,7 +960,7 @@ export default function DesignerPage() {
         ...currentCollection,
         children: currentCollection.children?.map(card => {
           if (card.id === cardId) {
-            console.log('Found card to toggle:', card, 'Current isExpanded:', card.isExpanded);
+            console.log('Found collection card to toggle:', card, 'Current isExpanded:', card.isExpanded);
             return { ...card, isExpanded: !card.isExpanded, updatedAt: new Date() };
           }
           return card;
@@ -968,11 +969,17 @@ export default function DesignerPage() {
     } else {
       console.log('Toggling main space card expansion');
       // Toggle expansion for main space cards
+      const updatedCards = space.cards.map(card => {
+        if (card.id === cardId) {
+          console.log('Found main space card to toggle:', card, 'Current isExpanded:', card.isExpanded);
+          return { ...card, isExpanded: !card.isExpanded, updatedAt: new Date() };
+        }
+        return card;
+      });
+      console.log('Updated cards:', updatedCards);
       setSpace({
         ...space,
-        cards: space.cards.map(card => 
-          card.id === cardId ? { ...card, isExpanded: !card.isExpanded, updatedAt: new Date() } : card
-        )
+        cards: updatedCards
       });
     }
   };
