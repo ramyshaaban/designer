@@ -224,11 +224,28 @@ export default function DesignerPage() {
       let welcomeMessage = '';
       
       if (context.location === 'space') {
+        // Context-aware welcome message based on space state
+        const hasCards = space.cards.length > 0;
+        const hasDescription = space.description && space.description.trim() !== '';
+        const spaceContext = hasCards ? 
+          `I can see you already have ${space.cards.length} cards in your space.` : 
+          'I can see this is a new, empty space.';
+        
+        const missingInfo = [];
+        if (!hasDescription) missingInfo.push('space description');
+        if (!hasCards) missingInfo.push('specific medical specialty or target audience');
+        
+        const contextPrompt = missingInfo.length > 0 ? 
+          `To provide the best suggestions, I'd love to know more about your ${missingInfo.join(' and ')}.` :
+          'I can help you enhance your existing space or add new content.';
+        
         welcomeMessage = `Hello! I'm your AI Design Assistant for your medical education space "${space.name}". 
+
+${spaceContext} ${contextPrompt}
 
 I can help you create amazing content by suggesting:
 
-🎯 **Card Templates**: Pre-built card structures for different medical specialties
+🎯 **Space Organization**: 4-6 space cards that organize your hospital space logically (e.g., "Featured Content", "Featured Categories", "Other Resources", "Residents Resources")
 📚 **Content Ideas**: Specific content suggestions for your cards
 🗂️ **Collection Templates**: Organized content collections with suggested cards
 🎨 **Creative Ideas**: Custom suggestions based on your specific needs
@@ -315,49 +332,40 @@ What kind of collection are you building? Tell me about the medical topic or lea
       try {
         const systemPrompt = `You are an AI Design Assistant for a medical education app called "StayCurrentMD Space Designer". 
 
-Current Context:
+**CURRENT SPACE CONTEXT:**
+- Space Name: "${space.name}"
+- Space Description: "${space.description || 'No description provided'}"
+- Space Color: ${space.color}
+- Current Cards: ${space.cards.length} cards
+- Current Collections: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'collection').length, 0)} collections
+- Total Content Items: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'content').length, 0)} items
+
+**CURRENT LOCATION:**
 - Location: ${aiContext.location}
 - Target: ${aiContext.targetTitle || 'Main Space'}
-- Space Name: ${space.name}
 
-Your role is to help users create comprehensive medical education content by suggesting:
+**IMPORTANT DISTINCTIONS:**
+1. **SPACE CARDS** = Organizing units for the hospital space (e.g., "Featured Content", "Featured Categories", "Other Resources", "Residents Resources")
+2. **COLLECTION CARDS** = Important categorization within a specific topic/collection (e.g., "Topic Overview", "Workup Algorithm", "Technique Videos")
 
-1. **Detailed Card Templates**: Specific card structures for medical specialties and conditions
-2. **Clinical Decision Making**: Cards for diagnostic algorithms, treatment protocols, and clinical pathways
-3. **Educational Content**: Cards for learning materials, case studies, and assessments
-4. **Patient Care**: Cards for patient education, family counseling, and follow-up care
+**YOUR ROLE:**
+Help users create comprehensive medical education content by suggesting:
 
-**MEDICAL TEMPLATE GUIDELINES:**
-When suggesting templates for specific medical conditions or specialties, provide detailed card suggestions such as:
+1. **Space-Level Organization**: Suggest 4-6 space cards that organize the hospital space logically
+2. **Collection-Level Structure**: Suggest 4-6 collection cards that categorize content within a specific medical topic
+3. **Content Suggestions**: Specific content items for each card
+4. **Context-Aware Design**: Analyze the current space and suggest improvements
 
-**For Clinical Decision Making Templates:**
-- Topic Overview (disease/condition introduction)
-- Workup Algorithm (diagnostic pathway)
-- Preoperative Planning (if surgical)
-- Technique Videos (procedural demonstrations)
-- Postoperative Care (recovery protocols)
-- Patient Education Materials (family resources)
-- Key Articles (evidence-based literature)
-- Assessment Tools (knowledge checks)
-- Case Studies (clinical scenarios)
-- Complications Management (adverse events)
-
-**For Specialty-Specific Templates:**
-- Core Concepts (fundamental knowledge)
-- Diagnostic Criteria (assessment guidelines)
-- Treatment Protocols (therapeutic approaches)
-- Monitoring Guidelines (follow-up care)
-- Patient Counseling (communication tools)
-- Quality Metrics (outcome measures)
-
-**RESPONSE FORMAT:**
-- Provide specific, actionable card suggestions
-- Include detailed descriptions for each card
-- Suggest realistic content that would be valuable for medical professionals
-- Be encouraging and helpful
+**RESPONSE GUIDELINES:**
+- Always suggest AT LEAST 4 cards for any template
+- Differentiate between space cards (organizing units) and collection cards (topic categorization)
+- Ask for missing information if space context is incomplete
+- Provide specific, actionable suggestions
 - Use medical terminology appropriately
-- Ask clarifying questions about target audience (residents, fellows, attendings)
-- Suggest content types (videos, articles, guidelines, interactive content)
+- Be encouraging and helpful
+
+**CONTEXT ANALYSIS:**
+${space.cards.length === 0 ? 'This is a new, empty space. Ask about the medical specialty, target audience, and learning goals.' : `This space has existing content. Analyze the current structure and suggest improvements or additions.`}
 
 Current context: The user is working on ${aiContext.location === 'space' ? 'the main space' : aiContext.location === 'card' ? `the "${aiContext.targetTitle}" card` : `the "${aiContext.targetTitle}" collection`} and needs help with content creation.`;
 
@@ -519,6 +527,80 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
         createdAt: new Date(),
         updatedAt: new Date(),
         order: 0,
+        isExpanded: false
+      },
+      {
+        id: `emergency-${Date.now()}-3`,
+        title: 'Other Resources',
+        description: 'Additional emergency medicine tools and references',
+        color: '#eab308',
+        order: space.cards.length + 2,
+        items: [
+          {
+            id: `emergency-item-${Date.now()}-5`,
+            type: 'content' as const,
+            title: 'Drug Dosing Calculator',
+            description: 'Emergency medication dosing and calculations',
+            contentType: 'interactive' as const,
+            icon: Gamepad2 as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          },
+          {
+            id: `emergency-item-${Date.now()}-6`,
+            type: 'content' as const,
+            title: 'Emergency Guidelines',
+            description: 'Latest emergency medicine guidelines and protocols',
+            contentType: 'guideline' as const,
+            icon: ClipboardList as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 1
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        order: 2,
+        isExpanded: false
+      },
+      {
+        id: `emergency-${Date.now()}-4`,
+        title: 'Residents Resources',
+        description: 'Educational materials for emergency medicine residents',
+        color: '#22c55e',
+        order: space.cards.length + 3,
+        items: [
+          {
+            id: `emergency-item-${Date.now()}-7`,
+            type: 'content' as const,
+            title: 'Resident Handbook',
+            description: 'Comprehensive guide for emergency medicine residents',
+            contentType: 'document' as const,
+            icon: File as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          },
+          {
+            id: `emergency-item-${Date.now()}-8`,
+            type: 'content' as const,
+            title: 'Case Studies',
+            description: 'Real emergency medicine cases for learning',
+            contentType: 'article' as const,
+            icon: Newspaper as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 1
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        order: 3,
         isExpanded: false
       }
     ];
@@ -1353,57 +1435,149 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
     const collection = findCollectionInCards(space.cards);
     if (!collection || collection.type !== 'collection') return;
 
-    // Generate cards based on suggestion
+    // Generate collection cards based on suggestion (these are collection-level cards, not space cards)
     const newCards: CollectionCard[] = [];
     
     if (suggestion.toLowerCase().includes('neuroblastoma') || suggestion.toLowerCase().includes('pediatric') && suggestion.toLowerCase().includes('oncology')) {
-      // Create neuroblastoma-specific cards for the collection
-      newCards.push({
-        id: `collection-card-${Date.now()}-1`,
-        title: 'Topic Overview',
-        description: 'Comprehensive introduction to neuroblastoma',
-        color: '#8b5cf6',
-        order: collection.children?.length || 0,
-        items: [],
-        isExpanded: false,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      });
-      newCards.push({
-        id: `collection-card-${Date.now()}-2`,
-        title: 'Workup Algorithm',
-        description: 'Diagnostic pathway and staging workup',
-        color: '#06b6d4',
-        order: (collection.children?.length || 0) + 1,
-        items: [],
-        isExpanded: false,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      });
+      // Create neuroblastoma-specific collection cards
+      newCards.push(
+        {
+          id: `collection-card-${Date.now()}-1`,
+          title: 'Topic Overview',
+          description: 'Comprehensive introduction to neuroblastoma',
+          color: '#8b5cf6',
+          order: collection.children?.length || 0,
+          items: [],
+          isExpanded: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: `collection-card-${Date.now()}-2`,
+          title: 'Workup Algorithm',
+          description: 'Diagnostic pathway and staging workup',
+          color: '#06b6d4',
+          order: (collection.children?.length || 0) + 1,
+          items: [],
+          isExpanded: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: `collection-card-${Date.now()}-3`,
+          title: 'Preoperative Planning',
+          description: 'Surgical indications and assessment',
+          color: '#10b981',
+          order: (collection.children?.length || 0) + 2,
+          items: [],
+          isExpanded: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: `collection-card-${Date.now()}-4`,
+          title: 'Technique Videos',
+          description: 'Surgical procedures and demonstrations',
+          color: '#f59e0b',
+          order: (collection.children?.length || 0) + 3,
+          items: [],
+          isExpanded: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: `collection-card-${Date.now()}-5`,
+          title: 'Postoperative Care',
+          description: 'Recovery protocols and monitoring',
+          color: '#ef4444',
+          order: (collection.children?.length || 0) + 4,
+          items: [],
+          isExpanded: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: `collection-card-${Date.now()}-6`,
+          title: 'Patient Education Materials',
+          description: 'Family counseling and support resources',
+          color: '#8b5cf6',
+          order: (collection.children?.length || 0) + 5,
+          items: [],
+          isExpanded: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
+      );
     } else {
-      // Default collection cards
-      newCards.push({
-        id: `collection-card-${Date.now()}-1`,
-        title: 'Core Concepts',
-        description: 'Fundamental knowledge and principles',
-        color: '#3b82f6',
-        order: collection.children?.length || 0,
-        items: [],
-        isExpanded: false,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      });
-      newCards.push({
-        id: `collection-card-${Date.now()}-2`,
-        title: 'Case Studies',
-        description: 'Clinical scenarios and analysis',
-        color: '#10b981',
-        order: (collection.children?.length || 0) + 1,
-        items: [],
-        isExpanded: false,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      });
+      // Default collection cards for any medical topic
+      newCards.push(
+        {
+          id: `collection-card-${Date.now()}-1`,
+          title: 'Core Concepts',
+          description: 'Fundamental knowledge and principles',
+          color: '#3b82f6',
+          order: collection.children?.length || 0,
+          items: [],
+          isExpanded: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: `collection-card-${Date.now()}-2`,
+          title: 'Diagnostic Approach',
+          description: 'Assessment and diagnostic criteria',
+          color: '#10b981',
+          order: (collection.children?.length || 0) + 1,
+          items: [],
+          isExpanded: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: `collection-card-${Date.now()}-3`,
+          title: 'Treatment Protocols',
+          description: 'Therapeutic approaches and guidelines',
+          color: '#f59e0b',
+          order: (collection.children?.length || 0) + 2,
+          items: [],
+          isExpanded: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: `collection-card-${Date.now()}-4`,
+          title: 'Case Studies',
+          description: 'Clinical scenarios and analysis',
+          color: '#ef4444',
+          order: (collection.children?.length || 0) + 3,
+          items: [],
+          isExpanded: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: `collection-card-${Date.now()}-5`,
+          title: 'Assessment Tools',
+          description: 'Knowledge checks and evaluations',
+          color: '#8b5cf6',
+          order: (collection.children?.length || 0) + 4,
+          items: [],
+          isExpanded: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: `collection-card-${Date.now()}-6`,
+          title: 'Key Articles',
+          description: 'Evidence-based literature and research',
+          color: '#06b6d4',
+          order: (collection.children?.length || 0) + 5,
+          items: [],
+          isExpanded: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
+      );
     }
 
     // Update the collection with new cards
