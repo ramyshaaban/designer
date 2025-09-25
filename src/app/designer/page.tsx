@@ -1977,7 +1977,7 @@ export default function DesignerPage() {
                   
                   {/* Add Card Button */}
                   <Button
-                    onClick={() => hasPortalsCard() ? setShowAddCardDialog(true) : createPortalsCard()}
+                    onClick={() => setShowAddCardDialog(true)}
                     variant="outline"
                     className="w-full flex items-center gap-2 border hover:shadow-lg transition-all duration-200"
                     style={{ 
@@ -1987,8 +1987,25 @@ export default function DesignerPage() {
                     }}
                   >
                     <Plus className="w-4 h-4" />
-                    {hasPortalsCard() ? 'Add New Card' : 'Add Portals Card'}
+                    Add New Card
                   </Button>
+
+                  {/* Add Portals Card Button - Only show if no portals card exists */}
+                  {!hasPortalsCard() && (
+                    <Button
+                      onClick={() => createPortalsCard()}
+                      variant="outline"
+                      className="w-full flex items-center gap-2 border hover:shadow-lg transition-all duration-200"
+                      style={{ 
+                        backgroundColor: space.backgroundColor,
+                        borderColor: space.borderColor,
+                        color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
+                      }}
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add Portals Card
+                    </Button>
+                  )}
 
                   {/* Use Template Button */}
                   <Button
@@ -2074,7 +2091,6 @@ export default function DesignerPage() {
                                     <div 
                                       key={portal.id} 
                                       className="relative group rounded-full p-3 transition-colors cursor-pointer hover:shadow-lg"
-                                      style={{ backgroundColor: portal.spaceColor + '20' }}
                                     >
                                       <div className="flex flex-col items-center text-center space-y-2">
                                         <div 
@@ -2324,7 +2340,6 @@ export default function DesignerPage() {
                                 <div 
                                   key={portal.id} 
                                   className="relative group rounded-full p-3 transition-colors cursor-pointer hover:shadow-lg"
-                                  style={{ backgroundColor: portal.spaceColor + '20' }}
                                 >
                                   <div className="flex flex-col items-center text-center space-y-2">
                                     <div 
