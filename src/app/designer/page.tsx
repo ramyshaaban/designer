@@ -128,6 +128,22 @@ export default function DesignerPage() {
     }
   }, []);
 
+  // Load version from URL parameter
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const versionId = urlParams.get('version');
+      
+      if (versionId) {
+        console.log('Loading version from URL:', versionId);
+        loadVersion(versionId);
+      }
+      
+      // Load saved versions list
+      loadSavedVersions();
+    }
+  }, []);
+
   // Manual save function instead of automatic saving
   const saveSpaceData = async () => {
     setIsSaving(true);
@@ -168,6 +184,13 @@ export default function DesignerPage() {
   // Search states
   const [searchQuery, setSearchQuery] = useState("");
   const [collectionSearchQuery, setCollectionSearchQuery] = useState("");
+
+  // Versioning states
+  const [showVersionDialog, setShowVersionDialog] = useState(false);
+  const [versionName, setVersionName] = useState("");
+  const [versionDescription, setVersionDescription] = useState("");
+  const [savedVersions, setSavedVersions] = useState<Array<{id: string, name: string, description: string, timestamp: Date, url: string}>>([]);
+  const [isSavingVersion, setIsSavingVersion] = useState(false);
 
   // Form states
   const [newCardTitle, setNewCardTitle] = useState("");
@@ -862,6 +885,99 @@ export default function DesignerPage() {
     });
   };
 
+  // Versioning functions
+  const saveVersion = async () => {
+    if (!versionName.trim()) {
+      alert('Please enter a version name');
+      return;
+    }
+
+    setIsSavingVersion(true);
+    try {
+      // Generate a unique version ID
+      const versionId = `version-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Create version data
+      const versionData = {
+        id: versionId,
+        name: versionName.trim(),
+        description: versionDescription.trim(),
+        space: space,
+        timestamp: new Date().toISOString()
+      };
+
+      // Save to localStorage
+      const savedVersions = JSON.parse(localStorage.getItem('designer-versions') || '[]');
+      savedVersions.push(versionData);
+      localStorage.setItem('designer-versions', JSON.stringify(savedVersions));
+
+      // Generate shareable URL
+      const baseUrl = window.location.origin + window.location.pathname;
+      const versionUrl = `${baseUrl}?version=${versionId}`;
+
+      // Update saved versions list
+      setSavedVersions(prev => [...prev, {
+        id: versionId,
+        name: versionName.trim(),
+        description: versionDescription.trim(),
+        timestamp: new Date(),
+        url: versionUrl
+      }]);
+
+      // Show success message with copyable link
+      const shareText = `Version "${versionName.trim()}" saved! Share this link to continue working: ${versionUrl}`;
+      navigator.clipboard.writeText(versionUrl).then(() => {
+        alert(shareText);
+      }).catch(() => {
+        alert(shareText);
+      });
+
+      // Reset form
+      setVersionName("");
+      setVersionDescription("");
+      setShowVersionDialog(false);
+
+    } catch (error) {
+      console.error('Error saving version:', error);
+      alert('Error saving version: ' + (error as Error).message);
+    } finally {
+      setIsSavingVersion(false);
+    }
+  };
+
+  const loadVersion = (versionId: string) => {
+    try {
+      const savedVersions = JSON.parse(localStorage.getItem('designer-versions') || '[]');
+      const version = savedVersions.find((v: any) => v.id === versionId);
+      
+      if (version) {
+        setSpace(version.space);
+        alert(`Version "${version.name}" loaded successfully!`);
+      } else {
+        alert('Version not found');
+      }
+    } catch (error) {
+      console.error('Error loading version:', error);
+      alert('Error loading version: ' + (error as Error).message);
+    }
+  };
+
+  const loadSavedVersions = () => {
+    try {
+      const savedVersions = JSON.parse(localStorage.getItem('designer-versions') || '[]');
+      const versionsList = savedVersions.map((v: any) => ({
+        id: v.id,
+        name: v.name,
+        description: v.description,
+        timestamp: new Date(v.timestamp),
+        url: `${window.location.origin}${window.location.pathname}?version=${v.id}`
+      }));
+      setSavedVersions(versionsList);
+    } catch (error) {
+      console.error('Error loading saved versions:', error);
+    }
+  };
+
   const applyTemplate = (template: CardTemplate) => {
     const newCard: SpaceCard = {
       id: `card-${Date.now()}`,
@@ -1263,6 +1379,15 @@ export default function DesignerPage() {
                     Save
                   </>
                 )}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowVersionDialog(true)}
+                className="bg-transparent hover:bg-gray-100 border border-gray-300"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                Save Version
               </Button>
               <Button
                 variant="ghost"
@@ -2357,6 +2482,72 @@ export default function DesignerPage() {
               </Button>
               <Button variant="outline" onClick={() => setShowSpaceSettingsDialog(false)}>
                 Close
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Version Save Dialog */}
+        <Dialog open={showVersionDialog} onOpenChange={setShowVersionDialog}>
+          <DialogContent className="w-full max-w-[calc(100vw-2rem)]">
+            <DialogHeader>
+              <DialogTitle>Save Version</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium text-gray-700">Version Name *</label>
+                <Input
+                  placeholder="e.g., Medical Education v1.0"
+                  value={versionName}
+                  onChange={(e) => setVersionName(e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-700">Description (Optional)</label>
+                <Textarea
+                  placeholder="Describe this version..."
+                  value={versionDescription}
+                  onChange={(e) => setVersionDescription(e.target.value)}
+                  className="mt-1"
+                  rows={3}
+                />
+              </div>
+              <div className="bg-blue-50 p-3 rounded-lg">
+                <p className="text-sm text-blue-800">
+                  <strong>What happens when you save:</strong>
+                </p>
+                <ul className="text-sm text-blue-700 mt-1 space-y-1">
+                  <li>• Your current space will be saved as a version</li>
+                  <li>• You'll get a shareable link to continue working on this version</li>
+                  <li>• The link can be shared with others or bookmarked</li>
+                  <li>• You can create multiple versions of your space</li>
+                </ul>
+              </div>
+            </div>
+            <div className="flex justify-between gap-2 pt-4">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowVersionDialog(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={saveVersion}
+                disabled={!versionName.trim() || isSavingVersion}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                {isSavingVersion ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4 mr-2" />
+                    Save Version
+                  </>
+                )}
               </Button>
             </div>
           </DialogContent>
