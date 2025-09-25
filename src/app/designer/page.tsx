@@ -9,9 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { useState, useRef, useEffect } from "react";
 import React from "react";
-import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle, ChevronUp, ChevronDown, Share, Heart, Search, HelpCircle, ArrowRight, ArrowLeft } from "lucide-react";
+import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle, ChevronUp, ChevronDown, Share, Heart, Search, HelpCircle, ArrowRight, ArrowLeft, FileVideo, Headphones, File, BarChart3, ClipboardList, Newspaper, Gamepad2, Menu } from "lucide-react";
 
-type ContentType = 'video' | 'podcast' | 'infographic' | 'guideline' | 'article' | 'external-link';
+type ContentType = 'video' | 'podcast' | 'document' | 'infographic' | 'guideline' | 'article' | 'interactive-content' | 'external-link' | 'menu-button';
 
 type ContentItem = {
   id: string;
@@ -23,6 +23,7 @@ type ContentItem = {
   isPublic: boolean;
   fileUrl?: string; // For uploaded content
   externalUrl?: string; // For external links
+  menuButtonTarget?: string; // For menu buttons - ID of target content
   children?: CollectionCard[]; // For collections - use CollectionCard type
   order: number;
   createdAt: Date;
@@ -313,6 +314,9 @@ export default function DesignerPage() {
   const [newItemIsPublic, setNewItemIsPublic] = useState(true);
   const [newItemFileUrl, setNewItemFileUrl] = useState("");
   const [newItemExternalUrl, setNewItemExternalUrl] = useState("");
+  const [newItemMenuButtonTarget, setNewItemMenuButtonTarget] = useState("");
+  const [showMenuButtonSearch, setShowMenuButtonSearch] = useState(false);
+  const [menuButtonSearchQuery, setMenuButtonSearchQuery] = useState("");
 
   const dragRef = useRef<HTMLDivElement>(null);
 
@@ -321,10 +325,13 @@ export default function DesignerPage() {
     const icons = {
       video: PlayCircle,
       podcast: Mic,
-      infographic: Image,
-      guideline: FileText,
+      document: File,
+      infographic: BarChart3,
+      guideline: ClipboardList,
       article: BookOpen,
-      'external-link': ExternalLink
+      'interactive-content': Gamepad2,
+      'external-link': ExternalLink,
+      'menu-button': Menu
     };
     return icons[type];
   };
@@ -333,12 +340,47 @@ export default function DesignerPage() {
     const emojis = {
       video: "🎥",
       podcast: "🎙️",
+      document: "📄",
       infographic: "📊",
       guideline: "📋",
-      article: "📄",
-      'external-link': "🔗"
+      article: "📰",
+      'interactive-content': "🎮",
+      'external-link': "🔗",
+      'menu-button': "🔘"
     };
     return emojis[type];
+  };
+
+  // Helper function to get all content items for menu button search
+  const getAllContentItems = (): ContentItem[] => {
+    const allItems: ContentItem[] = [];
+    
+    // Add items from main space cards
+    space.cards.forEach(card => {
+      allItems.push(...card.items);
+    });
+    
+    // Add items from collections (recursively)
+    const addCollectionItems = (collection: ContentItem) => {
+      if (collection.type === 'collection' && collection.children) {
+        collection.children.forEach(card => {
+          allItems.push(...card.items);
+          // Recursively add items from subcollections
+          card.items.forEach(item => {
+            if (item.type === 'collection' && item.children) {
+              addCollectionItems(item);
+            }
+          });
+        });
+      }
+    };
+    
+    // Add items from current collection if we're in a collection
+    if (currentCollection) {
+      addCollectionItems(currentCollection);
+    }
+    
+    return allItems.filter(item => item.type === 'content');
   };
 
   // Card Templates
@@ -890,6 +932,7 @@ export default function DesignerPage() {
         setNewItemIsPublic(editingItem.isPublic || false);
         setNewItemExternalUrl(editingItem.externalUrl || '');
         setNewItemFileUrl(editingItem.fileUrl || '');
+        setNewItemMenuButtonTarget(editingItem.menuButtonTarget || '');
       }
     } else {
       // Reset form when not editing
@@ -1264,8 +1307,9 @@ export default function DesignerPage() {
         contentType: newItemType === "content" ? newItemContentType : undefined,
         icon: newItemType === "content" ? getContentTypeIcon(newItemContentType) : FolderOpen,
         isPublic: newItemIsPublic,
-        fileUrl: newItemType === "content" && newItemContentType !== 'external-link' ? newItemFileUrl : undefined,
+        fileUrl: newItemType === "content" && newItemContentType !== 'external-link' && newItemContentType !== 'menu-button' ? newItemFileUrl : undefined,
         externalUrl: newItemType === "content" && newItemContentType === 'external-link' ? newItemExternalUrl : undefined,
+        menuButtonTarget: newItemType === "content" && newItemContentType === 'menu-button' ? newItemMenuButtonTarget : undefined,
         children: newItemType === "collection" ? (editingItem?.children || []) : undefined,
         order: editingItem ? editingItem.order : 0,
         createdAt: editingItem ? editingItem.createdAt : new Date(),
@@ -1315,6 +1359,9 @@ export default function DesignerPage() {
       setNewItemIsPublic(true);
       setNewItemFileUrl("");
       setNewItemExternalUrl("");
+      setNewItemMenuButtonTarget("");
+      setShowMenuButtonSearch(false);
+      setMenuButtonSearchQuery("");
       setShowAddItemDialog(false);
       setCurrentCardId(null);
       setEditingItem(null);
@@ -2299,6 +2346,72 @@ export default function DesignerPage() {
           </DialogContent>
         </Dialog>
 
+        {/* Menu Button Search Dialog */}
+        <Dialog open={showMenuButtonSearch} onOpenChange={setShowMenuButtonSearch}>
+          <DialogContent className="max-w-md mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)]">
+            <DialogHeader>
+              <DialogTitle>Select Target Content</DialogTitle>
+              <p className="text-sm text-gray-600">Choose the content this menu button will link to</p>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Input
+                  placeholder="Search content..."
+                  value={menuButtonSearchQuery}
+                  onChange={(e) => setMenuButtonSearchQuery(e.target.value)}
+                />
+              </div>
+              <div className="max-h-60 overflow-y-auto space-y-2">
+                {getAllContentItems()
+                  .filter(item => 
+                    item.title.toLowerCase().includes(menuButtonSearchQuery.toLowerCase()) ||
+                    item.description.toLowerCase().includes(menuButtonSearchQuery.toLowerCase())
+                  )
+                  .map((item) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <div
+                        key={item.id}
+                        className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
+                        onClick={() => {
+                          setNewItemMenuButtonTarget(item.id);
+                          setShowMenuButtonSearch(false);
+                          setMenuButtonSearchQuery("");
+                        }}
+                      >
+                        <div className="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style={{ backgroundColor: `${item.contentType === 'menu-button' ? '#f3f4f6' : '#e5e7eb'}` }}>
+                          <IconComponent className="w-4 h-4" style={{ color: item.contentType === 'menu-button' ? '#6b7280' : '#374151' }} />
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-medium text-sm">{item.title}</div>
+                          <div className="text-xs text-gray-500">{item.description}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                {getAllContentItems().filter(item => 
+                  item.title.toLowerCase().includes(menuButtonSearchQuery.toLowerCase()) ||
+                  item.description.toLowerCase().includes(menuButtonSearchQuery.toLowerCase())
+                ).length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    <Search className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                    <p className="text-sm">No content found</p>
+                    <p className="text-xs">Try adjusting your search terms</p>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 pt-4 border-t">
+              <Button variant="outline" onClick={() => {
+                setShowMenuButtonSearch(false);
+                setMenuButtonSearchQuery("");
+              }}>
+                Cancel
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
         {/* Add Item Dialog */}
         <Dialog open={showAddItemDialog} onOpenChange={setShowAddItemDialog}>
           <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)]">
@@ -2352,10 +2465,13 @@ export default function DesignerPage() {
                       <SelectContent>
                         <SelectItem value="video">Video</SelectItem>
                         <SelectItem value="podcast">Podcast</SelectItem>
+                        <SelectItem value="document">Document</SelectItem>
                         <SelectItem value="infographic">Infographic</SelectItem>
                         <SelectItem value="guideline">Guideline</SelectItem>
                         <SelectItem value="article">Article</SelectItem>
+                        <SelectItem value="interactive-content">Interactive Content</SelectItem>
                         <SelectItem value="external-link">External Link</SelectItem>
+                        <SelectItem value="menu-button">Menu Button</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -2368,6 +2484,25 @@ export default function DesignerPage() {
                         value={newItemExternalUrl}
                         onChange={(e) => setNewItemExternalUrl(e.target.value)}
                       />
+                    </div>
+                  ) : newItemContentType === 'menu-button' ? (
+                    <div>
+                      <label className="text-sm font-medium">Target Content</label>
+                      <div className="space-y-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => setShowMenuButtonSearch(true)}
+                          className="w-full justify-start"
+                        >
+                          <Search className="w-4 h-4 mr-2" />
+                          {newItemMenuButtonTarget ? 'Change Target' : 'Select Target Content'}
+                        </Button>
+                        {newItemMenuButtonTarget && (
+                          <div className="text-sm text-gray-600">
+                            Target: {getAllContentItems().find(item => item.id === newItemMenuButtonTarget)?.title || 'Unknown'}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ) : (
                     <div>
