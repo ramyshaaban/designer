@@ -174,6 +174,20 @@ export default function DesignerPage() {
     console.log('Cards with isExpanded:', space.cards.map(card => ({ id: card.id, title: card.title, isExpanded: card.isExpanded })));
   }, [space]);
 
+  // Force re-render when switching modes to ensure state consistency
+  useEffect(() => {
+    console.log('Mode changed to:', isDesignMode ? 'Design' : 'Production');
+    // Force a state update to ensure React re-renders the cards properly
+    setSpace(prevSpace => ({
+      ...prevSpace,
+      cards: prevSpace.cards.map(card => ({
+        ...card,
+        // Ensure isExpanded property exists and is properly set
+        isExpanded: card.isExpanded !== undefined ? card.isExpanded : false
+      }))
+    }));
+  }, [isDesignMode]);
+
   // Onboarding functions
   const startOnboarding = (tourId: string) => {
     const tour = onboardingTours.find(t => t.id === tourId);
