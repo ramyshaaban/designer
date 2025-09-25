@@ -426,7 +426,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
             icon: ClipboardList as any,
             isPublic: true,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            order: 0
           },
           {
             id: `emergency-item-${Date.now()}-2`,
@@ -437,11 +438,13 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
             icon: PlayCircle as any,
             isPublic: true,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            order: 0
           }
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
+        order: 0,
         isExpanded: false
       },
       {
@@ -460,7 +463,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
             icon: PlayCircle as any,
             isPublic: true,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            order: 0
           },
           {
             id: `emergency-item-${Date.now()}-4`,
@@ -471,11 +475,13 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
             icon: Newspaper as any,
             isPublic: true,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            order: 0
           }
         ],
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        order: 0
       }
     ];
 
@@ -503,7 +509,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
             icon: ClipboardList as any,
             isPublic: true,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            order: 0
           },
           {
             id: `surgery-item-${Date.now()}-2`,
@@ -514,11 +521,13 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
             icon: Newspaper as any,
             isPublic: true,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            order: 0
           }
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
+        order: 0,
         isExpanded: false
       },
       {
@@ -537,7 +546,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
             icon: PlayCircle as any,
             isPublic: true,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            order: 0
           },
           {
             id: `surgery-item-${Date.now()}-4`,
@@ -548,11 +558,13 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
             icon: PlayCircle as any,
             isPublic: true,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            order: 0
           }
         ],
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        order: 0
       }
     ];
 
@@ -580,7 +592,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
             icon: BarChart3 as any,
             isPublic: true,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            order: 0
           },
           {
             id: `cardio-item-${Date.now()}-2`,
@@ -591,11 +604,13 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
             icon: PlayCircle as any,
             isPublic: true,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            order: 0
           }
         ],
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        order: 0
       }
     ];
 
@@ -623,7 +638,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
             icon: BarChart3 as any,
             isPublic: true,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            order: 0
           },
           {
             id: `peds-item-${Date.now()}-2`,
@@ -634,11 +650,13 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
             icon: ClipboardList as any,
             isPublic: true,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            order: 0
           }
         ],
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        order: 0
       }
     ];
 
@@ -666,7 +684,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
             icon: PlayCircle as any,
             isPublic: true,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            order: 0
           },
           {
             id: `neuro-item-${Date.now()}-2`,
@@ -677,11 +696,13 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
             icon: Newspaper as any,
             isPublic: true,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            order: 0
           }
         ],
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        order: 0
       }
     ];
 
@@ -709,11 +730,13 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
             icon: ClipboardList as any,
             isPublic: true,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            order: 0
           }
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
+        order: 0,
         isExpanded: false
       },
       {
@@ -732,11 +755,13 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
             icon: Newspaper as any,
             isPublic: true,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            order: 0
           }
         ],
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        order: 0
       }
     ];
 
@@ -763,7 +788,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
         icon: PlayCircle as any,
         isPublic: true,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        order: 0
       });
     }
     
@@ -777,7 +803,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
         icon: Newspaper as any,
         isPublic: true,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        order: 0
       });
     }
     
@@ -791,7 +818,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
         icon: ClipboardList as any,
         isPublic: true,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        order: 0
       });
     }
 
@@ -1851,7 +1879,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
             order: space.cards.length + 1,
             isExpanded: false, // Minimized by default
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            order: 0
           };
         
         setSpace({
@@ -2178,7 +2207,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
         id: `item-${Date.now()}-${index}`,
         order: index,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        order: 0
       })),
       color: '#f3f4f6', // Default gray color for template cards
       order: space.cards.length + 1,
@@ -2206,7 +2236,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
         ...item,
         id: `item-${Date.now()}-${index}-${itemIndex}`,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        order: 0
       })),
       createdAt: new Date(),
       updatedAt: new Date()
@@ -3233,35 +3264,35 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
                           </div>
 
                           <div className="mt-4 pt-3 border-t">
-                          <div className="flex gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="flex-1"
-                              onClick={() => {
-                                setCurrentCardId(card.id);
-                                setShowAddItemDialog(true);
-                              }}
-                              data-onboarding="add-item-button"
-                            >
-                              <Plus className="w-4 h-4 mr-2" />
-                              Add Item
-                            </Button>
-                            
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => initializeAIDesigner({ 
-                                location: 'card', 
-                                targetId: card.id, 
-                                targetTitle: card.title 
-                              })}
-                              className="border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700"
-                              title={`AI Designer for ${card.title}`}
-                            >
-                              <Star className="w-4 h-4" />
-                            </Button>
-                          </div>
+                            <div className="flex gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="flex-1"
+                                onClick={() => {
+                                  setCurrentCardId(card.id);
+                                  setShowAddItemDialog(true);
+                                }}
+                                data-onboarding="add-item-button"
+                              >
+                                <Plus className="w-4 h-4 mr-2" />
+                                Add Item
+                              </Button>
+                              
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => initializeAIDesigner({ 
+                                  location: 'card', 
+                                  targetId: card.id, 
+                                  targetTitle: card.title 
+                                })}
+                                className="border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700"
+                                title={`AI Designer for ${card.title}`}
+                              >
+                                <Star className="w-4 h-4" />
+                              </Button>
+                            </div>
                         </CardContent>
                       </Card>
                     ))}
