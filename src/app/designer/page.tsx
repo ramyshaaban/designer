@@ -168,6 +168,12 @@ export default function DesignerPage() {
     }
   }, []);
 
+  // Debug useEffect to track space state changes
+  useEffect(() => {
+    console.log('Space state changed:', space);
+    console.log('Cards with isExpanded:', space.cards.map(card => ({ id: card.id, title: card.title, isExpanded: card.isExpanded })));
+  }, [space]);
+
   // Onboarding functions
   const startOnboarding = (tourId: string) => {
     const tour = onboardingTours.find(t => t.id === tourId);
