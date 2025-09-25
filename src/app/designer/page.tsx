@@ -1792,10 +1792,10 @@ export default function DesignerPage() {
             height: rect.height + (padding * 2),
             borderRadius: '8px',
             border: '2px solid #3b82f6',
-            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-          boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.75), 0 0 20px rgba(59, 130, 246, 0.5)',
-          zIndex: 9999,
-          pointerEvents: 'none',
+            backgroundColor: 'transparent', // Make center transparent
+            boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.75), 0 0 20px rgba(59, 130, 246, 0.5)',
+            zIndex: 9999,
+            pointerEvents: 'none',
             transition: 'all 0.3s ease-in-out'
           });
         } else {
@@ -1809,10 +1809,10 @@ export default function DesignerPage() {
             height: '100px',
             borderRadius: '8px',
             border: '2px solid #3b82f6',
-            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-          boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.75), 0 0 20px rgba(59, 130, 246, 0.5)',
-          zIndex: 9999,
-          pointerEvents: 'none',
+            backgroundColor: 'transparent', // Make center transparent
+            boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.75), 0 0 20px rgba(59, 130, 246, 0.5)',
+            zIndex: 9999,
+            pointerEvents: 'none',
             transform: 'translate(-50%, -50%)',
             transition: 'all 0.3s ease-in-out'
           });
@@ -1881,13 +1881,15 @@ export default function DesignerPage() {
         {/* Spotlight Effect */}
         <div style={spotlightStyle} />
         
+        
         {/* Tooltip */}
         <div 
           className="absolute bg-white rounded-xl shadow-2xl border border-gray-200 pointer-events-auto"
           style={{
             ...tooltipStyle,
             width: '320px',
-            maxWidth: '90vw'
+            maxWidth: '90vw',
+            zIndex: 10000 // Higher than spotlight
           }}
         >
           {/* Header */}
