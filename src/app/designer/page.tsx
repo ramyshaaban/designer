@@ -2246,22 +2246,6 @@ export default function DesignerPage() {
                               ))
                             )}
                           </div>
-
-                          <div className="mt-4 pt-3 border-t">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="w-full"
-                              onClick={() => {
-                                setCurrentCardId(card.id);
-                                setShowAddItemDialog(true);
-                              }}
-                              data-onboarding="add-item-button"
-                            >
-                              <Plus className="w-4 h-4 mr-2" />
-                              Add Item
-                            </Button>
-                          </div>
                           )}
                         </CardContent>
                       </Card>
