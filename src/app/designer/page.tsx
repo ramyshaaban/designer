@@ -1850,7 +1850,9 @@ export default function DesignerPage() {
             right: 0,
             height: targetElement ? `${targetElement.getBoundingClientRect().top - 8}px` : '50%',
             backgroundColor: 'rgba(0, 0, 0, 0.4)',
-            zIndex: 9998
+            zIndex: 9998,
+            borderBottomLeftRadius: targetElement ? '12px' : '0px',
+            borderBottomRightRadius: targetElement ? '12px' : '0px'
           }}
         />
         
@@ -1863,7 +1865,9 @@ export default function DesignerPage() {
             right: 0,
             height: targetElement ? `${window.innerHeight - targetElement.getBoundingClientRect().bottom - 8}px` : '50%',
             backgroundColor: 'rgba(0, 0, 0, 0.4)',
-            zIndex: 9998
+            zIndex: 9998,
+            borderTopLeftRadius: targetElement ? '12px' : '0px',
+            borderTopRightRadius: targetElement ? '12px' : '0px'
           }}
         />
         
@@ -1876,7 +1880,9 @@ export default function DesignerPage() {
             width: targetElement ? `${targetElement.getBoundingClientRect().left - 8}px` : '50%',
             height: targetElement ? `${targetElement.getBoundingClientRect().height + 16}px` : '100%',
             backgroundColor: 'rgba(0, 0, 0, 0.4)',
-            zIndex: 9998
+            zIndex: 9998,
+            borderTopRightRadius: targetElement ? '12px' : '0px',
+            borderBottomRightRadius: targetElement ? '12px' : '0px'
           }}
         />
         
@@ -1889,7 +1895,9 @@ export default function DesignerPage() {
             width: targetElement ? `${window.innerWidth - targetElement.getBoundingClientRect().right - 8}px` : '50%',
             height: targetElement ? `${targetElement.getBoundingClientRect().height + 16}px` : '100%',
             backgroundColor: 'rgba(0, 0, 0, 0.4)',
-            zIndex: 9998
+            zIndex: 9998,
+            borderTopLeftRadius: targetElement ? '12px' : '0px',
+            borderBottomLeftRadius: targetElement ? '12px' : '0px'
           }}
         />
         
