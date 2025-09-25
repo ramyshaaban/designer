@@ -34,10 +34,24 @@ type ContentItem = {
   shares?: number;
 };
 
+type Portal = {
+  id: string;
+  spaceId: string;
+  spaceName: string;
+  spaceDescription: string;
+  spaceColor: string;
+  spaceIcon: string;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 type SpaceCard = {
   id: string;
   title: string;
   items: ContentItem[];
+  portals?: Portal[]; // For portals card
+  color: string; // Hex color for the card
   order: number;
   isExpanded: boolean; // Whether the card is expanded or minimized
   createdAt: Date;
@@ -317,6 +331,8 @@ export default function DesignerPage() {
   const [newItemMenuButtonTarget, setNewItemMenuButtonTarget] = useState("");
   const [showMenuButtonSearch, setShowMenuButtonSearch] = useState(false);
   const [menuButtonSearchQuery, setMenuButtonSearchQuery] = useState("");
+  const [showPortalDialog, setShowPortalDialog] = useState(false);
+  const [portalSearchQuery, setPortalSearchQuery] = useState("");
 
   const dragRef = useRef<HTMLDivElement>(null);
 
@@ -385,6 +401,91 @@ export default function DesignerPage() {
     });
     
     return allItems.filter(item => item.type === 'content');
+  };
+
+  // Portal helper functions
+  const hasPortalsCard = (): boolean => {
+    return space.cards.some(card => card.title === 'Portals');
+  };
+
+  const getPortalsCard = (): SpaceCard | null => {
+    return space.cards.find(card => card.title === 'Portals') || null;
+  };
+
+  const addPortal = (spaceData: typeof sampleSpaces[0]) => {
+    const portalsCard = getPortalsCard();
+    if (!portalsCard) return;
+
+    const newPortal: Portal = {
+      id: `portal-${Date.now()}`,
+      spaceId: spaceData.id,
+      spaceName: spaceData.name,
+      spaceDescription: spaceData.description,
+      spaceColor: spaceData.color,
+      spaceIcon: spaceData.icon,
+      order: portalsCard.portals?.length || 0,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    const updatedCards = space.cards.map(card => {
+      if (card.id === portalsCard.id) {
+        return {
+          ...card,
+          portals: [...(card.portals || []), newPortal],
+          updatedAt: new Date()
+        };
+      }
+      return card;
+    });
+
+    setSpace({
+      ...space,
+      cards: updatedCards
+    });
+
+    setShowPortalDialog(false);
+    setPortalSearchQuery("");
+  };
+
+  const removePortal = (portalId: string) => {
+    const portalsCard = getPortalsCard();
+    if (!portalsCard) return;
+
+    const updatedCards = space.cards.map(card => {
+      if (card.id === portalsCard.id) {
+        return {
+          ...card,
+          portals: card.portals?.filter(portal => portal.id !== portalId) || [],
+          updatedAt: new Date()
+        };
+      }
+      return card;
+    });
+
+    setSpace({
+      ...space,
+      cards: updatedCards
+    });
+  };
+
+  const createPortalsCard = () => {
+    const newCard: SpaceCard = {
+      id: `card-${Date.now()}`,
+      title: 'Portals',
+      items: [],
+      portals: [],
+      color: space.borderColor + '20', // Light version of space border color
+      order: space.cards.length,
+      isExpanded: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    setSpace({
+      ...space,
+      cards: [...space.cards, newCard]
+    });
   };
 
   // Card Templates
@@ -687,6 +788,52 @@ export default function DesignerPage() {
     }
   ];
 
+  // Sample spaces for portal selection
+  const sampleSpaces = [
+    {
+      id: 'cardiology-space',
+      name: 'Cardiology Department',
+      description: 'Cardiovascular medicine resources and protocols',
+      color: '#dc2626',
+      icon: '❤️'
+    },
+    {
+      id: 'emergency-space',
+      name: 'Emergency Medicine',
+      description: 'Emergency protocols and trauma care guidelines',
+      color: '#ea580c',
+      icon: '🚨'
+    },
+    {
+      id: 'surgery-space',
+      name: 'Surgery Department',
+      description: 'Surgical procedures and operating room protocols',
+      color: '#059669',
+      icon: '⚕️'
+    },
+    {
+      id: 'pediatrics-space',
+      name: 'Pediatrics',
+      description: 'Child health and pediatric care resources',
+      color: '#2563eb',
+      icon: '👶'
+    },
+    {
+      id: 'radiology-space',
+      name: 'Radiology & Imaging',
+      description: 'Medical imaging and diagnostic procedures',
+      color: '#7c3aed',
+      icon: '📷'
+    },
+    {
+      id: 'pharmacy-space',
+      name: 'Pharmacy Services',
+      description: 'Medication management and drug information',
+      color: '#ca8a04',
+      icon: '💊'
+    }
+  ];
+
   // Onboarding tours
   const onboardingTours: OnboardingTour[] = [
     {
@@ -976,6 +1123,7 @@ export default function DesignerPage() {
             id: `card-${Date.now()}`,
             title: newCardTitle.trim(),
             items: [],
+            color: newCardColor, // Add color property
             order: space.cards.length + 1,
             isExpanded: false, // Minimized by default
             createdAt: new Date(),
@@ -1260,6 +1408,7 @@ export default function DesignerPage() {
         createdAt: new Date(),
         updatedAt: new Date()
       })),
+      color: '#f3f4f6', // Default gray color for template cards
       order: space.cards.length + 1,
       isExpanded: false,
       createdAt: new Date(),
@@ -1828,7 +1977,7 @@ export default function DesignerPage() {
                   
                   {/* Add Card Button */}
                   <Button
-                    onClick={() => setShowAddCardDialog(true)}
+                    onClick={() => hasPortalsCard() ? setShowAddCardDialog(true) : createPortalsCard()}
                     variant="outline"
                     className="w-full flex items-center gap-2 border hover:shadow-lg transition-all duration-200"
                     style={{ 
@@ -1838,7 +1987,7 @@ export default function DesignerPage() {
                     }}
                   >
                     <Plus className="w-4 h-4" />
-                    Add New Card
+                    {hasPortalsCard() ? 'Add New Card' : 'Add Portals Card'}
                   </Button>
 
                   {/* Use Template Button */}
@@ -1916,13 +2065,77 @@ export default function DesignerPage() {
                         </CardHeader>
 
                         <CardContent>
-                          <div className="grid grid-cols-3 gap-2" data-onboarding="content-grid">
-                            {card.items.length === 0 ? (
-                              <div className="col-span-3 text-center py-4">
-                                <p className="text-sm text-gray-500 italic">No items yet</p>
+                          {card.title === 'Portals' ? (
+                            // Special Portals card rendering
+                            <div className="space-y-4">
+                              <div className="grid grid-cols-3 gap-3">
+                                {card.portals && card.portals.length > 0 ? (
+                                  card.portals.map((portal) => (
+                                    <div 
+                                      key={portal.id} 
+                                      className="relative group rounded-full p-3 transition-colors cursor-pointer hover:shadow-lg"
+                                      style={{ backgroundColor: portal.spaceColor + '20' }}
+                                    >
+                                      <div className="flex flex-col items-center text-center space-y-2">
+                                        <div 
+                                          className="rounded-full border-2 flex items-center justify-center bg-white relative shadow-md" 
+                                          style={{ 
+                                            borderColor: portal.spaceColor, 
+                                            width: '80px', 
+                                            height: '80px' 
+                                          }}
+                                        >
+                                          <span className="text-2xl">{portal.spaceIcon}</span>
+                                        </div>
+                                        <div className="text-xs font-medium text-gray-700 max-w-full truncate">
+                                          {portal.spaceName}
+                                        </div>
+                                      </div>
+                                      {/* Delete button */}
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          removePortal(portal.id);
+                                        }}
+                                        className="absolute -top-2 -right-2 w-6 h-6 p-0 bg-red-500 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                      >
+                                        <X className="w-3 h-3" />
+                                      </Button>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <div className="col-span-3 text-center py-8">
+                                    <p className="text-sm text-gray-500 italic">No portals added yet</p>
+                                  </div>
+                                )}
                               </div>
-                            ) : (
-                              card.items.map((item) => (
+                              
+                              {/* Add Portal Button */}
+                              <Button
+                                onClick={() => setShowPortalDialog(true)}
+                                variant="outline"
+                                className="w-full flex items-center gap-2 border hover:shadow-lg transition-all duration-200"
+                                style={{ 
+                                  backgroundColor: space.backgroundColor,
+                                  borderColor: space.borderColor,
+                                  color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
+                                }}
+                              >
+                                <Plus className="w-4 h-4" />
+                                Add Portal
+                              </Button>
+                            </div>
+                          ) : (
+                            // Regular card rendering
+                            <div className="grid grid-cols-3 gap-2" data-onboarding="content-grid">
+                              {card.items.length === 0 ? (
+                                <div className="col-span-3 text-center py-4">
+                                  <p className="text-sm text-gray-500 italic">No items yet</p>
+                                </div>
+                              ) : (
+                                card.items.map((item) => (
                                 <div 
                                   key={item.id} 
                                   className={`relative group rounded-lg p-2 transition-colors cursor-pointer`}
@@ -2049,6 +2262,7 @@ export default function DesignerPage() {
                               Add Item
                             </Button>
                           </div>
+                          )}
                         </CardContent>
                       </Card>
                     ))}
@@ -2100,13 +2314,48 @@ export default function DesignerPage() {
                       </CardHeader>
                       {card.isExpanded && (
                       <CardContent>
-                        <div className="grid grid-cols-3 gap-2">
-                          {card.items.length === 0 ? (
-                            <div className="col-span-3 text-center py-8">
-                              <p className="text-sm text-gray-500 italic">No content available</p>
-                            </div>
-                          ) : (
-                            card.items.map((item) => (
+                        {card.title === 'Portals' ? (
+                          // Special Portals card rendering for Production Mode
+                          <div className="grid grid-cols-3 gap-3">
+                            {card.portals && card.portals.length > 0 ? (
+                              card.portals.map((portal) => (
+                                <div 
+                                  key={portal.id} 
+                                  className="relative group rounded-full p-3 transition-colors cursor-pointer hover:shadow-lg"
+                                  style={{ backgroundColor: portal.spaceColor + '20' }}
+                                >
+                                  <div className="flex flex-col items-center text-center space-y-2">
+                                    <div 
+                                      className="rounded-full border-2 flex items-center justify-center bg-white relative shadow-md" 
+                                      style={{ 
+                                        borderColor: portal.spaceColor, 
+                                        width: '80px', 
+                                        height: '80px' 
+                                      }}
+                                    >
+                                      <span className="text-2xl">{portal.spaceIcon}</span>
+                                    </div>
+                                    <div className="text-xs font-medium text-gray-700 max-w-full truncate">
+                                      {portal.spaceName}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))
+                            ) : (
+                              <div className="col-span-3 text-center py-8">
+                                <p className="text-sm text-gray-500 italic">No portals available</p>
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          // Regular card rendering for Production Mode
+                          <div className="grid grid-cols-3 gap-2">
+                            {card.items.length === 0 ? (
+                              <div className="col-span-3 text-center py-8">
+                                <p className="text-sm text-gray-500 italic">No content available</p>
+                              </div>
+                            ) : (
+                              card.items.map((item) => (
                               <div 
                                 key={item.id} 
                                 className={`rounded-lg p-2 transition-colors cursor-pointer ${
@@ -2166,6 +2415,7 @@ export default function DesignerPage() {
                             ))
                           )}
                         </div>
+                        )}
                       </CardContent>
                       )}
                     </Card>
@@ -2378,7 +2628,7 @@ export default function DesignerPage() {
                   console.log('Filtered items:', filteredItems);
                   
                   return filteredItems.map((item) => {
-                    const IconComponent = item.icon;
+                    const IconComponent = item.contentType ? getContentTypeIcon(item.contentType) : FileText;
                     return (
                       <div
                         key={item.id}
@@ -2416,6 +2666,68 @@ export default function DesignerPage() {
               <Button variant="outline" onClick={() => {
                 setShowMenuButtonSearch(false);
                 setMenuButtonSearchQuery("");
+              }}>
+                Cancel
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Portal Selection Dialog */}
+        <Dialog open={showPortalDialog} onOpenChange={setShowPortalDialog}>
+          <DialogContent className="max-w-md mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)]">
+            <DialogHeader>
+              <DialogTitle>Select Space to Add as Portal</DialogTitle>
+              <p className="text-sm text-gray-600">Choose a space to create a portal to</p>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Input
+                  placeholder="Search spaces..."
+                  value={portalSearchQuery}
+                  onChange={(e) => setPortalSearchQuery(e.target.value)}
+                />
+              </div>
+              <div className="max-h-60 overflow-y-auto space-y-2">
+                {sampleSpaces
+                  .filter(space => 
+                    space.name.toLowerCase().includes(portalSearchQuery.toLowerCase()) ||
+                    space.description.toLowerCase().includes(portalSearchQuery.toLowerCase())
+                  )
+                  .map((spaceData) => (
+                    <div
+                      key={spaceData.id}
+                      className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
+                      onClick={() => addPortal(spaceData)}
+                    >
+                      <div 
+                        className="w-12 h-12 rounded-full flex items-center justify-center mr-3 shadow-md" 
+                        style={{ backgroundColor: spaceData.color + '20', borderColor: spaceData.color }}
+                      >
+                        <span className="text-xl">{spaceData.icon}</span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium text-sm">{spaceData.name}</div>
+                        <div className="text-xs text-gray-500">{spaceData.description}</div>
+                      </div>
+                    </div>
+                  ))}
+                {sampleSpaces.filter(space => 
+                  space.name.toLowerCase().includes(portalSearchQuery.toLowerCase()) ||
+                  space.description.toLowerCase().includes(portalSearchQuery.toLowerCase())
+                ).length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    <Search className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                    <p className="text-sm">No spaces found</p>
+                    <p className="text-xs">Try adjusting your search terms</p>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 pt-4 border-t">
+              <Button variant="outline" onClick={() => {
+                setShowPortalDialog(false);
+                setPortalSearchQuery("");
               }}>
                 Cancel
               </Button>
@@ -2565,10 +2877,16 @@ export default function DesignerPage() {
               <div className="space-y-4">
                 <div>
                   <label className="text-sm font-medium">Title</label>
-                  <Input
-                    value={editingCard.title}
-                    onChange={(e) => setEditingCard({ ...editingCard, title: e.target.value })}
-                  />
+                  {editingCard.title === 'Portals' ? (
+                    <div className="text-center py-2 px-3 bg-gray-50 rounded border text-sm text-gray-600">
+                      Portals (Cannot be changed)
+                    </div>
+                  ) : (
+                    <Input
+                      value={editingCard.title}
+                      onChange={(e) => setEditingCard({ ...editingCard, title: e.target.value })}
+                    />
+                  )}
                 </div>
                 {currentCollection && editingCard && 'color' in editingCard && (
                   <div>
