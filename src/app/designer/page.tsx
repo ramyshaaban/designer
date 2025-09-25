@@ -481,7 +481,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0
+        order: 0,
+        isExpanded: false
       }
     ];
 
@@ -564,7 +565,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0
+        order: 0,
+        isExpanded: false
       }
     ];
 
@@ -764,7 +766,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0
+        order: 0,
+        isExpanded: false
       }
     ];
 
@@ -2825,53 +2828,53 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
               )}
               
               <div className="flex justify-end gap-2 flex-wrap">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={initializeAIDesigner}
-                className="bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border border-purple-200 text-purple-700 whitespace-nowrap"
-                title="AI Design Assistant"
-              >
-                <Star className="w-4 h-4 mr-2" />
-                AI Designer
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={saveSpaceData}
-                disabled={isSaving}
-                className={`bg-transparent hover:bg-gray-100 border ${hasUnsavedChanges ? 'border-orange-300 bg-orange-50' : 'border-gray-300'} whitespace-nowrap`}
-                data-onboarding="save-button"
-              >
-                {isSaving ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin mr-2"></div>
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4 mr-2" />
-                    Save {hasUnsavedChanges && <span className="text-orange-600">•</span>}
-                  </>
-                )}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowVersionDialog(true)}
-                className="bg-transparent hover:bg-gray-100 border border-gray-300 whitespace-nowrap"
-              >
-                <Save className="w-4 h-4 mr-2" />
-                Save Version
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowSpaceSettingsDialog(true)}
-                className="bg-transparent hover:bg-gray-100 border border-gray-300"
-              >
-                <Settings className="w-4 h-4" />
-              </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => initializeAIDesigner({ location: 'space' })}
+                  className="bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border border-purple-200 text-purple-700 whitespace-nowrap"
+                  title="AI Design Assistant"
+                >
+                  <Star className="w-4 h-4 mr-2" />
+                  AI Designer
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={saveSpaceData}
+                  disabled={isSaving}
+                  className={`bg-transparent hover:bg-gray-100 border ${hasUnsavedChanges ? 'border-orange-300 bg-orange-50' : 'border-gray-300'} whitespace-nowrap`}
+                  data-onboarding="save-button"
+                >
+                  {isSaving ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin mr-2"></div>
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      Save {hasUnsavedChanges && <span className="text-orange-600">•</span>}
+                    </>
+                  )}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowVersionDialog(true)}
+                  className="bg-transparent hover:bg-gray-100 border border-gray-300 whitespace-nowrap"
+                >
+                  <Save className="w-4 h-4 mr-2" />
+                  Save Version
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowSpaceSettingsDialog(true)}
+                  className="bg-transparent hover:bg-gray-100 border border-gray-300"
+                >
+                  <Settings className="w-4 h-4" />
+                </Button>
               </div>
             </div>
           )}
