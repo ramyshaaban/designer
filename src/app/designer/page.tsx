@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { useState, useRef, useEffect } from "react";
 import React from "react";
 import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle, ChevronUp, ChevronDown, Share, Heart, Search, HelpCircle, ArrowRight, ArrowLeft, FileVideo, Headphones, File, BarChart3, ClipboardList, Newspaper, Gamepad2, Menu, Stethoscope } from "lucide-react";
+import { AI_CONFIG } from '@/config/ai';
 
 type ContentType = 'video' | 'podcast' | 'document' | 'infographic' | 'guideline' | 'article' | 'interactive-content' | 'external-link' | 'menu-button';
 
@@ -277,56 +278,63 @@ What kind of medical education space are you looking to create? Tell me about yo
   };
 
   const generateAIResponse = async (message: string, provider: 'openai' | 'gemini'): Promise<string> => {
-    // This is a placeholder - you'll need to implement actual API calls
-    // For now, I'll create a smart response based on keywords
-    
-    const lowerMessage = message.toLowerCase();
-    
-    if (lowerMessage.includes('card') || lowerMessage.includes('content')) {
-      return `Great! Let me suggest some card types for your medical education space:
+    if (provider === 'openai') {
+      try {
+        const response = await fetch(AI_CONFIG.OPENAI_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${AI_CONFIG.OPENAI_API_KEY}`,
+          },
+          body: JSON.stringify({
+            model: AI_CONFIG.MODEL,
+            messages: [
+              {
+                role: 'system',
+                content: `You are an AI Design Assistant for a medical education app called "StayCurrentMD Space Designer". 
 
-**📹 Video Cards**: Perfect for surgical procedures, patient consultations, or educational lectures
-**🎧 Podcast Cards**: Ideal for medical discussions, case studies, or continuing education
-**📄 Document Cards**: Great for guidelines, protocols, research papers, or study materials
-**📊 Infographic Cards**: Excellent for visual learning, statistics, or complex medical concepts
-**🔗 External Link Cards**: Useful for referencing external resources or tools
+Your role is to help users create amazing medical education spaces by suggesting:
 
-What specific type of content are you planning to include? I can suggest more specific card configurations based on your needs!`;
+1. **Cards & Content Types**: Video, Podcast, Document, Infographic, Guideline, Article, Interactive Content, External Link, Menu Button
+2. **Templates**: Pre-built templates for different medical specialties (Emergency Medicine, Surgery, Internal Medicine, Pediatrics, Neurology, Cardiology, etc.)
+3. **Collections**: Organized content collections with suggested cards and structure
+4. **Creative Ideas**: Custom suggestions based on user needs
+
+Guidelines:
+- Always provide specific, actionable suggestions
+- Focus on medical education and healthcare learning
+- Suggest realistic content that would be valuable for medical professionals
+- Be encouraging and helpful
+- Use emojis to make responses engaging
+- Keep responses concise but informative
+- Ask clarifying questions when needed
+
+Current context: The user is designing a medical education space and needs help with cards, templates, or collections.`
+              },
+              {
+                role: 'user',
+                content: message
+              }
+            ],
+            max_tokens: AI_CONFIG.MAX_TOKENS,
+            temperature: AI_CONFIG.TEMPERATURE,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data.choices[0]?.message?.content || 'Sorry, I couldn\'t generate a response. Please try again.';
+      } catch (error) {
+        console.error('OpenAI API Error:', error);
+        throw new Error(`Failed to get AI response: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+    } else {
+      // Gemini integration would go here
+      return 'Gemini integration coming soon! Please switch to OpenAI for now.';
     }
-    
-    if (lowerMessage.includes('template') || lowerMessage.includes('specialty')) {
-      return `I can suggest templates for various medical specialties! Here are some popular options:
-
-**🏥 Emergency Medicine**: Triage protocols, trauma management, critical care procedures
-**💊 Internal Medicine**: Disease management, diagnostic algorithms, treatment guidelines
-**🔬 Surgery**: Pre-op checklists, surgical techniques, post-op care
-**👶 Pediatrics**: Growth charts, vaccination schedules, developmental milestones
-**🧠 Neurology**: Neurological exams, diagnostic criteria, treatment protocols
-**❤️ Cardiology**: ECG interpretation, cardiac procedures, heart failure management
-
-Which specialty interests you most? I can create a detailed template with specific cards and content suggestions!`;
-    }
-    
-    if (lowerMessage.includes('collection') || lowerMessage.includes('organize')) {
-      return `Collections are perfect for organizing related content! Here are some collection ideas:
-
-**📚 Study Materials**: Group related articles, videos, and documents together
-**🎯 Case Studies**: Organize patient cases with supporting materials
-**📋 Procedures**: Step-by-step guides with videos and checklists
-**🔬 Research**: Latest studies and evidence-based practices
-**👥 Team Resources**: Shared knowledge for your medical team
-
-What type of content would you like to organize into collections? I can suggest specific card types and content for each collection!`;
-    }
-    
-    return `I understand you're looking to create a medical education space! To give you the best suggestions, could you tell me more about:
-
-1. **Your medical specialty or focus area**
-2. **Your target audience** (students, residents, practicing physicians, etc.)
-3. **Specific learning goals** you want to achieve
-4. **Types of content** you plan to include
-
-This will help me suggest the most relevant cards, templates, and collections for your space!`;
   };
 
   const applyAISuggestion = (suggestion: string) => {
