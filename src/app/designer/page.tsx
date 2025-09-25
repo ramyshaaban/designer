@@ -132,82 +132,6 @@ export default function DesignerPage() {
     shares: 0
   });
 
-  // Load space data from localStorage on component mount
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('designer-space');
-      if (saved) {
-        try {
-          const parsedSpace = JSON.parse(saved);
-          console.log('Loaded space data:', parsedSpace);
-          
-          // Ensure all cards have isExpanded property
-          const spaceWithExpansion = {
-            ...parsedSpace,
-            cards: parsedSpace.cards?.map((card: any) => ({
-              ...card,
-              isExpanded: card.isExpanded !== undefined ? card.isExpanded : false
-            })) || []
-          };
-          
-          setSpace(spaceWithExpansion);
-          setLastSavedState(saved); // Initialize saved state
-        } catch (error) {
-          console.error('Error parsing saved space data:', error);
-        }
-      } else {
-        console.log('No saved space data found, using default');
-        // Initialize saved state with default space
-        setLastSavedState(JSON.stringify(space));
-      }
-    }
-  }, []);
-
-  // Handle page refresh warning
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (hasUnsavedChanges) {
-        e.preventDefault();
-        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
-        return 'You have unsaved changes. Are you sure you want to leave?';
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, []);
-
-  // Load version from URL parameter
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      // Check for version in query parameter (legacy support)
-      const urlParams = new URLSearchParams(window.location.search);
-      const versionId = urlParams.get('version');
-      
-      if (versionId) {
-        console.log('Loading version from URL parameter:', versionId);
-        loadVersion(versionId);
-      } else {
-        // Check for version in path (new format)
-        const pathSegments = window.location.pathname.split('/').filter(Boolean);
-        if (pathSegments.length > 0 && pathSegments[0] !== 'designer') {
-          const versionSlug = pathSegments[0];
-          console.log('Loading version from path slug:', versionSlug);
-          loadVersionBySlug(versionSlug);
-        }
-      }
-      
-      // Load saved versions list
-      loadSavedVersions();
-      
-      // Check if onboarding has been completed
-      const onboardingCompleted = localStorage.getItem('designer-onboarding-completed');
-      if (!onboardingCompleted) {
-        setShowOnboarding(true);
-        setOnboardingTour(onboardingTours[0]); // Start with main space tour
-      }
-    }
-  }, []);
 
   // Debug useEffect to track space state changes
   useEffect(() => {
@@ -376,6 +300,83 @@ export default function DesignerPage() {
   const [portalSearchQuery, setPortalSearchQuery] = useState("");
 
   const dragRef = useRef<HTMLDivElement>(null);
+
+  // Load space data from localStorage on component mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('designer-space');
+      if (saved) {
+        try {
+          const parsedSpace = JSON.parse(saved);
+          console.log('Loaded space data:', parsedSpace);
+          
+          // Ensure all cards have isExpanded property
+          const spaceWithExpansion = {
+            ...parsedSpace,
+            cards: parsedSpace.cards?.map((card: any) => ({
+              ...card,
+              isExpanded: card.isExpanded !== undefined ? card.isExpanded : false
+            })) || []
+          };
+          
+          setSpace(spaceWithExpansion);
+          setLastSavedState(saved); // Initialize saved state
+        } catch (error) {
+          console.error('Error parsing saved space data:', error);
+        }
+      } else {
+        console.log('No saved space data found, using default');
+        // Initialize saved state with default space
+        setLastSavedState(JSON.stringify(space));
+      }
+    }
+  }, []);
+
+  // Handle page refresh warning
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+        return 'You have unsaved changes. Are you sure you want to leave?';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasUnsavedChanges]);
+
+  // Load version from URL parameter
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Check for version in query parameter (legacy support)
+      const urlParams = new URLSearchParams(window.location.search);
+      const versionId = urlParams.get('version');
+      
+      if (versionId) {
+        console.log('Loading version from URL parameter:', versionId);
+        loadVersion(versionId);
+      } else {
+        // Check for version in path (new format)
+        const pathSegments = window.location.pathname.split('/').filter(Boolean);
+        if (pathSegments.length > 0 && pathSegments[0] !== 'designer') {
+          const versionSlug = pathSegments[0];
+          console.log('Loading version from path slug:', versionSlug);
+          loadVersionBySlug(versionSlug);
+        }
+      }
+      
+      // Load saved versions list
+      loadSavedVersions();
+      
+      // Check if onboarding has been completed
+      const onboardingCompleted = localStorage.getItem('designer-onboarding-completed');
+      if (!onboardingCompleted) {
+        setShowOnboarding(true);
+        setOnboardingTour(onboardingTours[0]); // Start with main space tour
+      }
+    }
+  }, []);
 
   // Helper functions
   const getContentTypeIcon = (type: ContentType) => {
