@@ -403,6 +403,9 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
   const applyAISuggestion = (suggestion: string) => {
     console.log('Applying AI suggestion:', suggestion);
     
+    // Add magic effect - show loading state
+    setIsAiLoading(true);
+    
     // Parse AI suggestions and create elements based on context
     if (aiContext.location === 'space') {
       // Generate space-level templates
@@ -431,6 +434,14 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
       // Generate collection templates
       generateCollectionTemplate(aiContext.targetId!, suggestion);
     }
+    
+    // Auto-close AI Designer after applying suggestion
+    setTimeout(() => {
+      setIsAiLoading(false);
+      setShowAIDesigner(false);
+      setAiMessages([]);
+      setAiInput('');
+    }, 1500); // 1.5 second delay to show the magic effect
   };
 
   // Template creation functions
@@ -1323,9 +1334,94 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
   };
 
   const generateCollectionTemplate = (collectionId: string, suggestion: string) => {
-    // This would generate cards within a collection
-    // Implementation depends on collection structure
-    console.log('Generating collection template for:', collectionId, suggestion);
+    // Find the collection in the space
+    const findCollectionInCards = (cards: SpaceCard[]): ContentItem | null => {
+      for (const card of cards) {
+        for (const item of card.items) {
+          if (item.id === collectionId) {
+            return item;
+          }
+          if (item.type === 'collection' && item.children) {
+            const found = findCollectionInCards(item.children);
+            if (found) return found;
+          }
+        }
+      }
+      return null;
+    };
+
+    const collection = findCollectionInCards(space.cards);
+    if (!collection || collection.type !== 'collection') return;
+
+    // Generate cards based on suggestion
+    const newCards: CollectionCard[] = [];
+    
+    if (suggestion.toLowerCase().includes('neuroblastoma') || suggestion.toLowerCase().includes('pediatric') && suggestion.toLowerCase().includes('oncology')) {
+      // Create neuroblastoma-specific cards for the collection
+      newCards.push({
+        id: `collection-card-${Date.now()}-1`,
+        title: 'Topic Overview',
+        description: 'Comprehensive introduction to neuroblastoma',
+        color: '#8b5cf6',
+        order: collection.children?.length || 0,
+        items: [],
+        isExpanded: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+      newCards.push({
+        id: `collection-card-${Date.now()}-2`,
+        title: 'Workup Algorithm',
+        description: 'Diagnostic pathway and staging workup',
+        color: '#06b6d4',
+        order: (collection.children?.length || 0) + 1,
+        items: [],
+        isExpanded: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+    } else {
+      // Default collection cards
+      newCards.push({
+        id: `collection-card-${Date.now()}-1`,
+        title: 'Core Concepts',
+        description: 'Fundamental knowledge and principles',
+        color: '#3b82f6',
+        order: collection.children?.length || 0,
+        items: [],
+        isExpanded: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+      newCards.push({
+        id: `collection-card-${Date.now()}-2`,
+        title: 'Case Studies',
+        description: 'Clinical scenarios and analysis',
+        color: '#10b981',
+        order: (collection.children?.length || 0) + 1,
+        items: [],
+        isExpanded: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+    }
+
+    // Update the collection with new cards
+    setSpace(prev => ({
+      ...prev,
+      cards: prev.cards.map(card => ({
+        ...card,
+        items: card.items.map(item => {
+          if (item.id === collectionId && item.type === 'collection') {
+            return {
+              ...item,
+              children: [...(item.children || []), ...newCards]
+            };
+          }
+          return item;
+        })
+      }))
+    }));
   };
 
   // Manual save function instead of automatic saving
@@ -4385,6 +4481,22 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
                 </>
               )}
 
+              {/* AI Designer Button */}
+              <div className="pt-2 border-t">
+                <Button
+                  variant="outline"
+                  onClick={() => initializeAIDesigner({ 
+                    location: 'card', 
+                    targetId: currentCardId!, 
+                    targetTitle: 'New Item' 
+                  })}
+                  className="w-full border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700"
+                >
+                  <Star className="w-4 h-4 mr-2" />
+                  AI Designer - Suggest Content
+                </Button>
+              </div>
+
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setShowAddItemDialog(false)}>
                   Cancel
@@ -4947,7 +5059,33 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
 
         {/* AI Designer Dialog */}
         <Dialog open={showAIDesigner} onOpenChange={setShowAIDesigner}>
-          <DialogContent className="max-w-2xl mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)] h-[80vh] flex flex-col">
+          <DialogContent className="max-w-2xl mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)] h-[80vh] flex flex-col relative">
+            {/* AI Magic Effect Overlay */}
+            {isAiLoading && (
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="relative">
+                    {/* Spinning stars */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Star className="w-8 h-8 text-purple-500 animate-spin" />
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Star className="w-6 h-6 text-blue-500 animate-spin" style={{ animationDelay: '0.5s' }} />
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Star className="w-4 h-4 text-pink-500 animate-spin" style={{ animationDelay: '1s' }} />
+                    </div>
+                  </div>
+                  <div className="mt-4 text-lg font-semibold text-purple-700">
+                    ✨ Creating Magic Content ✨
+                  </div>
+                  <div className="text-sm text-purple-600 mt-1">
+                    Applying AI suggestions...
+                  </div>
+                </div>
+              </div>
+            )}
+            
             <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Star className="w-6 h-6" />
