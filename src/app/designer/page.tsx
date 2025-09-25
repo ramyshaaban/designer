@@ -320,22 +320,44 @@ Current Context:
 - Target: ${aiContext.targetTitle || 'Main Space'}
 - Space Name: ${space.name}
 
-Your role is to help users create amazing medical education content by suggesting:
+Your role is to help users create comprehensive medical education content by suggesting:
 
-1. **Card Templates**: Pre-built card structures for different medical specialties
-2. **Content Ideas**: Specific content suggestions for cards
-3. **Collection Templates**: Organized content collections with suggested cards
-4. **Creative Ideas**: Custom suggestions based on user needs
+1. **Detailed Card Templates**: Specific card structures for medical specialties and conditions
+2. **Clinical Decision Making**: Cards for diagnostic algorithms, treatment protocols, and clinical pathways
+3. **Educational Content**: Cards for learning materials, case studies, and assessments
+4. **Patient Care**: Cards for patient education, family counseling, and follow-up care
 
-Guidelines:
-- Always provide specific, actionable suggestions
-- Focus on medical education and healthcare learning
+**MEDICAL TEMPLATE GUIDELINES:**
+When suggesting templates for specific medical conditions or specialties, provide detailed card suggestions such as:
+
+**For Clinical Decision Making Templates:**
+- Topic Overview (disease/condition introduction)
+- Workup Algorithm (diagnostic pathway)
+- Preoperative Planning (if surgical)
+- Technique Videos (procedural demonstrations)
+- Postoperative Care (recovery protocols)
+- Patient Education Materials (family resources)
+- Key Articles (evidence-based literature)
+- Assessment Tools (knowledge checks)
+- Case Studies (clinical scenarios)
+- Complications Management (adverse events)
+
+**For Specialty-Specific Templates:**
+- Core Concepts (fundamental knowledge)
+- Diagnostic Criteria (assessment guidelines)
+- Treatment Protocols (therapeutic approaches)
+- Monitoring Guidelines (follow-up care)
+- Patient Counseling (communication tools)
+- Quality Metrics (outcome measures)
+
+**RESPONSE FORMAT:**
+- Provide specific, actionable card suggestions
+- Include detailed descriptions for each card
 - Suggest realistic content that would be valuable for medical professionals
 - Be encouraging and helpful
-- Use emojis to make responses engaging
-- Keep responses concise but informative
-- Ask clarifying questions when needed
-- When suggesting templates or content, be specific about what should be included
+- Use medical terminology appropriately
+- Ask clarifying questions about target audience (residents, fellows, attendings)
+- Suggest content types (videos, articles, guidelines, interactive content)
 
 Current context: The user is working on ${aiContext.location === 'space' ? 'the main space' : aiContext.location === 'card' ? `the "${aiContext.targetTitle}" card` : `the "${aiContext.targetTitle}" collection`} and needs help with content creation.`;
 
@@ -384,7 +406,9 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
     // Parse AI suggestions and create elements based on context
     if (aiContext.location === 'space') {
       // Generate space-level templates
-      if (suggestion.toLowerCase().includes('emergency') || suggestion.toLowerCase().includes('trauma')) {
+      if (suggestion.toLowerCase().includes('neuroblastoma') || suggestion.toLowerCase().includes('pediatric') && suggestion.toLowerCase().includes('oncology')) {
+        createNeuroblastomaTemplate();
+      } else if (suggestion.toLowerCase().includes('emergency') || suggestion.toLowerCase().includes('trauma')) {
         createEmergencyMedicineTemplate();
       } else if (suggestion.toLowerCase().includes('surgery') || suggestion.toLowerCase().includes('surgical')) {
         createSurgeryTemplate();
@@ -394,6 +418,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
         createPediatricsTemplate();
       } else if (suggestion.toLowerCase().includes('neurology') || suggestion.toLowerCase().includes('brain')) {
         createNeurologyTemplate();
+      } else if (suggestion.toLowerCase().includes('clinical decision') || suggestion.toLowerCase().includes('decision making')) {
+        createClinicalDecisionMakingTemplate();
       } else {
         // Default medical education template
         createDefaultMedicalTemplate();
@@ -774,6 +800,461 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
     setSpace(prev => ({
       ...prev,
       cards: [...prev.cards, ...defaultCards]
+    }));
+  };
+
+  // Detailed Medical Template Functions
+  const createNeuroblastomaTemplate = () => {
+    const neuroblastomaCards = [
+      {
+        id: `neuroblastoma-${Date.now()}-1`,
+        title: 'Topic Overview',
+        description: 'Comprehensive introduction to neuroblastoma for pediatric residents',
+        color: '#8b5cf6',
+        order: space.cards.length,
+        items: [
+          {
+            id: `neuroblastoma-item-${Date.now()}-1`,
+            type: 'content' as const,
+            title: 'Disease Overview',
+            description: 'Introduction to neuroblastoma epidemiology and pathophysiology',
+            contentType: 'article' as const,
+            icon: Newspaper as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          },
+          {
+            id: `neuroblastoma-item-${Date.now()}-2`,
+            type: 'content' as const,
+            title: 'Risk Stratification',
+            description: 'INRG staging system and risk group classification',
+            contentType: 'guideline' as const,
+            icon: ClipboardList as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        order: 0,
+        isExpanded: false
+      },
+      {
+        id: `neuroblastoma-${Date.now()}-2`,
+        title: 'Workup Algorithm',
+        description: 'Diagnostic pathway and staging workup for neuroblastoma',
+        color: '#06b6d4',
+        order: space.cards.length + 1,
+        items: [
+          {
+            id: `neuroblastoma-item-${Date.now()}-3`,
+            type: 'content' as const,
+            title: 'Initial Diagnostic Workup',
+            description: 'Laboratory tests, imaging studies, and biopsy procedures',
+            contentType: 'guideline' as const,
+            icon: ClipboardList as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          },
+          {
+            id: `neuroblastoma-item-${Date.now()}-4`,
+            type: 'content' as const,
+            title: 'Staging Studies',
+            description: 'MIBG scan, CT/MRI, bone marrow biopsy protocols',
+            contentType: 'video' as const,
+            icon: PlayCircle as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        order: 0,
+        isExpanded: false
+      },
+      {
+        id: `neuroblastoma-${Date.now()}-3`,
+        title: 'Preoperative Planning',
+        description: 'Surgical considerations and preparation for neuroblastoma resection',
+        color: '#10b981',
+        order: space.cards.length + 2,
+        items: [
+          {
+            id: `neuroblastoma-item-${Date.now()}-5`,
+            type: 'content' as const,
+            title: 'Surgical Indications',
+            description: 'When to consider surgical resection vs. chemotherapy first',
+            contentType: 'guideline' as const,
+            icon: ClipboardList as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          },
+          {
+            id: `neuroblastoma-item-${Date.now()}-6`,
+            type: 'content' as const,
+            title: 'Preoperative Assessment',
+            description: 'Cardiac evaluation, renal function, and anesthesia considerations',
+            contentType: 'article' as const,
+            icon: Newspaper as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        order: 0,
+        isExpanded: false
+      },
+      {
+        id: `neuroblastoma-${Date.now()}-4`,
+        title: 'Technique Videos',
+        description: 'Surgical procedures and techniques for neuroblastoma management',
+        color: '#f59e0b',
+        order: space.cards.length + 3,
+        items: [
+          {
+            id: `neuroblastoma-item-${Date.now()}-7`,
+            type: 'content' as const,
+            title: 'Laparoscopic Adrenalectomy',
+            description: 'Minimally invasive adrenal tumor resection techniques',
+            contentType: 'video' as const,
+            icon: PlayCircle as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          },
+          {
+            id: `neuroblastoma-item-${Date.now()}-8`,
+            type: 'content' as const,
+            title: 'Open Tumor Resection',
+            description: 'Traditional open surgical approaches for large tumors',
+            contentType: 'video' as const,
+            icon: PlayCircle as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        order: 0,
+        isExpanded: false
+      },
+      {
+        id: `neuroblastoma-${Date.now()}-5`,
+        title: 'Postoperative Care',
+        description: 'Recovery protocols and monitoring after neuroblastoma surgery',
+        color: '#ef4444',
+        order: space.cards.length + 4,
+        items: [
+          {
+            id: `neuroblastoma-item-${Date.now()}-9`,
+            type: 'content' as const,
+            title: 'ICU Management',
+            description: 'Postoperative monitoring and critical care considerations',
+            contentType: 'guideline' as const,
+            icon: ClipboardList as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          },
+          {
+            id: `neuroblastoma-item-${Date.now()}-10`,
+            type: 'content' as const,
+            title: 'Pain Management',
+            description: 'Pediatric pain control strategies and medication protocols',
+            contentType: 'article' as const,
+            icon: Newspaper as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        order: 0,
+        isExpanded: false
+      },
+      {
+        id: `neuroblastoma-${Date.now()}-6`,
+        title: 'Patient Education Materials',
+        description: 'Family resources and educational materials for neuroblastoma',
+        color: '#84cc16',
+        order: space.cards.length + 5,
+        items: [
+          {
+            id: `neuroblastoma-item-${Date.now()}-11`,
+            type: 'content' as const,
+            title: 'Family Counseling Guide',
+            description: 'Talking to families about neuroblastoma diagnosis and treatment',
+            contentType: 'article' as const,
+            icon: Newspaper as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          },
+          {
+            id: `neuroblastoma-item-${Date.now()}-12`,
+            type: 'content' as const,
+            title: 'Support Resources',
+            description: 'Patient advocacy groups and family support networks',
+            contentType: 'external-link' as const,
+            icon: ExternalLink as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        order: 0,
+        isExpanded: false
+      },
+      {
+        id: `neuroblastoma-${Date.now()}-7`,
+        title: 'Key Articles',
+        description: 'Evidence-based literature and recent research on neuroblastoma',
+        color: '#6366f1',
+        order: space.cards.length + 6,
+        items: [
+          {
+            id: `neuroblastoma-item-${Date.now()}-13`,
+            type: 'content' as const,
+            title: 'COG Protocols',
+            description: 'Children\'s Oncology Group treatment protocols and guidelines',
+            contentType: 'article' as const,
+            icon: Newspaper as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          },
+          {
+            id: `neuroblastoma-item-${Date.now()}-14`,
+            type: 'content' as const,
+            title: 'Recent Research',
+            description: 'Latest advances in neuroblastoma treatment and immunotherapy',
+            contentType: 'article' as const,
+            icon: Newspaper as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        order: 0,
+        isExpanded: false
+      }
+    ];
+
+    setSpace(prev => ({
+      ...prev,
+      cards: [...prev.cards, ...neuroblastomaCards]
+    }));
+  };
+
+  const createClinicalDecisionMakingTemplate = () => {
+    const clinicalDecisionCards = [
+      {
+        id: `clinical-${Date.now()}-1`,
+        title: 'Topic Overview',
+        description: 'Comprehensive introduction to clinical decision making',
+        color: '#3b82f6',
+        order: space.cards.length,
+        items: [
+          {
+            id: `clinical-item-${Date.now()}-1`,
+            type: 'content' as const,
+            title: 'Decision Making Framework',
+            description: 'Evidence-based approach to clinical decision making',
+            contentType: 'article' as const,
+            icon: Newspaper as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        order: 0,
+        isExpanded: false
+      },
+      {
+        id: `clinical-${Date.now()}-2`,
+        title: 'Workup Algorithm',
+        description: 'Diagnostic algorithms and clinical pathways',
+        color: '#06b6d4',
+        order: space.cards.length + 1,
+        items: [
+          {
+            id: `clinical-item-${Date.now()}-2`,
+            type: 'content' as const,
+            title: 'Diagnostic Decision Trees',
+            description: 'Step-by-step diagnostic algorithms',
+            contentType: 'infographic' as const,
+            icon: BarChart3 as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        order: 0,
+        isExpanded: false
+      },
+      {
+        id: `clinical-${Date.now()}-3`,
+        title: 'Preoperative Planning',
+        description: 'Surgical decision making and preoperative considerations',
+        color: '#10b981',
+        order: space.cards.length + 2,
+        items: [
+          {
+            id: `clinical-item-${Date.now()}-3`,
+            type: 'content' as const,
+            title: 'Surgical Indications',
+            description: 'When to proceed with surgical intervention',
+            contentType: 'guideline' as const,
+            icon: ClipboardList as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        order: 0,
+        isExpanded: false
+      },
+      {
+        id: `clinical-${Date.now()}-4`,
+        title: 'Technique Videos',
+        description: 'Procedural demonstrations and technique videos',
+        color: '#f59e0b',
+        order: space.cards.length + 3,
+        items: [
+          {
+            id: `clinical-item-${Date.now()}-4`,
+            type: 'content' as const,
+            title: 'Procedure Demonstrations',
+            description: 'Video demonstrations of key procedures',
+            contentType: 'video' as const,
+            icon: PlayCircle as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        order: 0,
+        isExpanded: false
+      },
+      {
+        id: `clinical-${Date.now()}-5`,
+        title: 'Postoperative Care',
+        description: 'Postoperative decision making and care protocols',
+        color: '#ef4444',
+        order: space.cards.length + 4,
+        items: [
+          {
+            id: `clinical-item-${Date.now()}-5`,
+            type: 'content' as const,
+            title: 'Recovery Protocols',
+            description: 'Postoperative care and monitoring guidelines',
+            contentType: 'guideline' as const,
+            icon: ClipboardList as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        order: 0,
+        isExpanded: false
+      },
+      {
+        id: `clinical-${Date.now()}-6`,
+        title: 'Patient Education Materials',
+        description: 'Patient and family education resources',
+        color: '#84cc16',
+        order: space.cards.length + 5,
+        items: [
+          {
+            id: `clinical-item-${Date.now()}-6`,
+            type: 'content' as const,
+            title: 'Patient Counseling',
+            description: 'Communication strategies for patient education',
+            contentType: 'article' as const,
+            icon: Newspaper as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        order: 0,
+        isExpanded: false
+      },
+      {
+        id: `clinical-${Date.now()}-7`,
+        title: 'Key Articles',
+        description: 'Evidence-based literature and clinical guidelines',
+        color: '#6366f1',
+        order: space.cards.length + 6,
+        items: [
+          {
+            id: `clinical-item-${Date.now()}-7`,
+            type: 'content' as const,
+            title: 'Clinical Guidelines',
+            description: 'Evidence-based clinical practice guidelines',
+            contentType: 'article' as const,
+            icon: Newspaper as any,
+            isPublic: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            order: 0
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        order: 0,
+        isExpanded: false
+      }
+    ];
+
+    setSpace(prev => ({
+      ...prev,
+      cards: [...prev.cards, ...clinicalDecisionCards]
     }));
   };
 
