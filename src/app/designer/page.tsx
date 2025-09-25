@@ -151,6 +151,21 @@ export default function DesignerPage() {
       if (typeof window !== 'undefined') {
         console.log('Saving space data:', space);
         localStorage.setItem('designer-space', JSON.stringify(space));
+        
+        // If we're working on a version, also save to that version
+        if (currentVersionId) {
+          console.log('Saving to current version:', currentVersionId);
+          const savedVersions = JSON.parse(localStorage.getItem('designer-versions') || '[]');
+          const versionIndex = savedVersions.findIndex((v: any) => v.id === currentVersionId);
+          
+          if (versionIndex !== -1) {
+            savedVersions[versionIndex].space = space;
+            savedVersions[versionIndex].timestamp = new Date().toISOString();
+            localStorage.setItem('designer-versions', JSON.stringify(savedVersions));
+            console.log('Version updated successfully');
+          }
+        }
+        
         console.log('Space data saved successfully');
         alert('Space data saved successfully!');
       }
@@ -191,6 +206,7 @@ export default function DesignerPage() {
   const [versionDescription, setVersionDescription] = useState("");
   const [savedVersions, setSavedVersions] = useState<Array<{id: string, name: string, description: string, timestamp: Date, url: string}>>([]);
   const [isSavingVersion, setIsSavingVersion] = useState(false);
+  const [currentVersionId, setCurrentVersionId] = useState<string | null>(null);
 
   // Form states
   const [newCardTitle, setNewCardTitle] = useState("");
@@ -628,6 +644,8 @@ export default function DesignerPage() {
         isLiked: false,
         shares: 0
       });
+      setCurrentVersionId(null); // Clear current version
+      alert('All data cleared successfully!');
     }
   };
 
@@ -924,6 +942,10 @@ export default function DesignerPage() {
         url: versionUrl
       }]);
 
+      // Set this as the current version
+      setCurrentVersionId(versionId);
+      console.log('Created new version:', versionName.trim(), 'ID:', versionId);
+
       // Show success message with copyable link
       const shareText = `Version "${versionName.trim()}" saved! Share this link to continue working: ${versionUrl}`;
       navigator.clipboard.writeText(versionUrl).then(() => {
@@ -952,7 +974,9 @@ export default function DesignerPage() {
       
       if (version) {
         setSpace(version.space);
-        alert(`Version "${version.name}" loaded successfully!`);
+        setCurrentVersionId(versionId); // Set the current version ID
+        console.log('Loaded version:', version.name, 'ID:', versionId);
+        alert(`Version "${version.name}" loaded successfully! Changes will be saved to this version.`);
       } else {
         alert('Version not found');
       }
@@ -1325,6 +1349,15 @@ export default function DesignerPage() {
                 >
                   {space.name}
                 </h1>
+              )}
+              
+              {/* Version Indicator */}
+              {currentVersionId && (
+                <div className="flex items-center justify-center mt-2">
+                  <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                    📁 Working on Version
+                  </div>
+                </div>
               )}
             </div>
           </div>
