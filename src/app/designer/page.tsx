@@ -375,10 +375,14 @@ export default function DesignerPage() {
       }
     };
     
-    // Add items from current collection if we're in a collection
-    if (currentCollection) {
-      addCollectionItems(currentCollection);
-    }
+    // Add items from ALL collections in the main space
+    space.cards.forEach(card => {
+      card.items.forEach(item => {
+        if (item.type === 'collection') {
+          addCollectionItems(item);
+        }
+      });
+    });
     
     return allItems.filter(item => item.type === 'content');
   };
@@ -2362,12 +2366,18 @@ export default function DesignerPage() {
                 />
               </div>
               <div className="max-h-60 overflow-y-auto space-y-2">
-                {getAllContentItems()
-                  .filter(item => 
+                {(() => {
+                  const allItems = getAllContentItems();
+                  const filteredItems = allItems.filter(item => 
                     item.title.toLowerCase().includes(menuButtonSearchQuery.toLowerCase()) ||
                     item.description.toLowerCase().includes(menuButtonSearchQuery.toLowerCase())
-                  )
-                  .map((item) => {
+                  );
+                  
+                  console.log('All content items:', allItems);
+                  console.log('Search query:', menuButtonSearchQuery);
+                  console.log('Filtered items:', filteredItems);
+                  
+                  return filteredItems.map((item) => {
                     const IconComponent = item.icon;
                     return (
                       <div
@@ -2388,7 +2398,8 @@ export default function DesignerPage() {
                         </div>
                       </div>
                     );
-                  })}
+                  });
+                })()}
                 {getAllContentItems().filter(item => 
                   item.title.toLowerCase().includes(menuButtonSearchQuery.toLowerCase()) ||
                   item.description.toLowerCase().includes(menuButtonSearchQuery.toLowerCase())
