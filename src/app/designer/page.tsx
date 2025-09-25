@@ -1866,62 +1866,21 @@ export default function DesignerPage() {
           }}
         />
         
-        {/* Rounded Corner Overlays */}
+        {/* Rounded Border around Cutout */}
         {targetElement && (
-          <>
-            {/* Top-left corner */}
-            <div 
-              className="absolute pointer-events-auto"
-              style={{
-                top: targetElement.getBoundingClientRect().top - 8,
-                left: targetElement.getBoundingClientRect().left - 8,
-                width: '12px',
-                height: '12px',
-                backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                borderRadius: '12px 0 0 0',
-                zIndex: 9998
-              }}
-            />
-            {/* Top-right corner */}
-            <div 
-              className="absolute pointer-events-auto"
-              style={{
-                top: targetElement.getBoundingClientRect().top - 8,
-                right: window.innerWidth - targetElement.getBoundingClientRect().right - 8,
-                width: '12px',
-                height: '12px',
-                backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                borderRadius: '0 12px 0 0',
-                zIndex: 9998
-              }}
-            />
-            {/* Bottom-left corner */}
-            <div 
-              className="absolute pointer-events-auto"
-              style={{
-                bottom: window.innerHeight - targetElement.getBoundingClientRect().bottom - 8,
-                left: targetElement.getBoundingClientRect().left - 8,
-                width: '12px',
-                height: '12px',
-                backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                borderRadius: '0 0 0 12px',
-                zIndex: 9998
-              }}
-            />
-            {/* Bottom-right corner */}
-            <div 
-              className="absolute pointer-events-auto"
-              style={{
-                bottom: window.innerHeight - targetElement.getBoundingClientRect().bottom - 8,
-                right: window.innerWidth - targetElement.getBoundingClientRect().right - 8,
-                width: '12px',
-                height: '12px',
-                backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                borderRadius: '0 0 12px 0',
-                zIndex: 9998
-              }}
-            />
-          </>
+          <div 
+            className="absolute pointer-events-none"
+            style={{
+              top: targetElement.getBoundingClientRect().top - 8,
+              left: targetElement.getBoundingClientRect().left - 8,
+              width: targetElement.getBoundingClientRect().width + 16,
+              height: targetElement.getBoundingClientRect().height + 16,
+              borderRadius: '12px',
+              border: '2px solid rgba(255, 255, 255, 0.3)',
+              zIndex: 9999,
+              boxShadow: '0 0 20px rgba(255, 255, 255, 0.2)'
+            }}
+          />
         )}
         
         
