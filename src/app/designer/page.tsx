@@ -610,7 +610,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0
+        order: 0,
+        isExpanded: false
       }
     ];
 
@@ -656,7 +657,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0
+        order: 0,
+        isExpanded: false
       }
     ];
 
@@ -702,7 +704,8 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0
+        order: 0,
+        isExpanded: false
       }
     ];
 
@@ -3293,6 +3296,7 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
                                 <Star className="w-4 h-4" />
                               </Button>
                             </div>
+                          </div>
                         </CardContent>
                       </Card>
                     ))}
