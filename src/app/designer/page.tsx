@@ -122,7 +122,7 @@ type OnboardingTour = {
 export default function DesignerPage() {
   const [space, setSpace] = useState<Space>({
     id: "space-1",
-    name: "Space Title",
+    name: "Space Name",
     description: "Customize your space by adding cards and content",
     backgroundColor: "#f8fafc", // Light blue background
     borderColor: "#93c5fd", // Blue border
@@ -917,8 +917,8 @@ export default function DesignerPage() {
       steps: [
         {
           id: 'space-title',
-          title: 'Space Title',
-          description: 'This is your space title. Click to edit it and customize your space name.',
+          title: 'Space Name',
+          description: 'This is your space name. Click to edit it and customize your space name.',
           target: '[data-onboarding="space-title"]',
           position: 'bottom',
           skipable: true
@@ -965,8 +965,8 @@ export default function DesignerPage() {
       steps: [
         {
           id: 'space-title-input',
-          title: 'Space Title',
-          description: 'Edit your space title here. This will be displayed at the top of your space.',
+          title: 'Space Name',
+          description: 'Edit your space name here. This will be displayed at the top of your space.',
           target: '[data-onboarding="space-title-input"]',
           position: 'bottom',
           skipable: true
@@ -990,7 +990,7 @@ export default function DesignerPage() {
         {
           id: 'space-logo',
           title: 'Space Logo',
-          description: 'Upload a logo for your space. This will appear next to your space title.',
+          description: 'Upload a logo for your space. This will appear next to your space name.',
           target: '[data-onboarding="space-logo"]',
           position: 'bottom',
           skipable: true
@@ -1134,7 +1134,7 @@ export default function DesignerPage() {
       // Reset to default space
       setSpace({
         id: "space-1",
-        name: "Space Title",
+        name: "Space Name",
         description: "Customize your space by adding cards and content",
         backgroundColor: "#f8fafc",
         borderColor: "#93c5fd",
@@ -2100,7 +2100,7 @@ export default function DesignerPage() {
                 )}
               </div>
               
-              {/* Space Title */}
+              {/* Space Name */}
               <div data-onboarding="space-title">
                 {isEditingSpaceTitle ? (
                   <Input
@@ -3625,10 +3625,10 @@ export default function DesignerPage() {
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium">Space Title</label>
+                <label className="text-sm font-medium">Space Name</label>
                 <Input
                   data-onboarding="space-title-input"
-                  placeholder="Enter space title"
+                  placeholder="Enter space name"
                   value={space.name}
                   onChange={(e) => setSpace({ ...space, name: e.target.value })}
                 />
