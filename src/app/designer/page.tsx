@@ -216,45 +216,80 @@ export default function DesignerPage() {
     console.log('Tutorial restarted - starting main space tour');
   };
 
-  // AI Designer functions
-  const initializeAIDesigner = (context: { location: 'space' | 'card' | 'collection', targetId?: string, targetTitle?: string }) => {
-    setAiContext(context);
-    setShowAIDesigner(true);
-    if (aiMessages.length === 0) {
-      let welcomeMessage = '';
+  // Separate AI Designer initialization functions
+  const initializeSpaceAIDesigner = () => {
+    setSpaceAiContext({});
+    setShowSpaceAIDesigner(true);
+    if (spaceAiMessages.length === 0) {
+      // Context-aware welcome message based on space state
+      const hasCards = space.cards.length > 0;
+      const hasDescription = space.description && space.description.trim() !== '';
+      const spaceContext = hasCards ? 
+        `I can see you already have ${space.cards.length} cards in your space.` : 
+        'I can see this is a new, empty space.';
       
-      if (context.location === 'space') {
-        // Context-aware welcome message based on space state
-        const hasCards = space.cards.length > 0;
-        const hasDescription = space.description && space.description.trim() !== '';
-        const spaceContext = hasCards ? 
-          `I can see you already have ${space.cards.length} cards in your space.` : 
-          'I can see this is a new, empty space.';
-        
-        const missingInfo = [];
-        if (!hasDescription) missingInfo.push('space description');
-        if (!hasCards) missingInfo.push('specific medical specialty or target audience');
-        
-        const contextPrompt = missingInfo.length > 0 ? 
-          `To provide the best suggestions, I'd love to know more about your ${missingInfo.join(' and ')}.` :
-          'I can help you enhance your existing space or add new content.';
-        
-        welcomeMessage = `Hello! I'm your AI Design Assistant for your medical education space "${space.name}". 
+      const missingInfo = [];
+      if (!hasDescription) missingInfo.push('space description');
+      if (!hasCards) missingInfo.push('specific medical specialty or target audience');
+      
+      const contextPrompt = missingInfo.length > 0 ? 
+        `To provide the best suggestions, I'd love to know more about your ${missingInfo.join(' and ')}.` :
+        'I can help you enhance your existing space or add new content.';
+      
+      const welcomeMessage = `Hello! I'm your AI Space Designer for your medical education space "${space.name}". 
 
 ${spaceContext} ${contextPrompt}
 
-I can help you create amazing content by suggesting:
+I specialize in creating SPACE-LEVEL organization by suggesting:
 
-🎯 **Space Organization**: 4-6 space cards that organize your hospital space logically (e.g., "Featured Content", "Featured Categories", "Other Resources", "Residents Resources")
-📚 **Content Ideas**: Specific content suggestions for your cards
-🗂️ **Collection Templates**: Organized content collections with suggested cards
-🎨 **Creative Ideas**: Custom suggestions based on your specific needs
+🎯 **Space Organization Cards**: 4-6 space cards that organize your hospital space logically (e.g., "Featured Content", "Featured Categories", "Other Resources", "Residents Resources")
+📚 **Space Structure**: How to organize your entire medical education space
+🎨 **Space-Level Templates**: Complete space layouts for different medical specialties
 
 What would you like me to help you create? Tell me about your medical specialty, target audience, or specific learning goals!`;
-      } else if (context.location === 'card') {
-        welcomeMessage = `Hello! I'm here to help you populate the "${context.targetTitle}" card with amazing content!
+      
+      const message = {
+        id: 'welcome',
+        role: 'assistant' as const,
+        content: welcomeMessage,
+        timestamp: new Date()
+      };
+      setSpaceAiMessages([message]);
+    }
+  };
 
-I can suggest:
+  const initializeCollectionAIDesigner = (targetId: string, targetTitle: string) => {
+    setCollectionAiContext({ targetId, targetTitle });
+    setShowCollectionAIDesigner(true);
+    if (collectionAiMessages.length === 0) {
+      const welcomeMessage = `Hello! I'm your AI Collection Designer for the "${targetTitle}" collection!
+
+I specialize in creating COLLECTION-LEVEL organization by suggesting:
+
+🎯 **Collection Cards**: 4-6 collection cards that categorize content within this specific medical topic (e.g., "Topic Overview", "Workup Algorithm", "Technique Videos", "Postoperative Care")
+📚 **Content Organization**: How to structure content within this collection
+🗂️ **Learning Paths**: Sequential content for progressive learning within this topic
+🎨 **Topic-Specific Templates**: Detailed card structures for this medical specialty
+
+What kind of collection are you building? Tell me about the medical topic or learning goals for this collection!`;
+      
+      const message = {
+        id: 'welcome',
+        role: 'assistant' as const,
+        content: welcomeMessage,
+        timestamp: new Date()
+      };
+      setCollectionAiMessages([message]);
+    }
+  };
+
+  const initializeCardAIDesigner = (targetId: string, targetTitle: string) => {
+    setCardAiContext({ targetId, targetTitle });
+    setShowCardAIDesigner(true);
+    if (cardAiMessages.length === 0) {
+      const welcomeMessage = `Hello! I'm your AI Content Designer for the "${targetTitle}" card!
+
+I specialize in creating CARD-LEVEL content by suggesting:
 
 📹 **Video Content**: Surgical procedures, patient consultations, educational lectures
 🎧 **Podcast Content**: Medical discussions, case studies, continuing education
@@ -264,18 +299,6 @@ I can suggest:
 📁 **Collections**: Organized sub-collections within this card
 
 What type of content would work best for this card? Tell me about your specialty or learning objectives!`;
-      } else if (context.location === 'collection') {
-        welcomeMessage = `Hello! I'm here to help you design the "${context.targetTitle}" collection!
-
-I can suggest:
-
-🎯 **Card Templates**: Pre-built card structures for this collection
-📚 **Content Organization**: How to structure content within cards
-🗂️ **Sub-collections**: Nested organization for complex topics
-🎨 **Learning Paths**: Sequential content for progressive learning
-
-What kind of collection are you building? Tell me about the medical topic or learning goals!`;
-      }
       
       const message = {
         id: 'welcome',
@@ -283,11 +306,12 @@ What kind of collection are you building? Tell me about the medical topic or lea
         content: welcomeMessage,
         timestamp: new Date()
       };
-      setAiMessages([message]);
+      setCardAiMessages([message]);
     }
   };
 
-  const sendAIMessage = async (message: string) => {
+  // Separate send message functions for each AI Designer
+  const sendSpaceAIMessage = async (message: string) => {
     if (!message.trim()) return;
 
     const userMessage = {
@@ -297,13 +321,12 @@ What kind of collection are you building? Tell me about the medical topic or lea
       timestamp: new Date()
     };
 
-    setAiMessages(prev => [...prev, userMessage]);
-    setAiInput('');
-    setIsAiLoading(true);
+    setSpaceAiMessages(prev => [...prev, userMessage]);
+    setSpaceAiInput('');
+    setIsSpaceAiLoading(true);
 
     try {
-      // This would integrate with your OpenAI or Gemini API
-      const response = await generateAIResponse(message, selectedAiProvider);
+      const response = await generateSpaceAIResponse(message, selectedAiProvider);
       
       const assistantMessage = {
         id: `assistant-${Date.now()}`,
@@ -312,25 +335,104 @@ What kind of collection are you building? Tell me about the medical topic or lea
         timestamp: new Date()
       };
 
-      setAiMessages(prev => [...prev, assistantMessage]);
+      setSpaceAiMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
-      console.error('AI Error:', error);
+      console.error('Space AI Error:', error);
       const errorMessage = {
         id: `error-${Date.now()}`,
         role: 'assistant' as const,
         content: 'Sorry, I encountered an error. Please try again or check your API configuration.',
         timestamp: new Date()
       };
-      setAiMessages(prev => [...prev, errorMessage]);
+      setSpaceAiMessages(prev => [...prev, errorMessage]);
     } finally {
-      setIsAiLoading(false);
+      setIsSpaceAiLoading(false);
     }
   };
 
-  const generateAIResponse = async (message: string, provider: 'openai' | 'gemini'): Promise<string> => {
+  const sendCollectionAIMessage = async (message: string) => {
+    if (!message.trim()) return;
+
+    const userMessage = {
+      id: `user-${Date.now()}`,
+      role: 'user' as const,
+      content: message.trim(),
+      timestamp: new Date()
+    };
+
+    setCollectionAiMessages(prev => [...prev, userMessage]);
+    setCollectionAiInput('');
+    setIsCollectionAiLoading(true);
+
+    try {
+      const response = await generateCollectionAIResponse(message, selectedAiProvider);
+      
+      const assistantMessage = {
+        id: `assistant-${Date.now()}`,
+        role: 'assistant' as const,
+        content: response,
+        timestamp: new Date()
+      };
+
+      setCollectionAiMessages(prev => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('Collection AI Error:', error);
+      const errorMessage = {
+        id: `error-${Date.now()}`,
+        role: 'assistant' as const,
+        content: 'Sorry, I encountered an error. Please try again or check your API configuration.',
+        timestamp: new Date()
+      };
+      setCollectionAiMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsCollectionAiLoading(false);
+    }
+  };
+
+  const sendCardAIMessage = async (message: string) => {
+    if (!message.trim()) return;
+
+    const userMessage = {
+      id: `user-${Date.now()}`,
+      role: 'user' as const,
+      content: message.trim(),
+      timestamp: new Date()
+    };
+
+    setCardAiMessages(prev => [...prev, userMessage]);
+    setCardAiInput('');
+    setIsCardAiLoading(true);
+
+    try {
+      const response = await generateCardAIResponse(message, selectedAiProvider);
+      
+      const assistantMessage = {
+        id: `assistant-${Date.now()}`,
+        role: 'assistant' as const,
+        content: response,
+        timestamp: new Date()
+      };
+
+      setCardAiMessages(prev => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('Card AI Error:', error);
+      const errorMessage = {
+        id: `error-${Date.now()}`,
+        role: 'assistant' as const,
+        content: 'Sorry, I encountered an error. Please try again or check your API configuration.',
+        timestamp: new Date()
+      };
+      setCardAiMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsCardAiLoading(false);
+    }
+  };
+
+  // Separate AI response generation functions
+  const generateSpaceAIResponse = async (message: string, provider: 'openai' | 'gemini'): Promise<string> => {
     if (provider === 'openai') {
       try {
-        const systemPrompt = `You are an AI Design Assistant for a medical education app called "StayCurrentMD Space Designer". 
+        const systemPrompt = `You are an AI Space Designer for a medical education app called "StayCurrentMD Space Designer". 
 
 **CURRENT SPACE CONTEXT:**
 - Space Name: "${space.name}"
@@ -340,67 +442,57 @@ What kind of collection are you building? Tell me about the medical topic or lea
 - Current Collections: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'collection').length, 0)} collections
 - Total Content Items: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'content').length, 0)} items
 
-**CURRENT LOCATION:**
-- Location: ${aiContext.location}
-- Target: ${aiContext.targetTitle || 'Main Space'}
+**YOUR SPECIALTY: SPACE-LEVEL ORGANIZATION**
+You specialize in creating SPACE CARDS that organize the entire hospital space logically. These are organizing units for the hospital space.
 
-**IMPORTANT DISTINCTIONS:**
-1. **SPACE CARDS** = Organizing units for the hospital space (e.g., "Featured Content", "Featured Categories", "Other Resources", "Residents Resources")
-2. **COLLECTION CARDS** = Important categorization within a specific topic/collection (e.g., "Topic Overview", "Workup Algorithm", "Technique Videos")
-
-**YOUR ROLE:**
-Help users create comprehensive medical education content by suggesting:
-
-1. **Space-Level Organization**: Suggest 4-6 space cards that organize the hospital space logically
-2. **Collection-Level Structure**: Suggest 4-6 collection cards that categorize content within a specific medical topic
-3. **Content Suggestions**: Specific content items for each card
-4. **Context-Aware Design**: Analyze the current space and suggest improvements
+**SPACE CARD EXAMPLES:**
+- "Featured Content" - Essential resources and protocols
+- "Featured Categories" - Organized topics and specialties  
+- "Other Resources" - Additional tools and references
+- "Residents Resources" - Educational materials for residents
+- "Quick Access" - Frequently used tools and links
+- "Emergency Protocols" - Critical emergency procedures
 
 **RESPONSE GUIDELINES:**
-- Always suggest AT LEAST 4 cards for any template
-- Differentiate between space cards (organizing units) and collection cards (topic categorization)
+- Always suggest AT LEAST 4 space cards for any template
+- Focus on SPACE-LEVEL organization, not topic-specific content
 - Ask for missing information if space context is incomplete
-- Provide specific, actionable suggestions
+- Provide specific, actionable space organization suggestions
 - Use medical terminology appropriately
 - Be encouraging and helpful
 
 **CONTEXT ANALYSIS:**
 ${space.cards.length === 0 ? 'This is a new, empty space. Ask about the medical specialty, target audience, and learning goals.' : `This space has existing content. Analyze the current structure and suggest improvements or additions.`}
 
-Current context: The user is working on ${aiContext.location === 'space' ? 'the main space' : aiContext.location === 'card' ? `the "${aiContext.targetTitle}" card` : `the "${aiContext.targetTitle}" collection`} and needs help with content creation.`;
+Current context: The user is working on the main space and needs help with SPACE-LEVEL organization.`;
 
         const response = await fetch(AI_CONFIG.OPENAI_API_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${AI_CONFIG.OPENAI_API_KEY}`,
+            'Authorization': `Bearer ${AI_CONFIG.OPENAI_API_KEY}`
           },
           body: JSON.stringify({
-            model: AI_CONFIG.MODEL,
+            model: 'gpt-4',
             messages: [
-              {
-                role: 'system',
-                content: systemPrompt
-              },
-              {
-                role: 'user',
-                content: message
-              }
+              { role: 'system', content: systemPrompt },
+              ...spaceAiMessages.map(msg => ({ role: msg.role, content: msg.content })),
+              { role: 'user', content: message }
             ],
-            max_tokens: AI_CONFIG.MAX_TOKENS,
-            temperature: AI_CONFIG.TEMPERATURE,
-          }),
+            max_tokens: 1000,
+            temperature: 0.7
+          })
         });
 
         if (!response.ok) {
-          throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+          throw new Error(`OpenAI API error: ${response.status}`);
         }
 
         const data = await response.json();
-        return data.choices[0]?.message?.content || 'Sorry, I couldn\'t generate a response. Please try again.';
+        return data.choices[0].message.content;
       } catch (error) {
-        console.error('OpenAI API Error:', error);
-        throw new Error(`Failed to get AI response: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        console.error('OpenAI API error:', error);
+        return 'Sorry, I encountered an error. Please try again.';
       }
     } else {
       // Gemini integration would go here
@@ -408,47 +500,221 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
     }
   };
 
-  const applyAISuggestion = (suggestion: string) => {
-    console.log('Applying AI suggestion:', suggestion);
+  const generateCollectionAIResponse = async (message: string, provider: 'openai' | 'gemini'): Promise<string> => {
+    if (provider === 'openai') {
+      try {
+        const systemPrompt = `You are an AI Collection Designer for a medical education app called "StayCurrentMD Space Designer". 
+
+**CURRENT SPACE CONTEXT:**
+- Space Name: "${space.name}"
+- Space Description: "${space.description || 'No description provided'}"
+- Space Color: ${space.color}
+- Current Cards: ${space.cards.length} cards
+- Current Collections: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'collection').length, 0)} collections
+- Total Content Items: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'content').length, 0)} items
+
+**CURRENT COLLECTION:**
+- Collection: "${collectionAiContext.targetTitle}"
+- Collection ID: ${collectionAiContext.targetId}
+
+**YOUR SPECIALTY: COLLECTION-LEVEL ORGANIZATION**
+You specialize in creating COLLECTION CARDS that categorize content within a specific medical topic/collection. These are topic-specific categorization cards.
+
+**COLLECTION CARD EXAMPLES:**
+- "Topic Overview" - Comprehensive introduction to the medical topic
+- "Workup Algorithm" - Diagnostic pathway and staging workup
+- "Preoperative Planning" - Surgical indications and assessment
+- "Technique Videos" - Surgical procedures and demonstrations
+- "Postoperative Care" - Recovery protocols and monitoring
+- "Patient Education Materials" - Family counseling and support resources
+- "Key Articles" - Evidence-based literature and research
+- "Assessment Tools" - Knowledge checks and evaluations
+
+**RESPONSE GUIDELINES:**
+- Always suggest AT LEAST 4 collection cards for any template
+- Focus on COLLECTION-LEVEL organization within the specific topic
+- Ask for missing information about the medical topic
+- Provide specific, actionable collection organization suggestions
+- Use medical terminology appropriately
+- Be encouraging and helpful
+
+Current context: The user is working on the "${collectionAiContext.targetTitle}" collection and needs help with COLLECTION-LEVEL organization.`;
+
+        const response = await fetch(AI_CONFIG.OPENAI_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${AI_CONFIG.OPENAI_API_KEY}`
+          },
+          body: JSON.stringify({
+            model: 'gpt-4',
+            messages: [
+              { role: 'system', content: systemPrompt },
+              ...collectionAiMessages.map(msg => ({ role: msg.role, content: msg.content })),
+              { role: 'user', content: message }
+            ],
+            max_tokens: 1000,
+            temperature: 0.7
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`OpenAI API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.choices[0].message.content;
+      } catch (error) {
+        console.error('OpenAI API error:', error);
+        return 'Sorry, I encountered an error. Please try again.';
+      }
+    } else {
+      // Gemini integration would go here
+      return 'Gemini integration coming soon! Please switch to OpenAI for now.';
+    }
+  };
+
+  const generateCardAIResponse = async (message: string, provider: 'openai' | 'gemini'): Promise<string> => {
+    if (provider === 'openai') {
+      try {
+        const systemPrompt = `You are an AI Content Designer for a medical education app called "StayCurrentMD Space Designer". 
+
+**CURRENT SPACE CONTEXT:**
+- Space Name: "${space.name}"
+- Space Description: "${space.description || 'No description provided'}"
+- Space Color: ${space.color}
+- Current Cards: ${space.cards.length} cards
+- Current Collections: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'collection').length, 0)} collections
+- Total Content Items: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'content').length, 0)} items
+
+**CURRENT CARD:**
+- Card: "${cardAiContext.targetTitle}"
+- Card ID: ${cardAiContext.targetId}
+
+**YOUR SPECIALTY: CARD-LEVEL CONTENT**
+You specialize in creating CONTENT ITEMS within a specific card. These are individual content pieces like videos, articles, documents, etc.
+
+**CONTENT TYPE EXAMPLES:**
+- Video: Surgical procedures, patient consultations, educational lectures
+- Podcast: Medical discussions, case studies, continuing education
+- Document: Guidelines, protocols, research papers, study materials
+- Infographic: Visual learning materials, statistics, medical concepts
+- External Link: Useful resources and tools
+- Collection: Organized sub-collections within this card
+
+**RESPONSE GUIDELINES:**
+- Focus on CARD-LEVEL content creation
+- Suggest specific content items for this card
+- Ask for missing information about the card's purpose
+- Provide specific, actionable content suggestions
+- Use medical terminology appropriately
+- Be encouraging and helpful
+
+Current context: The user is working on the "${cardAiContext.targetTitle}" card and needs help with CARD-LEVEL content creation.`;
+
+        const response = await fetch(AI_CONFIG.OPENAI_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${AI_CONFIG.OPENAI_API_KEY}`
+          },
+          body: JSON.stringify({
+            model: 'gpt-4',
+            messages: [
+              { role: 'system', content: systemPrompt },
+              ...cardAiMessages.map(msg => ({ role: msg.role, content: msg.content })),
+              { role: 'user', content: message }
+            ],
+            max_tokens: 1000,
+            temperature: 0.7
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`OpenAI API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.choices[0].message.content;
+      } catch (error) {
+        console.error('OpenAI API error:', error);
+        return 'Sorry, I encountered an error. Please try again.';
+      }
+    } else {
+      // Gemini integration would go here
+      return 'Gemini integration coming soon! Please switch to OpenAI for now.';
+    }
+  };
+
+  // Separate suggestion application functions
+  const applySpaceAISuggestion = (suggestion: string) => {
+    console.log('Applying Space AI suggestion:', suggestion);
     
     // Add magic effect - show loading state
-    setIsAiLoading(true);
+    setIsSpaceAiLoading(true);
     
-    // Parse AI suggestions and create elements based on context
-    if (aiContext.location === 'space') {
-      // Generate space-level templates
-      if (suggestion.toLowerCase().includes('neuroblastoma') || suggestion.toLowerCase().includes('pediatric') && suggestion.toLowerCase().includes('oncology')) {
-        createNeuroblastomaTemplate();
-      } else if (suggestion.toLowerCase().includes('emergency') || suggestion.toLowerCase().includes('trauma')) {
-        createEmergencyMedicineTemplate();
-      } else if (suggestion.toLowerCase().includes('surgery') || suggestion.toLowerCase().includes('surgical')) {
-        createSurgeryTemplate();
-      } else if (suggestion.toLowerCase().includes('cardiology') || suggestion.toLowerCase().includes('heart')) {
-        createCardiologyTemplate();
-      } else if (suggestion.toLowerCase().includes('pediatrics') || suggestion.toLowerCase().includes('pediatric')) {
-        createPediatricsTemplate();
-      } else if (suggestion.toLowerCase().includes('neurology') || suggestion.toLowerCase().includes('brain')) {
-        createNeurologyTemplate();
-      } else if (suggestion.toLowerCase().includes('clinical decision') || suggestion.toLowerCase().includes('decision making')) {
-        createClinicalDecisionMakingTemplate();
-      } else {
-        // Default medical education template
-        createDefaultMedicalTemplate();
-      }
-    } else if (aiContext.location === 'card') {
-      // Generate content for specific card
-      generateCardContent(aiContext.targetId!, suggestion);
-    } else if (aiContext.location === 'collection') {
-      // Generate collection templates
-      generateCollectionTemplate(aiContext.targetId!, suggestion);
+    // Parse AI suggestions and create space cards
+    if (suggestion.toLowerCase().includes('neuroblastoma') || suggestion.toLowerCase().includes('pediatric') && suggestion.toLowerCase().includes('oncology')) {
+      createNeuroblastomaTemplate();
+    } else if (suggestion.toLowerCase().includes('emergency') || suggestion.toLowerCase().includes('trauma')) {
+      createEmergencyMedicineTemplate();
+    } else if (suggestion.toLowerCase().includes('surgery') || suggestion.toLowerCase().includes('surgical')) {
+      createSurgeryTemplate();
+    } else if (suggestion.toLowerCase().includes('cardiology') || suggestion.toLowerCase().includes('heart')) {
+      createCardiologyTemplate();
+    } else if (suggestion.toLowerCase().includes('pediatrics') || suggestion.toLowerCase().includes('pediatric')) {
+      createPediatricsTemplate();
+    } else if (suggestion.toLowerCase().includes('neurology') || suggestion.toLowerCase().includes('brain')) {
+      createNeurologyTemplate();
+    } else if (suggestion.toLowerCase().includes('clinical decision') || suggestion.toLowerCase().includes('decision making')) {
+      createClinicalDecisionMakingTemplate();
+    } else {
+      // Default medical education template
+      createDefaultMedicalTemplate();
     }
     
     // Auto-close AI Designer after applying suggestion
     setTimeout(() => {
-      setIsAiLoading(false);
-      setShowAIDesigner(false);
-      setAiMessages([]);
-      setAiInput('');
+      setIsSpaceAiLoading(false);
+      setShowSpaceAIDesigner(false);
+      setSpaceAiMessages([]);
+      setSpaceAiInput('');
+    }, 1500); // 1.5 second delay to show the magic effect
+  };
+
+  const applyCollectionAISuggestion = (suggestion: string) => {
+    console.log('Applying Collection AI suggestion:', suggestion);
+    
+    // Add magic effect - show loading state
+    setIsCollectionAiLoading(true);
+    
+    // Generate collection cards based on suggestion
+    generateCollectionTemplate(collectionAiContext.targetId!, suggestion);
+    
+    // Auto-close AI Designer after applying suggestion
+    setTimeout(() => {
+      setIsCollectionAiLoading(false);
+      setShowCollectionAIDesigner(false);
+      setCollectionAiMessages([]);
+      setCollectionAiInput('');
+    }, 1500); // 1.5 second delay to show the magic effect
+  };
+
+  const applyCardAISuggestion = (suggestion: string) => {
+    console.log('Applying Card AI suggestion:', suggestion);
+    
+    // Add magic effect - show loading state
+    setIsCardAiLoading(true);
+    
+    // Generate content for specific card
+    generateCardContent(cardAiContext.targetId!, suggestion);
+    
+    // Auto-close AI Designer after applying suggestion
+    setTimeout(() => {
+      setIsCardAiLoading(false);
+      setShowCardAIDesigner(false);
+      setCardAiMessages([]);
+      setCardAiInput('');
     }, 1500); // 1.5 second delay to show the magic effect
   };
 
@@ -1673,16 +1939,41 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
 
   // AI Designer state
-  const [showAIDesigner, setShowAIDesigner] = useState(false);
-  const [aiMessages, setAiMessages] = useState<Array<{id: string, role: 'user' | 'assistant', content: string, timestamp: Date}>>([]);
-  const [aiInput, setAiInput] = useState('');
-  const [isAiLoading, setIsAiLoading] = useState(false);
+  // Separate AI Designers for different contexts
+  const [showSpaceAIDesigner, setShowSpaceAIDesigner] = useState(false);
+  const [showCollectionAIDesigner, setShowCollectionAIDesigner] = useState(false);
+  const [showCardAIDesigner, setShowCardAIDesigner] = useState(false);
+  
+  // Separate AI states for each context
+  const [spaceAiMessages, setSpaceAiMessages] = useState<Array<{id: string, role: 'user' | 'assistant', content: string, timestamp: Date}>>([]);
+  const [collectionAiMessages, setCollectionAiMessages] = useState<Array<{id: string, role: 'user' | 'assistant', content: string, timestamp: Date}>>([]);
+  const [cardAiMessages, setCardAiMessages] = useState<Array<{id: string, role: 'user' | 'assistant', content: string, timestamp: Date}>>([]);
+  
+  const [spaceAiInput, setSpaceAiInput] = useState('');
+  const [collectionAiInput, setCollectionAiInput] = useState('');
+  const [cardAiInput, setCardAiInput] = useState('');
+  
+  const [isSpaceAiLoading, setIsSpaceAiLoading] = useState(false);
+  const [isCollectionAiLoading, setIsCollectionAiLoading] = useState(false);
+  const [isCardAiLoading, setIsCardAiLoading] = useState(false);
+  
   const [selectedAiProvider, setSelectedAiProvider] = useState<'openai' | 'gemini'>('openai');
-  const [aiContext, setAiContext] = useState<{
-    location: 'space' | 'card' | 'collection';
+  
+  // Separate contexts for each AI Designer
+  const [spaceAiContext, setSpaceAiContext] = useState<{
     targetId?: string;
     targetTitle?: string;
-  }>({ location: 'space' });
+  }>({});
+  
+  const [collectionAiContext, setCollectionAiContext] = useState<{
+    targetId?: string;
+    targetTitle?: string;
+  }>({});
+  
+  const [cardAiContext, setCardAiContext] = useState<{
+    targetId?: string;
+    targetTitle?: string;
+  }>({});
 
   // Force re-render when switching modes to ensure state consistency
   useEffect(() => {
@@ -3582,12 +3873,12 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => initializeAIDesigner({ location: 'space' })}
+                  onClick={() => initializeSpaceAIDesigner()}
                   className="bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border border-purple-200 text-purple-700 whitespace-nowrap"
-                  title="AI Design Assistant"
+                  title="AI Space Designer"
                 >
                   <Star className="w-4 h-4 mr-2" />
-                  AI Designer
+                  AI Space Designer
                 </Button>
                 <Button
                   variant="outline"
@@ -3698,11 +3989,11 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
 
                     <Button 
                       variant="outline"
-                      onClick={() => initializeAIDesigner({ location: 'space' })}
+                      onClick={() => initializeSpaceAIDesigner()}
                       className="flex items-center gap-2 border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700 transition-all duration-200"
                     >
                       <Star className="w-4 h-4" />
-                      AI Designer
+                      AI Space Designer
                     </Button>
                   </div>
                 </div>
@@ -3737,12 +4028,13 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
                     </Button>
                     
                     <Button
-                      onClick={() => initializeAIDesigner({ location: 'space' })}
+                      onClick={() => initializeSpaceAIDesigner()}
                       variant="outline"
                       className="flex items-center gap-2 border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700 transition-all duration-200"
-                      title="AI Designer for Space"
+                      title="AI Space Designer"
                     >
                       <Star className="w-4 h-4" />
+                      AI Space Designer
                     </Button>
                   </div>
 
@@ -4039,11 +4331,7 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
                                   <Button
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => initializeAIDesigner({ 
-                                      location: 'card', 
-                                      targetId: card.id, 
-                                      targetTitle: card.title 
-                                    })}
+                                    onClick={() => initializeCardAIDesigner(card.id, card.title)}
                                     className="border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700"
                                     title={`AI Designer for ${card.title}`}
                                   >
@@ -4659,11 +4947,7 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
               <div className="pt-2 border-t">
                 <Button
                   variant="outline"
-                  onClick={() => initializeAIDesigner({ 
-                    location: 'card', 
-                    targetId: currentCardId!, 
-                    targetTitle: 'New Item' 
-                  })}
+                  onClick={() => initializeCardAIDesigner(currentCardId!, 'New Item')}
                   className="w-full border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700"
                 >
                   <Star className="w-4 h-4 mr-2" />
@@ -5038,11 +5322,7 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
                                   <Button
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => initializeAIDesigner({ 
-                                      location: 'card', 
-                                      targetId: card.id, 
-                                      targetTitle: card.title 
-                                    })}
+                                    onClick={() => initializeCardAIDesigner(card.id, card.title)}
                                     className="border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700"
                                     title={`AI Designer for ${card.title}`}
                                   >
@@ -5082,11 +5362,7 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
                       
                       <Button
                         variant="outline"
-                        onClick={() => initializeAIDesigner({ 
-                          location: 'collection', 
-                          targetId: currentCollection.id, 
-                          targetTitle: currentCollection.title 
-                        })}
+                        onClick={() => initializeCollectionAIDesigner(currentCollection.id, currentCollection.title)}
                         className="border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700"
                         title={`AI Designer for ${currentCollection.title}`}
                       >
@@ -5231,7 +5507,7 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
           </DialogContent>
         </Dialog>
 
-        {/* AI Designer Dialog */}
+        {/* AI Designer Dialogs - Replaced with separate dialogs */}
         <Dialog open={showAIDesigner} onOpenChange={setShowAIDesigner}>
           <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[90vh] !h-[90vh] flex flex-col !top-[5vh] !left-[2.5vw] !translate-x-0 !translate-y-0">
             {/* AI Magic Effect Overlay */}
@@ -5521,6 +5797,501 @@ Current context: The user is working on ${aiContext.location === 'space' ? 'the 
                 )}
               </Button>
             </div>
+          </DialogContent>
+        </Dialog>
+        
+        {/* Space AI Designer Dialog */}
+        <Dialog open={showSpaceAIDesigner} onOpenChange={setShowSpaceAIDesigner}>
+          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[90vh] !h-[90vh] flex flex-col !top-[5vh] !left-[2.5vw] !translate-x-0 !translate-y-0">
+            {/* AI Magic Effect Overlay */}
+            {isSpaceAiLoading && (
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="relative">
+                    {/* Spinning stars */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Star className="w-8 h-8 text-purple-500 animate-spin" />
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Star className="w-6 h-6 text-blue-500 animate-spin" style={{ animationDelay: '0.5s' }} />
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Star className="w-4 h-4 text-pink-500 animate-spin" style={{ animationDelay: '1s' }} />
+                    </div>
+                  </div>
+                  <div className="mt-4 text-lg font-semibold text-purple-700">
+                    ✨ Creating Space Organization ✨
+                  </div>
+                  <div className="text-sm text-purple-600 mt-1">
+                    Applying space-level suggestions...
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Star className="w-6 h-6" />
+              AI Space Designer
+            </DialogTitle>
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <span>Powered by:</span>
+                <Select value={selectedAiProvider} onValueChange={(value: 'openai' | 'gemini') => setSelectedAiProvider(value)}>
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="openai">OpenAI</SelectItem>
+                    <SelectItem value="gemini">Gemini</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </DialogHeader>
+            
+          {/* Chat Messages */}
+          <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50">
+            {spaceAiMessages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div
+                  className={`max-w-[80%] p-3 rounded-lg ${
+                    message.role === 'user'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-white border border-gray-200'
+                  }`}
+                >
+                  <div className="whitespace-pre-wrap text-sm">{message.content}</div>
+                  <div className={`text-xs mt-1 ${
+                    message.role === 'user' ? 'text-blue-100' : 'text-gray-500'
+                  }`}>
+                    {message.timestamp.toLocaleTimeString()}
+                  </div>
+                  
+                  {/* Apply Suggestion Button for AI messages */}
+                  {message.role === 'assistant' && message.id !== 'welcome' && (
+                    <div className="mt-3 pt-2 border-t border-gray-200">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => applySpaceAISuggestion(message.content)}
+                        className="w-full bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border border-purple-200 text-purple-700"
+                      >
+                        <Star className="w-4 h-4 mr-2" />
+                        Apply This Space Organization
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+            
+            {/* Loading indicator */}
+            {isSpaceAiLoading && (
+              <div className="flex justify-start">
+                <div className="bg-white border border-gray-200 p-3 rounded-lg">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                    AI Space Designer is thinking...
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+            
+            {/* Input Area */}
+            <div className="flex gap-2 p-4 border-t">
+              <Input
+                value={spaceAiInput}
+                onChange={(e) => setSpaceAiInput(e.target.value)}
+                placeholder="Ask me about space organization, medical specialties, or learning goals..."
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendSpaceAIMessage(spaceAiInput);
+                  }
+                }}
+                disabled={isSpaceAiLoading}
+                className="flex-1"
+              />
+              <Button
+                onClick={() => sendSpaceAIMessage(spaceAiInput)}
+                disabled={!spaceAiInput.trim() || isSpaceAiLoading}
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+              >
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+            
+          {/* Quick Actions */}
+          <div className="p-4 border-t bg-gray-50">
+            <div className="text-sm font-medium text-gray-700 mb-2">Quick Actions:</div>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => sendSpaceAIMessage("Create an emergency medicine template with triage protocols and critical care procedures")}
+                className="text-xs"
+              >
+                🚨 Emergency Medicine Template
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => sendSpaceAIMessage("Create a surgery template with preoperative assessment and technique videos")}
+                className="text-xs"
+              >
+                ⚕️ Surgery Template
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => sendSpaceAIMessage("Create a cardiology template with diagnostic tools and treatment protocols")}
+                className="text-xs"
+              >
+                ❤️ Cardiology Template
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => sendSpaceAIMessage("Create a pediatrics template with growth charts and developmental milestones")}
+                className="text-xs"
+              >
+                👶 Pediatrics Template
+              </Button>
+            </div>
+          </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Collection AI Designer Dialog */}
+        <Dialog open={showCollectionAIDesigner} onOpenChange={setShowCollectionAIDesigner}>
+          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[90vh] !h-[90vh] flex flex-col !top-[5vh] !left-[2.5vw] !translate-x-0 !translate-y-0">
+            {/* AI Magic Effect Overlay */}
+            {isCollectionAiLoading && (
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="relative">
+                    {/* Spinning stars */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Star className="w-8 h-8 text-purple-500 animate-spin" />
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Star className="w-6 h-6 text-blue-500 animate-spin" style={{ animationDelay: '0.5s' }} />
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Star className="w-4 h-4 text-pink-500 animate-spin" style={{ animationDelay: '1s' }} />
+                    </div>
+                  </div>
+                  <div className="mt-4 text-lg font-semibold text-purple-700">
+                    ✨ Creating Collection Structure ✨
+                  </div>
+                  <div className="text-sm text-purple-600 mt-1">
+                    Applying collection-level suggestions...
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Star className="w-6 h-6" />
+              AI Collection Designer
+            </DialogTitle>
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <span>Powered by:</span>
+                <Select value={selectedAiProvider} onValueChange={(value: 'openai' | 'gemini') => setSelectedAiProvider(value)}>
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="openai">OpenAI</SelectItem>
+                    <SelectItem value="gemini">Gemini</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </DialogHeader>
+            
+          {/* Chat Messages */}
+          <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50">
+            {collectionAiMessages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div
+                  className={`max-w-[80%] p-3 rounded-lg ${
+                    message.role === 'user'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-white border border-gray-200'
+                  }`}
+                >
+                  <div className="whitespace-pre-wrap text-sm">{message.content}</div>
+                  <div className={`text-xs mt-1 ${
+                    message.role === 'user' ? 'text-blue-100' : 'text-gray-500'
+                  }`}>
+                    {message.timestamp.toLocaleTimeString()}
+                  </div>
+                  
+                  {/* Apply Suggestion Button for AI messages */}
+                  {message.role === 'assistant' && message.id !== 'welcome' && (
+                    <div className="mt-3 pt-2 border-t border-gray-200">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => applyCollectionAISuggestion(message.content)}
+                        className="w-full bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border border-purple-200 text-purple-700"
+                      >
+                        <Star className="w-4 h-4 mr-2" />
+                        Apply This Collection Structure
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+            
+            {/* Loading indicator */}
+            {isCollectionAiLoading && (
+              <div className="flex justify-start">
+                <div className="bg-white border border-gray-200 p-3 rounded-lg">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                    AI Collection Designer is thinking...
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+            
+            {/* Input Area */}
+            <div className="flex gap-2 p-4 border-t">
+              <Input
+                value={collectionAiInput}
+                onChange={(e) => setCollectionAiInput(e.target.value)}
+                placeholder="Ask me about collection organization, medical topics, or learning paths..."
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendCollectionAIMessage(collectionAiInput);
+                  }
+                }}
+                disabled={isCollectionAiLoading}
+                className="flex-1"
+              />
+              <Button
+                onClick={() => sendCollectionAIMessage(collectionAiInput)}
+                disabled={!collectionAiInput.trim() || isCollectionAiLoading}
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+              >
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+            
+          {/* Quick Actions */}
+          <div className="p-4 border-t bg-gray-50">
+            <div className="text-sm font-medium text-gray-700 mb-2">Quick Actions:</div>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => sendCollectionAIMessage("Create cards for learning objectives and assessment")}
+                className="text-xs"
+              >
+                📚 Learning Objectives
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => sendCollectionAIMessage("Create cards for case studies and clinical scenarios")}
+                className="text-xs"
+              >
+                🏥 Case Studies
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => sendCollectionAIMessage("Create cards for diagnostic approach and treatment protocols")}
+                className="text-xs"
+              >
+                🔬 Diagnostic Approach
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => sendCollectionAIMessage("Create cards for patient education and family counseling")}
+                className="text-xs"
+              >
+                👨‍👩‍👧‍👦 Patient Education
+              </Button>
+            </div>
+          </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Card AI Designer Dialog */}
+        <Dialog open={showCardAIDesigner} onOpenChange={setShowCardAIDesigner}>
+          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[90vh] !h-[90vh] flex flex-col !top-[5vh] !left-[2.5vw] !translate-x-0 !translate-y-0">
+            {/* AI Magic Effect Overlay */}
+            {isCardAiLoading && (
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="relative">
+                    {/* Spinning stars */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Star className="w-8 h-8 text-purple-500 animate-spin" />
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Star className="w-6 h-6 text-blue-500 animate-spin" style={{ animationDelay: '0.5s' }} />
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Star className="w-4 h-4 text-pink-500 animate-spin" style={{ animationDelay: '1s' }} />
+                    </div>
+                  </div>
+                  <div className="mt-4 text-lg font-semibold text-purple-700">
+                    ✨ Creating Content ✨
+                  </div>
+                  <div className="text-sm text-purple-600 mt-1">
+                    Applying content suggestions...
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Star className="w-6 h-6" />
+              AI Content Designer
+            </DialogTitle>
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <span>Powered by:</span>
+                <Select value={selectedAiProvider} onValueChange={(value: 'openai' | 'gemini') => setSelectedAiProvider(value)}>
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="openai">OpenAI</SelectItem>
+                    <SelectItem value="gemini">Gemini</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </DialogHeader>
+            
+          {/* Chat Messages */}
+          <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50">
+            {cardAiMessages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div
+                  className={`max-w-[80%] p-3 rounded-lg ${
+                    message.role === 'user'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-white border border-gray-200'
+                  }`}
+                >
+                  <div className="whitespace-pre-wrap text-sm">{message.content}</div>
+                  <div className={`text-xs mt-1 ${
+                    message.role === 'user' ? 'text-blue-100' : 'text-gray-500'
+                  }`}>
+                    {message.timestamp.toLocaleTimeString()}
+                  </div>
+                  
+                  {/* Apply Suggestion Button for AI messages */}
+                  {message.role === 'assistant' && message.id !== 'welcome' && (
+                    <div className="mt-3 pt-2 border-t border-gray-200">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => applyCardAISuggestion(message.content)}
+                        className="w-full bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border border-purple-200 text-purple-700"
+                      >
+                        <Star className="w-4 h-4 mr-2" />
+                        Apply This Content
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+            
+            {/* Loading indicator */}
+            {isCardAiLoading && (
+              <div className="flex justify-start">
+                <div className="bg-white border border-gray-200 p-3 rounded-lg">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                    AI Content Designer is thinking...
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+            
+            {/* Input Area */}
+            <div className="flex gap-2 p-4 border-t">
+              <Input
+                value={cardAiInput}
+                onChange={(e) => setCardAiInput(e.target.value)}
+                placeholder="Ask me about content types, medical resources, or specific materials..."
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendCardAIMessage(cardAiInput);
+                  }
+                }}
+                disabled={isCardAiLoading}
+                className="flex-1"
+              />
+              <Button
+                onClick={() => sendCardAIMessage(cardAiInput)}
+                disabled={!cardAiInput.trim() || isCardAiLoading}
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+              >
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+            
+          {/* Quick Actions */}
+          <div className="p-4 border-t bg-gray-50">
+            <div className="text-sm font-medium text-gray-700 mb-2">Quick Actions:</div>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => sendCardAIMessage("Add video content for surgical procedures and patient consultations")}
+                className="text-xs"
+              >
+                📹 Video Content
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => sendCardAIMessage("Add podcast content for medical discussions and case studies")}
+                className="text-xs"
+              >
+                🎧 Podcast Content
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => sendCardAIMessage("Add document content for guidelines and protocols")}
+                className="text-xs"
+              >
+                📄 Document Content
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => sendCardAIMessage("Add infographic content for visual learning materials")}
+                className="text-xs"
+              >
+                📊 Infographic Content
+              </Button>
+            </div>
+          </div>
           </DialogContent>
         </Dialog>
         
