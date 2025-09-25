@@ -1588,11 +1588,7 @@ export default function DesignerPage() {
                               card.items.map((item) => (
                                 <div 
                                   key={item.id} 
-                                  className={`relative group rounded-lg p-2 transition-colors cursor-pointer ${
-                                    item.type === 'collection' 
-                                      ? 'bg-gradient-to-br from-purple-50 to-blue-50' 
-                                      : ''
-                                  }`}
+                                  className={`relative group rounded-lg p-2 transition-colors cursor-pointer`}
                                   onClick={() => {
                                     if (item.type === 'collection') {
                                       setCurrentCollection(item);
@@ -1602,12 +1598,16 @@ export default function DesignerPage() {
                                   }}
                                 >
                                     <div className="flex flex-col items-center text-center space-y-2 h-full justify-center">
-                                      <div className={`rounded-lg border flex items-center justify-center bg-white relative ${item.type === 'collection' ? 'shadow-lg' : ''}`} style={{ borderColor: space.borderColor, width: '100px', height: '100px' }}>
+                                      <div className={`rounded-lg border flex items-center justify-center bg-white relative ${item.type === 'collection' ? 'shadow-lg' : ''}`} style={{ borderColor: space.borderColor, width: '100px', height: '100px', minHeight: '100px', maxHeight: '100px' }}>
                                         {/* Stack effect for collections */}
                                         {item.type === 'collection' && (
                                           <>
-                                            <div className="absolute inset-0 rounded-lg border bg-white transform translate-x-1 translate-y-1 opacity-60" style={{ borderColor: space.borderColor }}></div>
-                                            <div className="absolute inset-0 rounded-lg border bg-white transform translate-x-0.5 translate-y-0.5 opacity-80" style={{ borderColor: space.borderColor }}></div>
+                                        {/* Third square (back) */}
+                                        <div className="absolute inset-0 rounded-lg border bg-gray-50 transform translate-x-2 translate-y-2 rotate-2 opacity-40" style={{ borderColor: space.borderColor }}></div>
+                                        {/* Second square (middle) */}
+                                        <div className="absolute inset-0 rounded-lg border bg-gray-100 transform translate-x-1 translate-y-1 -rotate-1 opacity-60" style={{ borderColor: space.borderColor }}></div>
+                                        {/* First square (front) - solid white */}
+                                        <div className="absolute inset-0 rounded-lg border bg-white transform translate-x-0 translate-y-0 rotate-0 opacity-100" style={{ borderColor: space.borderColor }}></div>
                                           </>
                                         )}
                                         <div className="relative z-10">
@@ -1621,15 +1621,48 @@ export default function DesignerPage() {
                                         </div>
                                         {/* Item count inside container for collections */}
                                         {item.type === 'collection' && (
-                                          <div className="absolute bottom-1 right-1 bg-purple-100 text-purple-600 text-xs font-medium px-1 py-0.5 rounded-full min-w-[20px] text-center">
-                                            {getCollectionItemCount(item)}
+                                          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 z-20">
+                                            <div className="bg-purple-100 text-purple-600 text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap">
+                                              {getCollectionItemCount(item)} {getCollectionItemCount(item) === 1 ? 'item' : 'items'}
+                                            </div>
                                           </div>
                                         )}
                                       </div>
                                       <div className="w-full h-12 flex flex-col justify-center">
-                                        <p className="text-xs font-medium leading-tight line-clamp-2">{item.title}</p>
+                                        <p className={`text-xs font-medium leading-tight line-clamp-2 ${item.type === 'collection' ? '' : ''}`} style={item.type === 'collection' ? { color: space.borderColor } : {}}>{item.title}</p>
                                         <p className="text-xs text-gray-600 line-clamp-1 leading-tight">{item.description}</p>
                                       </div>
+                                      
+                                      {/* Edit/Delete buttons for collections */}
+                                      {item.type === 'collection' && isDesignMode && (
+                                        <div className="flex gap-1 mt-2">
+                                          <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              setEditingItem(item);
+                                              setCurrentCardId(card.id);
+                                              setShowAddItemDialog(true);
+                                            }}
+                                            className="h-6 w-6 p-0 bg-transparent hover:bg-gray-100 border border-gray-300 text-gray-600 hover:text-gray-700"
+                                          >
+                                            <Edit className="w-3 h-3" />
+                                          </Button>
+                                          <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              deleteItem(card.id, item.id);
+                                            }}
+                                            className="h-6 w-6 p-0 bg-transparent hover:bg-red-100 border border-red-300 text-red-600 hover:text-red-700"
+                                          >
+                                            <Trash2 className="w-3 h-3" />
+                                          </Button>
+                                        </div>
+                                      )}
+                                      
                                       {item.type !== 'collection' && (
                                         <div className="flex gap-1 mt-2">
                                           <Button
@@ -1749,28 +1782,34 @@ export default function DesignerPage() {
                                     {/* Stack effect for collections */}
                                     {item.type === 'collection' && (
                                       <>
-                                        <div className="absolute inset-0 rounded-lg border bg-white transform translate-x-1 translate-y-1 opacity-60" style={{ borderColor: space.borderColor }}></div>
-                                        <div className="absolute inset-0 rounded-lg border bg-white transform translate-x-0.5 translate-y-0.5 opacity-80" style={{ borderColor: space.borderColor }}></div>
+                                        {/* Third square (back) */}
+                                        <div className="absolute inset-0 rounded-lg border bg-gray-50 transform translate-x-2 translate-y-2 rotate-2 opacity-40" style={{ borderColor: space.borderColor }}></div>
+                                        {/* Second square (middle) */}
+                                        <div className="absolute inset-0 rounded-lg border bg-gray-100 transform translate-x-1 translate-y-1 -rotate-1 opacity-60" style={{ borderColor: space.borderColor }}></div>
+                                        {/* First square (front) - solid white */}
+                                        <div className="absolute inset-0 rounded-lg border bg-white transform translate-x-0 translate-y-0 rotate-0 opacity-100" style={{ borderColor: space.borderColor }}></div>
                                       </>
                                     )}
-                                    <div className="relative z-10">
+                                    <div className="relative z-10 flex items-center justify-center w-full h-full">
                                       {item.type === 'collection' ? <FolderOpen className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} /> : 
                                         typeof item.icon === 'string' ? 
-                                          <span className="text-2xl">{item.icon}</span> : 
+                                          <span className="text-2xl flex items-center justify-center">{item.icon}</span> : 
                                           typeof item.icon === 'object' && item.contentType ?
                                             React.createElement(getContentTypeIcon(item.contentType), { className: "w-8 h-8", style: { color: space.borderColor, strokeWidth: 1 } }) :
-                                            <span className="text-2xl">📄</span>
+                                            <span className="text-2xl flex items-center justify-center">📄</span>
                                       }
                                     </div>
                                     {/* Item count inside container for collections */}
                                     {item.type === 'collection' && (
-                                      <div className="absolute bottom-1 right-1 bg-purple-100 text-purple-600 text-xs font-medium px-1 py-0.5 rounded-full min-w-[20px] text-center">
-                                        {(item.children?.length || 0)}
+                                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 z-20">
+                                        <div className="bg-purple-100 text-purple-600 text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap">
+                                          {(item.children?.length || 0)} {(item.children?.length || 0) === 1 ? 'item' : 'items'}
+                                        </div>
                                       </div>
                                     )}
                                   </div>
                                   <div className="w-full h-12 flex flex-col justify-center">
-                                    <h4 className="text-xs font-medium line-clamp-2">{item.title}</h4>
+                                    <h4 className={`text-xs font-medium line-clamp-2 ${item.type === 'collection' ? '' : ''}`} style={item.type === 'collection' ? { color: space.borderColor } : {}}>{item.title}</h4>
                                     <p className="text-xs text-gray-600 line-clamp-1 leading-tight">{item.description}</p>
                                     {item.externalUrl && (
                                       <a 
@@ -2298,12 +2337,16 @@ export default function DesignerPage() {
                                   }}
                                   >
                                     <div className="flex flex-col items-center text-center space-y-2 h-full justify-center">
-                                      <div className={`rounded-lg border flex items-center justify-center bg-white relative ${item.type === 'collection' ? 'shadow-lg' : ''}`} style={{ borderColor: space.borderColor, width: '100px', height: '100px' }}>
+                                      <div className={`rounded-lg border flex items-center justify-center bg-white relative ${item.type === 'collection' ? 'shadow-lg' : ''}`} style={{ borderColor: space.borderColor, width: '100px', height: '100px', minHeight: '100px', maxHeight: '100px' }}>
                                         {/* Stack effect for collections */}
                                         {item.type === 'collection' && (
                                           <>
-                                            <div className="absolute inset-0 rounded-lg border bg-white transform translate-x-1 translate-y-1 opacity-60" style={{ borderColor: space.borderColor }}></div>
-                                            <div className="absolute inset-0 rounded-lg border bg-white transform translate-x-0.5 translate-y-0.5 opacity-80" style={{ borderColor: space.borderColor }}></div>
+                                        {/* Third square (back) */}
+                                        <div className="absolute inset-0 rounded-lg border bg-gray-50 transform translate-x-2 translate-y-2 rotate-2 opacity-40" style={{ borderColor: space.borderColor }}></div>
+                                        {/* Second square (middle) */}
+                                        <div className="absolute inset-0 rounded-lg border bg-gray-100 transform translate-x-1 translate-y-1 -rotate-1 opacity-60" style={{ borderColor: space.borderColor }}></div>
+                                        {/* First square (front) - solid white */}
+                                        <div className="absolute inset-0 rounded-lg border bg-white transform translate-x-0 translate-y-0 rotate-0 opacity-100" style={{ borderColor: space.borderColor }}></div>
                                           </>
                                         )}
                                         <div className="relative z-10">
@@ -2317,15 +2360,45 @@ export default function DesignerPage() {
                                         </div>
                                         {/* Item count inside container for collections */}
                                         {item.type === 'collection' && (
-                                          <div className="absolute bottom-1 right-1 bg-purple-100 text-purple-600 text-xs font-medium px-1 py-0.5 rounded-full min-w-[20px] text-center">
-                                            {(item.children?.length || 0)}
+                                          <div className="absolute bottom-1 right-1 bg-purple-100 text-purple-600 text-xs font-medium px-2 py-1 rounded-full">
+                                            {(item.children?.length || 0)} {(item.children?.length || 0) === 1 ? 'item' : 'items'}
                                           </div>
                                         )}
                                       </div>
                                       <div className="w-full h-12 flex flex-col justify-center">
-                                        <p className="text-xs font-medium line-clamp-2">{item.title}</p>
+                                        <p className={`text-xs font-medium line-clamp-2 ${item.type === 'collection' ? '' : ''}`} style={item.type === 'collection' ? { color: space.borderColor } : {}}>{item.title}</p>
                                         <p className="text-xs text-gray-600 line-clamp-1 leading-tight">{item.description}</p>
                                       </div>
+                                      
+                                      {/* Edit/Delete buttons for collections */}
+                                      {item.type === 'collection' && isDesignMode && (
+                                        <div className="flex gap-1 mt-2">
+                                          <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              setEditingItem(item);
+                                              setCurrentCardId(card.id);
+                                              setShowAddItemDialog(true);
+                                            }}
+                                            className="h-6 w-6 p-0 bg-transparent hover:bg-gray-100 border border-gray-300 text-gray-600 hover:text-gray-700"
+                                          >
+                                            <Edit className="w-3 h-3" />
+                                          </Button>
+                                          <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              deleteItem(card.id, item.id);
+                                            }}
+                                            className="h-6 w-6 p-0 bg-transparent hover:bg-red-100 border border-red-300 text-red-600 hover:text-red-700"
+                                          >
+                                            <Trash2 className="w-3 h-3" />
+                                          </Button>
+                                        </div>
+                                      )}
                                       
                                       {item.type !== 'collection' && isDesignMode && (
                                         <div className="flex gap-1 mt-2">
