@@ -693,6 +693,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
   // Helper function to extract card titles from AI suggestion
   const extractCardTitlesFromSuggestion = (suggestion: string): string[] => {
+    console.log('Parsing AI suggestion:', suggestion);
     const cardTitles: string[] = [];
     
     // Look for patterns like "1. Card Title", "• Card Title", "- Card Title", etc.
@@ -701,14 +702,16 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
       /^[•·]\s*(.+)$/gm,            // "• Card Title"
       /^-\s*(.+)$/gm,               // "- Card Title"
       /^\*\s*(.+)$/gm,              // "* Card Title"
+      /^(\w+.*?)(?:\n|$)/gm,        // Any line that starts with a word
     ];
     
     for (const pattern of patterns) {
       const matches = suggestion.match(pattern);
       if (matches) {
+        console.log('Found matches with pattern:', pattern, matches);
         for (const match of matches) {
           const title = match.replace(/^\d+\.\s*|[•·*-]\s*/, '').trim();
-          if (title && title.length > 3 && title.length < 50) {
+          if (title && title.length > 3 && title.length < 50 && !title.includes(':')) {
             cardTitles.push(title);
           }
         }
@@ -717,13 +720,20 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
     
     // If no patterns found, try to extract from common medical card patterns
     if (cardTitles.length === 0) {
+      console.log('No patterns found, trying medical patterns');
       const medicalPatterns = [
         'Featured Content',
         'Featured Categories', 
         'Other Resources',
         'Residents Resources',
         'Quick Access',
-        'Emergency Protocols'
+        'Emergency Protocols',
+        'Learning Materials',
+        'Assessment Tools',
+        'Case Studies',
+        'Guidelines',
+        'Procedures',
+        'Diagnostics'
       ];
       
       for (const pattern of medicalPatterns) {
@@ -733,11 +743,13 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
       }
     }
     
+    console.log('Extracted card titles:', cardTitles);
     return cardTitles.slice(0, 6); // Limit to 6 cards max
   };
 
   // Helper function to create cards from AI suggestion
   const createCardsFromAISuggestion = (cardTitles: string[]) => {
+    console.log('Creating cards from AI suggestion:', cardTitles);
     const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
     
     const newCards: SpaceCard[] = cardTitles.map((title, index) => ({
@@ -753,6 +765,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
       isExpanded: false
     }));
 
+    console.log('Created new cards:', newCards);
     setSpace(prev => ({
       ...prev,
       cards: [...prev.cards, ...newCards]
@@ -761,6 +774,8 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
   // Helper function to create collection cards from AI suggestion
   const createCollectionCardsFromAISuggestion = (collectionId: string, cardTitles: string[]) => {
+    console.log('Creating collection cards from AI suggestion:', collectionId, cardTitles);
+    
     // Find the collection in the space
     const findCollectionInCards = (cards: SpaceCard[]): ContentItem | null => {
       for (const card of cards) {
@@ -778,7 +793,12 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
     };
 
     const collection = findCollectionInCards(space.cards);
-    if (!collection || collection.type !== 'collection') return;
+    console.log('Found collection:', collection);
+    
+    if (!collection || collection.type !== 'collection') {
+      console.log('Collection not found or not a collection type');
+      return;
+    }
 
     const colors = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
     
@@ -793,6 +813,8 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
       createdAt: new Date(),
       updatedAt: new Date()
     }));
+
+    console.log('Created new collection cards:', newCards);
 
     // Update the collection with new cards
     setSpace(prev => ({
