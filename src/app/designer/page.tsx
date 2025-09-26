@@ -325,8 +325,8 @@ What type of content would work best for this card? Tell me about your specialty
     setSpaceAiInput('');
     setIsSpaceAiLoading(true);
 
-    try {
-      const response = await generateSpaceAIResponse(message, selectedAiProvider);
+      try {
+        const response = await generateSpaceAIResponse(message);
       
       const assistantMessage = {
         id: `assistant-${Date.now()}`,
@@ -364,8 +364,8 @@ What type of content would work best for this card? Tell me about your specialty
     setCollectionAiInput('');
     setIsCollectionAiLoading(true);
 
-    try {
-      const response = await generateCollectionAIResponse(message, selectedAiProvider);
+      try {
+        const response = await generateCollectionAIResponse(message);
       
       const assistantMessage = {
         id: `assistant-${Date.now()}`,
@@ -403,8 +403,8 @@ What type of content would work best for this card? Tell me about your specialty
     setCardAiInput('');
     setIsCardAiLoading(true);
 
-    try {
-      const response = await generateCardAIResponse(message, selectedAiProvider);
+      try {
+        const response = await generateCardAIResponse(message);
       
       const assistantMessage = {
         id: `assistant-${Date.now()}`,
@@ -429,15 +429,21 @@ What type of content would work best for this card? Tell me about your specialty
   };
 
   // Separate AI response generation functions
-  const generateSpaceAIResponse = async (message: string, provider: 'openai' | 'gemini'): Promise<string> => {
-    if (provider === 'openai') {
+  const generateSpaceAIResponse = async (message: string): Promise<string> => {
       try {
+        console.log('AI_CONFIG.OPENAI_API_KEY:', AI_CONFIG.OPENAI_API_KEY ? 'Present' : 'Missing');
+        console.log('API Key length:', AI_CONFIG.OPENAI_API_KEY?.length || 0);
+        console.log('AI_CONFIG:', AI_CONFIG);
+        
+        if (!AI_CONFIG.OPENAI_API_KEY) {
+          throw new Error('OpenAI API key is not configured');
+        }
         const systemPrompt = `You are an AI Space Designer for a medical education app called "StayCurrentMD Space Designer". 
 
 **CURRENT SPACE CONTEXT:**
 - Space Name: "${space.name}"
 - Space Description: "${space.description || 'No description provided'}"
-- Space Color: ${space.color}
+    - Space Color: ${space.borderColor}
 - Current Cards: ${space.cards.length} cards
 - Current Collections: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'collection').length, 0)} collections
 - Total Content Items: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'content').length, 0)} items
@@ -484,31 +490,31 @@ Current context: The user is working on the main space and needs help with SPACE
           })
         });
 
+        console.log('OpenAI API response status:', response.status);
+        
         if (!response.ok) {
-          throw new Error(`OpenAI API error: ${response.status}`);
+          const errorText = await response.text();
+          console.error('OpenAI API error response:', errorText);
+          throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
         }
 
         const data = await response.json();
+        console.log('OpenAI API response data:', data);
         return data.choices[0].message.content;
       } catch (error) {
         console.error('OpenAI API error:', error);
-        return 'Sorry, I encountered an error. Please try again.';
+        return `Sorry, I encountered an error: ${error.message}. Please try again.`;
       }
-    } else {
-      // Gemini integration would go here
-      return 'Gemini integration coming soon! Please switch to OpenAI for now.';
-    }
   };
 
-  const generateCollectionAIResponse = async (message: string, provider: 'openai' | 'gemini'): Promise<string> => {
-    if (provider === 'openai') {
+  const generateCollectionAIResponse = async (message: string): Promise<string> => {
       try {
         const systemPrompt = `You are an AI Collection Designer for a medical education app called "StayCurrentMD Space Designer". 
 
 **CURRENT SPACE CONTEXT:**
 - Space Name: "${space.name}"
 - Space Description: "${space.description || 'No description provided'}"
-- Space Color: ${space.color}
+    - Space Color: ${space.borderColor}
 - Current Cards: ${space.cards.length} cards
 - Current Collections: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'collection').length, 0)} collections
 - Total Content Items: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'content').length, 0)} items
@@ -568,21 +574,16 @@ Current context: The user is working on the "${collectionAiContext.targetTitle}"
         console.error('OpenAI API error:', error);
         return 'Sorry, I encountered an error. Please try again.';
       }
-    } else {
-      // Gemini integration would go here
-      return 'Gemini integration coming soon! Please switch to OpenAI for now.';
-    }
   };
 
-  const generateCardAIResponse = async (message: string, provider: 'openai' | 'gemini'): Promise<string> => {
-    if (provider === 'openai') {
+  const generateCardAIResponse = async (message: string): Promise<string> => {
       try {
         const systemPrompt = `You are an AI Content Designer for a medical education app called "StayCurrentMD Space Designer". 
 
 **CURRENT SPACE CONTEXT:**
 - Space Name: "${space.name}"
 - Space Description: "${space.description || 'No description provided'}"
-- Space Color: ${space.color}
+    - Space Color: ${space.borderColor}
 - Current Cards: ${space.cards.length} cards
 - Current Collections: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'collection').length, 0)} collections
 - Total Content Items: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'content').length, 0)} items
@@ -640,10 +641,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         console.error('OpenAI API error:', error);
         return 'Sorry, I encountered an error. Please try again.';
       }
-    } else {
-      // Gemini integration would go here
-      return 'Gemini integration coming soon! Please switch to OpenAI for now.';
-    }
   };
 
   // Separate suggestion application functions
@@ -691,18 +688,79 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
     }, 1500); // 1.5 second delay to show the magic effect
   };
 
+  // Helper function to check if a message contains actionable suggestions
+  const isActionableSuggestion = (message: string): boolean => {
+    const lowerMessage = message.toLowerCase();
+    
+    // Exclude casual conversation patterns
+    const casualPatterns = [
+      'how are you', 'how do you do', 'hello', 'hi', 'thanks', 'thank you',
+      'good morning', 'good afternoon', 'good evening', 'nice to meet you',
+      'what can you do', 'what are you', 'who are you', 'tell me about yourself',
+      'i am fine', 'i am good', 'i am well', 'doing well', 'doing good'
+    ];
+    
+    if (casualPatterns.some(pattern => lowerMessage.includes(pattern))) {
+      return false;
+    }
+    
+    // Look for specific actionable patterns
+    const actionablePatterns = [
+      /^\d+\.\s*\*\*"[^"]+"\*\*:/,  // "1. **"Card Title"**:"
+      /^\d+\.\s*\*\*[^*]+\*\*:/,    // "1. **Card Title**:"
+      /^\d+\.\s*"[^"]+":/,          // "1. "Card Title":"
+      /^\d+\.\s*[^:]+:/,            // "1. Card Title:"
+      /^[•·\-\*]\s*[^:]+:/,         // "• Card Title:"
+      /create\s+\d+\s+cards?/i,     // "create 5 cards"
+      /add\s+\d+\s+cards?/i,        // "add 3 cards"
+      /generate\s+\d+\s+cards?/i,   // "generate 4 cards"
+      /suggest\s+\d+\s+cards?/i,    // "suggest 6 cards"
+      /recommend\s+\d+\s+cards?/i,  // "recommend 2 cards"
+      /here\s+are\s+\d+\s+cards?/i, // "here are 5 cards"
+      /i\s+suggest\s+\d+\s+cards?/i, // "i suggest 3 cards"
+      /i\s+recommend\s+\d+\s+cards?/i, // "i recommend 4 cards"
+      /template\s+with\s+\d+\s+cards?/i, // "template with 5 cards"
+      /structure\s+with\s+\d+\s+cards?/i, // "structure with 3 cards"
+    ];
+    
+    // Check for actionable patterns
+    const hasActionablePattern = actionablePatterns.some(pattern => pattern.test(message));
+    
+    // Also check for content-specific patterns
+    const contentPatterns = [
+      /create\s+content/i,
+      /add\s+content/i,
+      /generate\s+content/i,
+      /suggest\s+content/i,
+      /here\s+are\s+some\s+content/i,
+      /i\s+suggest\s+adding/i,
+      /i\s+recommend\s+adding/i,
+      /video\s+content/i,
+      /article\s+content/i,
+      /document\s+content/i,
+      /guideline\s+content/i,
+    ];
+    
+    const hasContentPattern = contentPatterns.some(pattern => pattern.test(message));
+    
+    return hasActionablePattern || hasContentPattern;
+  };
+
   // Helper function to extract card titles from AI suggestion
   const extractCardTitlesFromSuggestion = (suggestion: string): string[] => {
     console.log('Parsing AI suggestion:', suggestion);
     const cardTitles: string[] = [];
     
-    // Look for patterns like "1. Card Title", "• Card Title", "- Card Title", etc.
+    // Look for patterns like "1. **"Card Title"**:", "• Card Title", "- Card Title", etc.
     const patterns = [
-      /^\d+\.\s*(.+)$/gm,           // "1. Card Title"
-      /^[•·]\s*(.+)$/gm,            // "• Card Title"
-      /^-\s*(.+)$/gm,               // "- Card Title"
-      /^\*\s*(.+)$/gm,              // "* Card Title"
-      /^(\w+.*?)(?:\n|$)/gm,        // Any line that starts with a word
+      /^\d+\.\s*\*\*"([^"]+)"\*\*:/gm,  // "1. **"Card Title"**:"
+      /^\d+\.\s*\*\*([^*]+)\*\*:/gm,    // "1. **Card Title**:"
+      /^\d+\.\s*"([^"]+)":/gm,          // "1. "Card Title":"
+      /^\d+\.\s*(.+?):/gm,              // "1. Card Title:"
+      /^\d+\.\s*(.+)$/gm,               // "1. Card Title"
+      /^[•·]\s*(.+)$/gm,                // "• Card Title"
+      /^-\s*(.+)$/gm,                   // "- Card Title"
+      /^\*\s*(.+)$/gm,                  // "* Card Title"
     ];
     
     for (const pattern of patterns) {
@@ -710,8 +768,13 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
       if (matches) {
         console.log('Found matches with pattern:', pattern, matches);
         for (const match of matches) {
-          const title = match.replace(/^\d+\.\s*|[•·*-]\s*/, '').trim();
-          if (title && title.length > 3 && title.length < 50 && !title.includes(':')) {
+          let title = match.replace(/^\d+\.\s*|[•·*-]\s*/, '').trim();
+          // Remove markdown formatting
+          title = title.replace(/\*\*([^*]+)\*\*/, '$1'); // Remove **bold**
+          title = title.replace(/"([^"]+)":?/, '$1'); // Remove quotes and colons
+          title = title.replace(/:\s*.*$/, ''); // Remove everything after colon
+          
+          if (title && title.length > 3 && title.length < 50) {
             cardTitles.push(title);
           }
         }
@@ -761,7 +824,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
       items: [],
       createdAt: new Date(),
       updatedAt: new Date(),
-      order: index,
       isExpanded: false
     }));
 
@@ -798,7 +860,20 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
       return null;
     };
 
-    const collection = findCollectionInCards(space.cards);
+    // Also search in the current collection if we're in a collection context
+    const findCollectionInCurrentCollection = (): ContentItem | null => {
+      if (currentCollection && currentCollection.id === collectionId) {
+        console.log('Found current collection by ID match!');
+        return currentCollection;
+      }
+      return null;
+    };
+
+    let collection = findCollectionInCards(space.cards);
+    if (!collection) {
+      collection = findCollectionInCurrentCollection();
+    }
+    
     console.log('Found collection:', collection);
     
     if (!collection || collection.type !== 'collection') {
@@ -811,18 +886,20 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
           }
         });
       });
+      console.log('Current collection:', currentCollection);
       return;
     }
 
     const colors = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
     
-    const newCards: CollectionCard[] = cardTitles.map((title, index) => ({
+    const newCards: ContentItem[] = cardTitles.map((title, index) => ({
       id: `collection-card-${Date.now()}-${index}`,
+      type: 'collection' as const,
       title: title,
       description: `AI-generated collection card: ${title}`,
       color: colors[index % colors.length],
       order: (collection.children?.length || 0) + index,
-      items: [],
+      children: [],
       isExpanded: false,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -855,6 +932,15 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
       console.log('Updated space:', updated);
       return updated;
     });
+
+    // Also update the current collection if it's the same one
+    if (currentCollection && currentCollection.id === collectionId) {
+      console.log('Updating current collection with new cards');
+      setCurrentCollection({
+        ...currentCollection,
+        children: [...(currentCollection.children || []), ...newCards]
+      });
+    }
   };
 
   const applyCollectionAISuggestion = (suggestion: string) => {
@@ -938,7 +1024,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       },
       {
@@ -975,7 +1060,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       },
       {
@@ -990,7 +1074,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
             type: 'content' as const,
             title: 'Drug Dosing Calculator',
             description: 'Emergency medication dosing and calculations',
-            contentType: 'interactive' as const,
+            contentType: 'interactive-content' as const,
             icon: Gamepad2 as any,
             isPublic: true,
             createdAt: new Date(),
@@ -1012,7 +1096,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 2,
         isExpanded: false
       },
       {
@@ -1049,7 +1132,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 3,
         isExpanded: false
       }
     ];
@@ -1096,7 +1178,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       },
       {
@@ -1133,7 +1214,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       }
     ];
@@ -1180,7 +1260,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       }
     ];
@@ -1227,7 +1306,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       }
     ];
@@ -1274,7 +1352,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       }
     ];
@@ -1309,7 +1386,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       },
       {
@@ -1334,7 +1410,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       }
     ];
@@ -1382,7 +1457,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       },
       {
@@ -1419,7 +1493,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       },
       {
@@ -1456,7 +1529,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       },
       {
@@ -1493,7 +1565,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       },
       {
@@ -1530,7 +1601,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       },
       {
@@ -1567,7 +1637,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       },
       {
@@ -1604,7 +1673,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       }
     ];
@@ -1639,7 +1707,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       },
       {
@@ -1664,7 +1731,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       },
       {
@@ -1689,7 +1755,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       },
       {
@@ -1714,7 +1779,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       },
       {
@@ -1739,7 +1803,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       },
       {
@@ -1764,7 +1827,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       },
       {
@@ -1789,7 +1851,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
         isExpanded: false
       }
     ];
@@ -1801,8 +1862,18 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
   };
 
   const generateCardContent = (cardId: string, suggestion: string) => {
-    const card = space.cards.find(c => c.id === cardId);
-    if (!card) return;
+    // First try to find the card in space cards
+    let card = space.cards.find(c => c.id === cardId);
+    
+    // If not found in space cards, try to find it in current collection
+    if (!card && currentCollection) {
+      card = currentCollection.children?.find(c => c.id === cardId);
+    }
+    
+    if (!card) {
+      console.log('Card not found:', cardId);
+      return;
+    }
 
     // Generate content based on suggestion keywords
     const newItems: ContentItem[] = [];
@@ -1853,14 +1924,30 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
     }
 
     if (newItems.length > 0) {
-      setSpace(prev => ({
-        ...prev,
-        cards: prev.cards.map(c => 
-          c.id === cardId 
-            ? { ...c, items: [...c.items, ...newItems] }
-            : c
-        )
-      }));
+      // Check if this is a space card or collection card
+      const isSpaceCard = space.cards.some(c => c.id === cardId);
+      
+      if (isSpaceCard) {
+        // Update space card
+        setSpace(prev => ({
+          ...prev,
+          cards: prev.cards.map(c => 
+            c.id === cardId 
+              ? { ...c, items: [...c.items, ...newItems] }
+              : c
+          )
+        }));
+      } else if (currentCollection) {
+        // Update collection card
+        setCurrentCollection({
+          ...currentCollection,
+          children: currentCollection.children?.map(c => 
+            c.id === cardId 
+              ? { ...c, children: [...(c.children || []), ...newItems] }
+              : c
+          ) || []
+        });
+      }
     }
   };
 
@@ -1893,7 +1980,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         {
           id: `collection-card-${Date.now()}-1`,
           title: 'Topic Overview',
-          description: 'Comprehensive introduction to neuroblastoma',
           color: '#8b5cf6',
           order: collection.children?.length || 0,
           items: [],
@@ -1904,7 +1990,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         {
           id: `collection-card-${Date.now()}-2`,
           title: 'Workup Algorithm',
-          description: 'Diagnostic pathway and staging workup',
           color: '#06b6d4',
           order: (collection.children?.length || 0) + 1,
           items: [],
@@ -1915,7 +2000,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         {
           id: `collection-card-${Date.now()}-3`,
           title: 'Preoperative Planning',
-          description: 'Surgical indications and assessment',
           color: '#10b981',
           order: (collection.children?.length || 0) + 2,
           items: [],
@@ -1926,7 +2010,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         {
           id: `collection-card-${Date.now()}-4`,
           title: 'Technique Videos',
-          description: 'Surgical procedures and demonstrations',
           color: '#f59e0b',
           order: (collection.children?.length || 0) + 3,
           items: [],
@@ -1937,7 +2020,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         {
           id: `collection-card-${Date.now()}-5`,
           title: 'Postoperative Care',
-          description: 'Recovery protocols and monitoring',
           color: '#ef4444',
           order: (collection.children?.length || 0) + 4,
           items: [],
@@ -1948,7 +2030,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         {
           id: `collection-card-${Date.now()}-6`,
           title: 'Patient Education Materials',
-          description: 'Family counseling and support resources',
           color: '#8b5cf6',
           order: (collection.children?.length || 0) + 5,
           items: [],
@@ -1963,7 +2044,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         {
           id: `collection-card-${Date.now()}-1`,
           title: 'Core Concepts',
-          description: 'Fundamental knowledge and principles',
           color: '#3b82f6',
           order: collection.children?.length || 0,
           items: [],
@@ -1974,7 +2054,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         {
           id: `collection-card-${Date.now()}-2`,
           title: 'Diagnostic Approach',
-          description: 'Assessment and diagnostic criteria',
           color: '#10b981',
           order: (collection.children?.length || 0) + 1,
           items: [],
@@ -1985,7 +2064,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         {
           id: `collection-card-${Date.now()}-3`,
           title: 'Treatment Protocols',
-          description: 'Therapeutic approaches and guidelines',
           color: '#f59e0b',
           order: (collection.children?.length || 0) + 2,
           items: [],
@@ -1996,7 +2074,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         {
           id: `collection-card-${Date.now()}-4`,
           title: 'Case Studies',
-          description: 'Clinical scenarios and analysis',
           color: '#ef4444',
           order: (collection.children?.length || 0) + 3,
           items: [],
@@ -2007,7 +2084,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         {
           id: `collection-card-${Date.now()}-5`,
           title: 'Assessment Tools',
-          description: 'Knowledge checks and evaluations',
           color: '#8b5cf6',
           order: (collection.children?.length || 0) + 4,
           items: [],
@@ -2018,7 +2094,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         {
           id: `collection-card-${Date.now()}-6`,
           title: 'Key Articles',
-          description: 'Evidence-based literature and research',
           color: '#06b6d4',
           order: (collection.children?.length || 0) + 5,
           items: [],
@@ -2140,7 +2215,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
   const [isCollectionAiLoading, setIsCollectionAiLoading] = useState(false);
   const [isCardAiLoading, setIsCardAiLoading] = useState(false);
   
-  const [selectedAiProvider, setSelectedAiProvider] = useState<'openai' | 'gemini'>('openai');
   
   // Separate contexts for each AI Designer
   const [spaceAiContext, setSpaceAiContext] = useState<{
@@ -2323,13 +2397,16 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
     const addCollectionItems = (collection: ContentItem) => {
       if (collection.type === 'collection' && collection.children) {
         collection.children.forEach(card => {
-          allItems.push(...card.items);
-          // Recursively add items from subcollections
-          card.items.forEach(item => {
-            if (item.type === 'collection' && item.children) {
-              addCollectionItems(item);
-            }
-          });
+          // Collection cards have children, not items
+          if (card.children) {
+            allItems.push(...card.children);
+            // Recursively add items from subcollections
+            card.children.forEach(item => {
+              if (item.type === 'collection' && item.children) {
+                addCollectionItems(item);
+              }
+            });
+          }
         });
       }
     };
@@ -3110,8 +3187,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
             order: space.cards.length + 1,
             isExpanded: false, // Minimized by default
             createdAt: new Date(),
-            updatedAt: new Date(),
-            order: 0
+            updatedAt: new Date()
           };
         
         setSpace({
@@ -3438,8 +3514,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         id: `item-${Date.now()}-${index}`,
         order: index,
         createdAt: new Date(),
-        updatedAt: new Date(),
-        order: 0
+        updatedAt: new Date()
       })),
       color: '#f3f4f6', // Default gray color for template cards
       order: space.cards.length + 1,
@@ -3627,11 +3702,11 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
       const newCards = updateCollectionByPath(updatedSpace.cards, collectionPath, currentCollection);
       
       // Ensure all collection cards have isExpanded property
-      const ensureExpansionProperty = (cards: CollectionCard[]): CollectionCard[] => {
+      const ensureExpansionProperty = (cards: ContentItem[]): ContentItem[] => {
         return cards.map(card => ({
           ...card,
           isExpanded: card.isExpanded !== undefined ? card.isExpanded : false,
-          items: card.items.map(item => {
+          children: card.children ? card.children.map(item => {
             if (item.type === 'collection' && item.children) {
               return {
                 ...item,
@@ -3639,7 +3714,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
               };
             }
             return item;
-          })
+          }) : []
         }));
       };
       
@@ -3920,32 +3995,34 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         <div className="sticky top-0 bg-white border-b p-4 z-10">
           {/* Mode Toggle - Above Everything */}
           <div className="flex items-center justify-center gap-2 mb-4" data-onboarding="mode-toggle">
-            <Button
-              variant={isDesignMode ? "default" : "outline"}
-              onClick={() => setIsDesignMode(true)}
-              className={`rounded-r-none border ${isDesignMode ? '' : ''}`}
-              style={isDesignMode ? { 
-                backgroundColor: space.backgroundColor,
-                borderColor: space.borderColor,
-                color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
-              } : {}}
-            >
-              <Palette className="w-4 h-4 mr-2" />
-              Design Mode
-            </Button>
-            <Button
-              variant={!isDesignMode ? "default" : "outline"}
-              onClick={() => setIsDesignMode(false)}
-              className={`rounded-l-none border ${!isDesignMode ? '' : ''}`}
-              style={!isDesignMode ? { 
-                backgroundColor: space.backgroundColor,
-                borderColor: space.borderColor,
-                color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
-              } : {}}
-            >
-              <Eye className="w-4 h-4 mr-2" />
-              Production Mode
-            </Button>
+            <div className="flex">
+              <Button
+                variant={isDesignMode ? "default" : "outline"}
+                onClick={() => setIsDesignMode(true)}
+                className={`rounded-r-none border ${isDesignMode ? '' : ''}`}
+                style={isDesignMode ? { 
+                  backgroundColor: space.backgroundColor,
+                  borderColor: space.borderColor,
+                  color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
+                } : {}}
+              >
+                <Palette className="w-4 h-4 mr-2" />
+                Design Mode
+              </Button>
+              <Button
+                variant={!isDesignMode ? "default" : "outline"}
+                onClick={() => setIsDesignMode(false)}
+                className={`rounded-l-none border ${!isDesignMode ? '' : ''}`}
+                style={!isDesignMode ? { 
+                  backgroundColor: space.backgroundColor,
+                  borderColor: space.borderColor,
+                  color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
+                } : {}}
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                Production Mode
+              </Button>
+            </div>
             <Button
               variant="outline"
               size="sm"
@@ -4518,7 +4595,8 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                                     className="border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700"
                                     title={`AI Designer for ${card.title}`}
                                   >
-                                    <Star className="w-4 h-4" />
+                                    <Star className="w-4 h-4 mr-1" />
+                                    AI
                                   </Button>
                                 </div>
                               </div>
@@ -5126,17 +5204,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                 </>
               )}
 
-              {/* AI Designer Button */}
-              <div className="pt-2 border-t">
-                <Button
-                  variant="outline"
-                  onClick={() => initializeCardAIDesigner(currentCardId!, 'New Item')}
-                  className="w-full border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700"
-                >
-                  <Star className="w-4 h-4 mr-2" />
-                  AI Designer - Suggest Content
-                </Button>
-              </div>
 
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setShowAddItemDialog(false)}>
@@ -5322,7 +5389,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                               >
                                 <CardTitle className="text-lg" style={{ color: card.color }}>{card.title}</CardTitle>
                                 <Badge variant="secondary" className="text-xs">
-                                  {card.items.length} {card.items.length === 1 ? 'item' : 'items'}
+                                  {(card.children || []).length} {(card.children || []).length === 1 ? 'item' : 'items'}
                                 </Badge>
                                 <ChevronRight 
                                   className={`w-4 h-4 transition-transform ${card.isExpanded ? 'rotate-90' : ''}`} 
@@ -5358,8 +5425,8 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                           {card.isExpanded && (
                             <CardContent>
                             <div className="grid grid-cols-3 gap-2">
-                              {card.items && card.items.length > 0 ? (
-                                card.items.map((item) => (
+                              {card.children && card.children.length > 0 ? (
+                                card.children.map((item) => (
                                       <div 
                                         key={item.id} 
                                         className={`relative group rounded-lg p-2 transition-colors cursor-pointer ${
@@ -5509,7 +5576,8 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                                     className="border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700"
                                     title={`AI Designer for ${card.title}`}
                                   >
-                                    <Star className="w-4 h-4" />
+                                    <Star className="w-4 h-4 mr-1" />
+                                    AI
                                   </Button>
                                 </div>
                               </div>
@@ -5549,7 +5617,8 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                         className="border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700"
                         title={`AI Designer for ${currentCollection.title}`}
                       >
-                        <Star className="w-4 h-4" />
+                        <Star className="w-4 h-4 mr-2" />
+                        AI Collection Designer
                       </Button>
                     </div>
                     
@@ -5727,16 +5796,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
               AI Design Assistant
             </DialogTitle>
               <div className="flex items-center gap-2 text-sm text-gray-600">
-                <span>Powered by:</span>
-                <Select value={selectedAiProvider} onValueChange={(value: 'openai' | 'gemini') => setSelectedAiProvider(value)}>
-                  <SelectTrigger className="w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="openai">OpenAI</SelectItem>
-                    <SelectItem value="gemini">Gemini</SelectItem>
-                  </SelectContent>
-                </Select>
+                <span>Powered by OpenAI</span>
               </div>
             </DialogHeader>
             
@@ -5762,12 +5822,12 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   </div>
                   
                   {/* Apply Suggestion Button for AI messages */}
-                  {message.role === 'assistant' && message.id !== 'welcome' && (
+                  {message.role === 'assistant' && message.id !== 'welcome' && isActionableSuggestion(message.content) && (
                     <div className="mt-3 pt-2 border-t border-gray-200">
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => applyAISuggestion(message.content)}
+                        onClick={() => applyCardAISuggestion(message.content)}
                         className="w-full bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border border-purple-200 text-purple-700"
                       >
                         <Star className="w-4 h-4 mr-2" />
@@ -5961,16 +6021,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
               AI Space Designer
             </DialogTitle>
               <div className="flex items-center gap-2 text-sm text-gray-600">
-                <span>Powered by:</span>
-                <Select value={selectedAiProvider} onValueChange={(value: 'openai' | 'gemini') => setSelectedAiProvider(value)}>
-                  <SelectTrigger className="w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="openai">OpenAI</SelectItem>
-                    <SelectItem value="gemini">Gemini</SelectItem>
-                  </SelectContent>
-                </Select>
+                <span>Powered by OpenAI</span>
               </div>
             </DialogHeader>
             
@@ -6126,16 +6177,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
               AI Collection Designer
             </DialogTitle>
               <div className="flex items-center gap-2 text-sm text-gray-600">
-                <span>Powered by:</span>
-                <Select value={selectedAiProvider} onValueChange={(value: 'openai' | 'gemini') => setSelectedAiProvider(value)}>
-                  <SelectTrigger className="w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="openai">OpenAI</SelectItem>
-                    <SelectItem value="gemini">Gemini</SelectItem>
-                  </SelectContent>
-                </Select>
+                <span>Powered by OpenAI</span>
               </div>
             </DialogHeader>
             
@@ -6161,7 +6203,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   </div>
                   
                   {/* Apply Suggestion Button for AI messages */}
-                  {message.role === 'assistant' && message.id !== 'welcome' && (
+                  {message.role === 'assistant' && message.id !== 'welcome' && isActionableSuggestion(message.content) && (
                     <div className="mt-3 pt-2 border-t border-gray-200">
                       <Button
                         variant="outline"
@@ -6291,16 +6333,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
               AI Content Designer
             </DialogTitle>
               <div className="flex items-center gap-2 text-sm text-gray-600">
-                <span>Powered by:</span>
-                <Select value={selectedAiProvider} onValueChange={(value: 'openai' | 'gemini') => setSelectedAiProvider(value)}>
-                  <SelectTrigger className="w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="openai">OpenAI</SelectItem>
-                    <SelectItem value="gemini">Gemini</SelectItem>
-                  </SelectContent>
-                </Select>
+                <span>Powered by OpenAI</span>
               </div>
             </DialogHeader>
             
@@ -6326,7 +6359,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   </div>
                   
                   {/* Apply Suggestion Button for AI messages */}
-                  {message.role === 'assistant' && message.id !== 'welcome' && (
+                  {message.role === 'assistant' && message.id !== 'welcome' && isActionableSuggestion(message.content) && (
                     <div className="mt-3 pt-2 border-t border-gray-200">
                       <Button
                         variant="outline"
