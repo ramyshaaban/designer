@@ -721,6 +721,17 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
       /i\s+recommend\s+\d+\s+cards?/i, // "i recommend 4 cards"
       /template\s+with\s+\d+\s+cards?/i, // "template with 5 cards"
       /structure\s+with\s+\d+\s+cards?/i, // "structure with 3 cards"
+      // Collection-specific patterns
+      /collection\s+structure/i,    // "collection structure"
+      /organize\s+into\s+cards?/i,  // "organize into cards"
+      /break\s+down\s+into/i,       // "break down into"
+      /categorize\s+into/i,         // "categorize into"
+      /group\s+into/i,              // "group into"
+      /divide\s+into/i,             // "divide into"
+      /split\s+into/i,              // "split into"
+      /structure\s+as/i,            // "structure as"
+      /organize\s+as/i,             // "organize as"
+      /arrange\s+as/i,              // "arrange as"
     ];
     
     // Check for actionable patterns
@@ -743,7 +754,13 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
     
     const hasContentPattern = contentPatterns.some(pattern => pattern.test(message));
     
-    return hasActionablePattern || hasContentPattern;
+    // Check for numbered lists or bullet points (common in AI suggestions)
+    const hasListPattern = /^\d+\.\s+|\n\d+\.\s+|^[•·\-\*]\s+|\n[•·\-\*]\s+/.test(message);
+    
+    // Check for multiple card titles or suggestions
+    const hasMultipleSuggestions = (message.match(/\d+\.\s+[^:]+:/g) || []).length >= 2;
+    
+    return hasActionablePattern || hasContentPattern || (hasListPattern && hasMultipleSuggestions);
   };
 
   // Helper function to extract card titles from AI suggestion
