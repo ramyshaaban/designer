@@ -4284,7 +4284,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                       placeholder="Search cards and content..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 border-gray-300 focus:border-blue-500"
+                      className="pl-10 border-gray-300 focus:border-blue-500 min-h-[44px] text-base"
                     />
                   </div>
                   
@@ -4594,7 +4594,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                                   <Button
                                     variant="outline"
                                     size="sm"
-                                    className="flex-1"
+                                    className="flex-1 min-h-[44px] text-base"
                                     onClick={() => {
                                       setCurrentCardId(card.id);
                                       setShowAddItemDialog(true);
@@ -4797,7 +4797,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
         {/* Add Card Dialog */}
         <Dialog open={showAddCardDialog} onOpenChange={setShowAddCardDialog}>
-          <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)]">
+          <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-sm">
             <DialogHeader>
               <DialogTitle>Add New Card</DialogTitle>
             </DialogHeader>
@@ -4808,6 +4808,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   placeholder="Enter card title"
                   value={newCardTitle}
                   onChange={(e) => setNewCardTitle(e.target.value)}
+                  className="min-h-[44px] text-base"
                 />
               </div>
               {currentCollection && (
@@ -4854,7 +4855,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
         {/* Template Selection Dialog */}
         <Dialog open={showTemplateDialog} onOpenChange={setShowTemplateDialog}>
-          <DialogContent className="max-w-md mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)]">
+          <DialogContent className="max-w-md mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Choose a Card Template</DialogTitle>
               <p className="text-sm text-gray-600">Select a pre-built card template to get started quickly</p>
@@ -4913,7 +4914,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
         {/* Collection Template Selection Dialog */}
         <Dialog open={showCollectionTemplateDialog} onOpenChange={setShowCollectionTemplateDialog}>
-          <DialogContent className="max-w-md mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)]">
+          <DialogContent className="max-w-md mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Choose a Collection Template</DialogTitle>
               <p className="text-sm text-gray-600">Select a pre-built collection template with organized cards</p>
@@ -4972,7 +4973,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
         {/* Menu Button Search Dialog */}
         <Dialog open={showMenuButtonSearch} onOpenChange={setShowMenuButtonSearch}>
-          <DialogContent className="max-w-md mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)]">
+          <DialogContent className="max-w-md mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Select Target Content</DialogTitle>
               <p className="text-sm text-gray-600">Choose the content this menu button will link to</p>
@@ -4983,6 +4984,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   placeholder="Search content..."
                   value={menuButtonSearchQuery}
                   onChange={(e) => setMenuButtonSearchQuery(e.target.value)}
+                  className="min-h-[44px] text-base"
                 />
               </div>
               <div className="max-h-60 overflow-y-auto space-y-2">
@@ -5045,7 +5047,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
         {/* Portal Selection Dialog */}
         <Dialog open={showPortalDialog} onOpenChange={setShowPortalDialog}>
-          <DialogContent className="max-w-md mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)]">
+          <DialogContent className="max-w-md mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Select Space to Add as Portal</DialogTitle>
               <p className="text-sm text-gray-600">Choose a space to create a portal to</p>
@@ -5056,6 +5058,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   placeholder="Search spaces..."
                   value={portalSearchQuery}
                   onChange={(e) => setPortalSearchQuery(e.target.value)}
+                  className="min-h-[44px] text-base"
                 />
               </div>
               <div className="max-h-60 overflow-y-auto space-y-2">
@@ -5107,7 +5110,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
         {/* Add Item Dialog */}
         <Dialog open={showAddItemDialog} onOpenChange={setShowAddItemDialog}>
-          <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)]">
+          <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-sm">
             <DialogHeader>
               <DialogTitle>{editingItem ? 'Edit Item' : 'Add New Item'}</DialogTitle>
             </DialogHeader>
@@ -5131,6 +5134,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   placeholder="Enter item title"
                   value={newItemTitle}
                   onChange={(e) => setNewItemTitle(e.target.value)}
+                  className="min-h-[44px] text-base"
                 />
               </div>
               
@@ -5176,6 +5180,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                         placeholder="https://example.com"
                         value={newItemExternalUrl}
                         onChange={(e) => setNewItemExternalUrl(e.target.value)}
+                        className="min-h-[44px] text-base"
                       />
                     </div>
                   ) : newItemContentType === 'menu-button' ? (
@@ -5241,7 +5246,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         {/* Edit Card Dialog */}
         {editingCard && (
           <Dialog open={!!editingCard} onOpenChange={() => setEditingCard(null)}>
-            <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)]">
+            <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-sm">
               <DialogHeader>
                 <DialogTitle>Edit Card</DialogTitle>
               </DialogHeader>
@@ -5256,6 +5261,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                     <Input
                       value={editingCard.title}
                       onChange={(e) => setEditingCard({ ...editingCard, title: e.target.value })}
+                      className="min-h-[44px] text-base"
                     />
                   )}
                 </div>
@@ -5312,7 +5318,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
             }
             setShowCollectionDialog(open);
           }}>
-            <DialogContent className="max-w-md mx-auto max-h-[90vh] overflow-y-auto w-full max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)]" data-onboarding="collection-dialog">
+            <DialogContent className="max-w-md mx-auto max-h-[95vh] overflow-y-auto w-full max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-md sm:max-h-[90vh]" data-onboarding="collection-dialog">
               <DialogHeader>
                 {isDesignMode ? (
                   <DialogTitle className="flex items-center gap-2">
@@ -5576,7 +5582,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                                   <Button
                                     variant="outline"
                                     size="sm"
-                                    className="flex-1"
+                                    className="flex-1 min-h-[44px] text-base"
                                     onClick={() => {
                                       setCurrentCardId(card.id);
                                       setShowAddItemDialog(true);
@@ -5642,7 +5648,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                     {/* Collection Template Button */}
                     <Button
                       variant="outline"
-                      className="w-full"
+                        className="w-full min-h-[44px] text-base"
                       onClick={() => setShowCollectionTemplateDialog(true)}
                     >
                       <Layout className="w-4 h-4 mr-2" />
@@ -5685,7 +5691,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
         {/* Space Settings Dialog */}
         <Dialog open={showSpaceSettingsDialog} onOpenChange={setShowSpaceSettingsDialog}>
-          <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)]">
+          <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-sm">
             <DialogHeader>
               <DialogTitle>Space Settings</DialogTitle>
             </DialogHeader>
@@ -5697,6 +5703,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   placeholder="Enter space name"
                   value={space.name}
                   onChange={(e) => setSpace({ ...space, name: e.target.value })}
+                  className="min-h-[44px] text-base"
                 />
               </div>
               <div>
@@ -5780,7 +5787,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         
         {/* Space AI Designer Dialog */}
         <Dialog open={showSpaceAIDesigner} onOpenChange={setShowSpaceAIDesigner}>
-          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[90vh] !h-[90vh] flex flex-col !top-[5vh] !left-[2.5vw] !translate-x-0 !translate-y-0">
+          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[95vh] !h-[95vh] flex flex-col !top-[2.5vh] !left-[2.5vw] !translate-x-0 !translate-y-0 sm:!top-[5vh] sm:!max-h-[90vh] sm:!h-[90vh]">
             {/* AI Magic Effect Overlay */}
             {isSpaceAiLoading && (
               <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
@@ -5869,7 +5876,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
           </div>
             
             {/* Input Area */}
-            <div className="flex gap-2 p-4 border-t">
+            <div className="flex gap-2 p-4 border-t pb-safe">
               <Input
                 value={spaceAiInput}
                 onChange={(e) => setSpaceAiInput(e.target.value)}
@@ -5881,12 +5888,12 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   }
                 }}
                 disabled={isSpaceAiLoading}
-                className="flex-1"
+                className="flex-1 min-h-[44px] text-base"
               />
               <Button
                 onClick={() => sendSpaceAIMessage(spaceAiInput)}
                 disabled={!spaceAiInput.trim() || isSpaceAiLoading}
-                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 min-h-[44px] px-4"
               >
                 <ArrowRight className="w-4 h-4" />
               </Button>
@@ -5939,7 +5946,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
         {/* Version Save Dialog */}
         <Dialog open={showVersionDialog} onOpenChange={setShowVersionDialog}>
-          <DialogContent className="w-full max-w-[calc(100vw-2rem)]">
+          <DialogContent className="w-full max-w-[calc(100vw-1rem)] sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Save Version</DialogTitle>
             </DialogHeader>
@@ -5950,7 +5957,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   placeholder="e.g., Medical Education v1.0"
                   value={versionName}
                   onChange={(e) => setVersionName(e.target.value)}
-                  className="mt-1"
+                  className="mt-1 min-h-[44px] text-base"
                 />
               </div>
               <div>
@@ -5959,7 +5966,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   placeholder="Describe this version..."
                   value={versionDescription}
                   onChange={(e) => setVersionDescription(e.target.value)}
-                  className="mt-1"
+                  className="mt-1 min-h-[44px] text-base"
                   rows={3}
                 />
               </div>
@@ -6005,7 +6012,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         
         {/* Space AI Designer Dialog */}
         <Dialog open={showSpaceAIDesigner} onOpenChange={setShowSpaceAIDesigner}>
-          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[90vh] !h-[90vh] flex flex-col !top-[5vh] !left-[2.5vw] !translate-x-0 !translate-y-0">
+          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[95vh] !h-[95vh] flex flex-col !top-[2.5vh] !left-[2.5vw] !translate-x-0 !translate-y-0 sm:!top-[5vh] sm:!max-h-[90vh] sm:!h-[90vh]">
             {/* AI Magic Effect Overlay */}
             {isSpaceAiLoading && (
               <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
@@ -6095,7 +6102,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
           </div>
             
             {/* Input Area */}
-            <div className="flex gap-2 p-4 border-t">
+            <div className="flex gap-2 p-4 border-t pb-safe">
               <Input
                 value={spaceAiInput}
                 onChange={(e) => setSpaceAiInput(e.target.value)}
@@ -6107,12 +6114,12 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   }
                 }}
                 disabled={isSpaceAiLoading}
-                className="flex-1"
+                className="flex-1 min-h-[44px] text-base"
               />
               <Button
                 onClick={() => sendSpaceAIMessage(spaceAiInput)}
                 disabled={!spaceAiInput.trim() || isSpaceAiLoading}
-                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 min-h-[44px] px-4"
               >
                 <ArrowRight className="w-4 h-4" />
               </Button>
@@ -6161,7 +6168,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
         {/* Collection AI Designer Dialog */}
         <Dialog open={showCollectionAIDesigner} onOpenChange={setShowCollectionAIDesigner}>
-          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[90vh] !h-[90vh] flex flex-col !top-[5vh] !left-[2.5vw] !translate-x-0 !translate-y-0">
+          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[95vh] !h-[95vh] flex flex-col !top-[2.5vh] !left-[2.5vw] !translate-x-0 !translate-y-0 sm:!top-[5vh] sm:!max-h-[90vh] sm:!h-[90vh]">
             {/* AI Magic Effect Overlay */}
             {isCollectionAiLoading && (
               <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
@@ -6251,7 +6258,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
           </div>
             
             {/* Input Area */}
-            <div className="flex gap-2 p-4 border-t">
+            <div className="flex gap-2 p-4 border-t pb-safe">
               <Input
                 value={collectionAiInput}
                 onChange={(e) => setCollectionAiInput(e.target.value)}
@@ -6263,12 +6270,12 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   }
                 }}
                 disabled={isCollectionAiLoading}
-                className="flex-1"
+                className="flex-1 min-h-[44px] text-base"
               />
               <Button
                 onClick={() => sendCollectionAIMessage(collectionAiInput)}
                 disabled={!collectionAiInput.trim() || isCollectionAiLoading}
-                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 min-h-[44px] px-4"
               >
                 <ArrowRight className="w-4 h-4" />
               </Button>
@@ -6317,7 +6324,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
         {/* Card AI Designer Dialog */}
         <Dialog open={showCardAIDesigner} onOpenChange={setShowCardAIDesigner}>
-          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[90vh] !h-[90vh] flex flex-col !top-[5vh] !left-[2.5vw] !translate-x-0 !translate-y-0">
+          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[95vh] !h-[95vh] flex flex-col !top-[2.5vh] !left-[2.5vw] !translate-x-0 !translate-y-0 sm:!top-[5vh] sm:!max-h-[90vh] sm:!h-[90vh]">
             {/* AI Magic Effect Overlay */}
             {isCardAiLoading && (
               <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
@@ -6407,7 +6414,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
           </div>
             
             {/* Input Area */}
-            <div className="flex gap-2 p-4 border-t">
+            <div className="flex gap-2 p-4 border-t pb-safe">
               <Input
                 value={cardAiInput}
                 onChange={(e) => setCardAiInput(e.target.value)}
@@ -6419,12 +6426,12 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   }
                 }}
                 disabled={isCardAiLoading}
-                className="flex-1"
+                className="flex-1 min-h-[44px] text-base"
               />
               <Button
                 onClick={() => sendCardAIMessage(cardAiInput)}
                 disabled={!cardAiInput.trim() || isCardAiLoading}
-                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 min-h-[44px] px-4"
               >
                 <ArrowRight className="w-4 h-4" />
               </Button>
