@@ -775,15 +775,21 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
   // Helper function to create collection cards from AI suggestion
   const createCollectionCardsFromAISuggestion = (collectionId: string, cardTitles: string[]) => {
     console.log('Creating collection cards from AI suggestion:', collectionId, cardTitles);
+    console.log('Current space cards:', space.cards);
     
     // Find the collection in the space
     const findCollectionInCards = (cards: SpaceCard[]): ContentItem | null => {
+      console.log('Searching in cards:', cards.length);
       for (const card of cards) {
+        console.log('Checking card:', card.title, 'with', card.items.length, 'items');
         for (const item of card.items) {
+          console.log('Checking item:', item.id, 'type:', item.type, 'title:', item.title);
           if (item.id === collectionId) {
+            console.log('Found collection by ID match!');
             return item;
           }
           if (item.type === 'collection' && item.children) {
+            console.log('Found nested collection, searching children...');
             const found = findCollectionInCards(item.children);
             if (found) return found;
           }
@@ -797,6 +803,14 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
     
     if (!collection || collection.type !== 'collection') {
       console.log('Collection not found or not a collection type');
+      console.log('Available collections in space:');
+      space.cards.forEach(card => {
+        card.items.forEach(item => {
+          if (item.type === 'collection') {
+            console.log('- Collection:', item.id, item.title);
+          }
+        });
+      });
       return;
     }
 
@@ -815,23 +829,32 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
     }));
 
     console.log('Created new collection cards:', newCards);
+    console.log('Current collection children:', collection.children);
 
     // Update the collection with new cards
-    setSpace(prev => ({
-      ...prev,
-      cards: prev.cards.map(card => ({
-        ...card,
-        items: card.items.map(item => {
-          if (item.id === collectionId && item.type === 'collection') {
-            return {
-              ...item,
-              children: [...(item.children || []), ...newCards]
-            };
-          }
-          return item;
-        })
-      }))
-    }));
+    setSpace(prev => {
+      console.log('Updating space with new collection cards');
+      const updated = {
+        ...prev,
+        cards: prev.cards.map(card => ({
+          ...card,
+          items: card.items.map(item => {
+            if (item.id === collectionId && item.type === 'collection') {
+              console.log('Updating collection:', item.title);
+              const updatedItem = {
+                ...item,
+                children: [...(item.children || []), ...newCards]
+              };
+              console.log('Updated collection children:', updatedItem.children);
+              return updatedItem;
+            }
+            return item;
+          })
+        }))
+      };
+      console.log('Updated space:', updated);
+      return updated;
+    });
   };
 
   const applyCollectionAISuggestion = (suggestion: string) => {
