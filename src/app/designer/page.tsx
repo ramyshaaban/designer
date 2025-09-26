@@ -3384,7 +3384,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         return `http://localhost:${window.location.port || '3001'}/designer`;
       }
       // For production, use the custom domain
-      return 'https://scmd.ramyshaaban.com';
+      return 'https://designer.ramyshaaban.org';
     }
     return 'http://localhost:3001/designer'; // fallback
   };
@@ -3397,7 +3397,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         return `${getBaseUrl()}?version=${slug}`;
       }
       // For production, use path segments
-      return `https://scmd.ramyshaaban.com/${slug}`;
+      return `https://designer.ramyshaaban.org/${slug}`;
     }
     return `${getBaseUrl()}?version=${slug}`; // fallback
   };
