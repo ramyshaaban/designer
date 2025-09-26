@@ -120,3 +120,35 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Mobile keyboard handling for dialogs */
+@layer utilities {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* Prevent dialog shifting when keyboard opens */
+  .dialog-fixed {
+    position: fixed !important;
+    transform: none !important;
+  }
+  
+  /* Ensure input area stays visible */
+  .input-sticky {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    z-index: 10;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  /* Mobile viewport handling */
+  @media screen and (max-width: 768px) {
+    .mobile-dialog {
+      max-height: 85vh !important;
+      height: 85vh !important;
+      top: 7.5vh !important;
+      transform: none !important;
+    }
+  }
+}

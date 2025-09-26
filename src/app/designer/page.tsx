@@ -5787,7 +5787,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         
         {/* Space AI Designer Dialog */}
         <Dialog open={showSpaceAIDesigner} onOpenChange={setShowSpaceAIDesigner}>
-          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[95vh] !h-[95vh] flex flex-col !top-[2.5vh] !left-[2.5vw] !translate-x-0 !translate-y-0 sm:!top-[5vh] sm:!max-h-[90vh] sm:!h-[90vh]">
+          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[85vh] !h-[85vh] flex flex-col !top-[7.5vh] !left-[2.5vw] !translate-x-0 !translate-y-0 sm:!top-[5vh] sm:!max-h-[90vh] sm:!h-[90vh] !fixed mobile-dialog">
             {/* AI Magic Effect Overlay */}
             {isSpaceAiLoading && (
               <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
@@ -5825,7 +5825,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
             </DialogHeader>
             
           {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50">
+          <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50 pb-4">
             {spaceAiMessages.map((message) => (
               <div
                 key={message.id}
@@ -5876,7 +5876,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
           </div>
             
             {/* Input Area */}
-            <div className="flex gap-2 p-4 border-t pb-safe">
+            <div className="flex gap-2 p-4 border-t pb-safe input-sticky">
               <Input
                 value={spaceAiInput}
                 onChange={(e) => setSpaceAiInput(e.target.value)}
@@ -6012,7 +6012,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         
         {/* Space AI Designer Dialog */}
         <Dialog open={showSpaceAIDesigner} onOpenChange={setShowSpaceAIDesigner}>
-          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[95vh] !h-[95vh] flex flex-col !top-[2.5vh] !left-[2.5vw] !translate-x-0 !translate-y-0 sm:!top-[5vh] sm:!max-h-[90vh] sm:!h-[90vh]">
+          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[85vh] !h-[85vh] flex flex-col !top-[7.5vh] !left-[2.5vw] !translate-x-0 !translate-y-0 sm:!top-[5vh] sm:!max-h-[90vh] sm:!h-[90vh] !fixed mobile-dialog">
             {/* AI Magic Effect Overlay */}
             {isSpaceAiLoading && (
               <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
@@ -6050,7 +6050,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
             </DialogHeader>
             
           {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50">
+          <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50 pb-4">
             {spaceAiMessages.map((message) => (
               <div
                 key={message.id}
@@ -6102,7 +6102,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
           </div>
             
             {/* Input Area */}
-            <div className="flex gap-2 p-4 border-t pb-safe">
+            <div className="flex gap-2 p-4 border-t pb-safe input-sticky">
               <Input
                 value={spaceAiInput}
                 onChange={(e) => setSpaceAiInput(e.target.value)}
@@ -6168,7 +6168,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
         {/* Collection AI Designer Dialog */}
         <Dialog open={showCollectionAIDesigner} onOpenChange={setShowCollectionAIDesigner}>
-          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[95vh] !h-[95vh] flex flex-col !top-[2.5vh] !left-[2.5vw] !translate-x-0 !translate-y-0 sm:!top-[5vh] sm:!max-h-[90vh] sm:!h-[90vh]">
+          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[85vh] !h-[85vh] flex flex-col !top-[7.5vh] !left-[2.5vw] !translate-x-0 !translate-y-0 sm:!top-[5vh] sm:!max-h-[90vh] sm:!h-[90vh] !fixed mobile-dialog">
             {/* AI Magic Effect Overlay */}
             {isCollectionAiLoading && (
               <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
@@ -6206,7 +6206,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
             </DialogHeader>
             
           {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50">
+          <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50 pb-4">
             {collectionAiMessages.map((message) => (
               <div
                 key={message.id}
@@ -6258,7 +6258,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
           </div>
             
             {/* Input Area */}
-            <div className="flex gap-2 p-4 border-t pb-safe">
+            <div className="flex gap-2 p-4 border-t pb-safe input-sticky">
               <Input
                 value={collectionAiInput}
                 onChange={(e) => setCollectionAiInput(e.target.value)}
@@ -6324,7 +6324,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
         {/* Card AI Designer Dialog */}
         <Dialog open={showCardAIDesigner} onOpenChange={setShowCardAIDesigner}>
-          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[95vh] !h-[95vh] flex flex-col !top-[2.5vh] !left-[2.5vw] !translate-x-0 !translate-y-0 sm:!top-[5vh] sm:!max-h-[90vh] sm:!h-[90vh]">
+          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[85vh] !h-[85vh] flex flex-col !top-[7.5vh] !left-[2.5vw] !translate-x-0 !translate-y-0 sm:!top-[5vh] sm:!max-h-[90vh] sm:!h-[90vh] !fixed mobile-dialog">
             {/* AI Magic Effect Overlay */}
             {isCardAiLoading && (
               <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
@@ -6362,7 +6362,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
             </DialogHeader>
             
           {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50">
+          <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50 pb-4">
             {cardAiMessages.map((message) => (
               <div
                 key={message.id}
@@ -6414,7 +6414,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
           </div>
             
             {/* Input Area */}
-            <div className="flex gap-2 p-4 border-t pb-safe">
+            <div className="flex gap-2 p-4 border-t pb-safe input-sticky">
               <Input
                 value={cardAiInput}
                 onChange={(e) => setCardAiInput(e.target.value)}
