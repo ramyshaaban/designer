@@ -5839,7 +5839,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   </div>
                   
                   {/* Apply Suggestion Button for AI messages */}
-                  {message.role === 'assistant' && message.id !== 'welcome' && isActionableSuggestion(message.content) && (
+                  {message.role === 'assistant' && message.id !== 'welcome' && (
                     <div className="mt-3 pt-2 border-t border-gray-200">
                       <Button
                         variant="outline"
@@ -6220,7 +6220,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   </div>
                   
                   {/* Apply Suggestion Button for AI messages */}
-                  {message.role === 'assistant' && message.id !== 'welcome' && isActionableSuggestion(message.content) && (
+                  {message.role === 'assistant' && message.id !== 'welcome' && (
                     <div className="mt-3 pt-2 border-t border-gray-200">
                       <Button
                         variant="outline"
@@ -6376,7 +6376,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   </div>
                   
                   {/* Apply Suggestion Button for AI messages */}
-                  {message.role === 'assistant' && message.id !== 'welcome' && isActionableSuggestion(message.content) && (
+                  {message.role === 'assistant' && message.id !== 'welcome' && (
                     <div className="mt-3 pt-2 border-t border-gray-200">
                       <Button
                         variant="outline"
