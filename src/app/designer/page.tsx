@@ -10,7 +10,9 @@ import { Switch } from "@/components/ui/switch";
 import { useState, useRef, useEffect } from "react";
 import React from "react";
 import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle, ChevronUp, ChevronDown, Share, Heart, Search, HelpCircle, ArrowRight, ArrowLeft, FileVideo, Headphones, File, BarChart3, ClipboardList, Newspaper, Gamepad2, Menu, Stethoscope, Star } from "lucide-react";
-import { AI_CONFIG } from '@/config/ai';
+import AIDesigner from '@/components/AIDesigner';
+import CollectionDesigner from '@/components/CollectionDesigner';
+import MagicalStar from '@/components/MagicalStar';
 
 type ContentType = 'video' | 'podcast' | 'document' | 'infographic' | 'guideline' | 'article' | 'interactive-content' | 'external-link' | 'menu-button';
 
@@ -124,7 +126,7 @@ export default function DesignerPage() {
   const [space, setSpace] = useState<Space>({
     id: "space-1",
     name: "Space Name",
-    description: "Customize your space by adding cards and content",
+    description: "My Space",
     backgroundColor: "#f8fafc", // Light blue background
     borderColor: "#93c5fd", // Blue border
     cards: [],
@@ -216,793 +218,20 @@ export default function DesignerPage() {
     console.log('Tutorial restarted - starting main space tour');
   };
 
-  // Separate AI Designer initialization functions
-  const initializeSpaceAIDesigner = () => {
-    setSpaceAiContext({});
-    setShowSpaceAIDesigner(true);
-    if (spaceAiMessages.length === 0) {
-      // Context-aware welcome message based on space state
-      const hasCards = space.cards.length > 0;
-      const hasDescription = space.description && space.description.trim() !== '';
-      const spaceContext = hasCards ? 
-        `I can see you already have ${space.cards.length} cards in your space.` : 
-        'I can see this is a new, empty space.';
-      
-      const missingInfo = [];
-      if (!hasDescription) missingInfo.push('space description');
-      if (!hasCards) missingInfo.push('specific medical specialty or target audience');
-      
-      const contextPrompt = missingInfo.length > 0 ? 
-        `To provide the best suggestions, I'd love to know more about your ${missingInfo.join(' and ')}.` :
-        'I can help you enhance your existing space or add new content.';
-      
-      const welcomeMessage = `Hello! I'm your AI Space Designer for your medical education space "${space.name}". 
 
-${spaceContext} ${contextPrompt}
 
-I specialize in creating SPACE-LEVEL organization by suggesting:
 
-🎯 **Space Organization Cards**: 4-6 space cards that organize your hospital space logically (e.g., "Featured Content", "Featured Categories", "Other Resources", "Residents Resources")
-📚 **Space Structure**: How to organize your entire medical education space
-🎨 **Space-Level Templates**: Complete space layouts for different medical specialties
 
-What would you like me to help you create? Tell me about your medical specialty, target audience, or specific learning goals!`;
-      
-      const message = {
-        id: 'welcome',
-        role: 'assistant' as const,
-        content: welcomeMessage,
-        timestamp: new Date()
-      };
-      setSpaceAiMessages([message]);
-    }
-  };
 
-  const initializeCollectionAIDesigner = (targetId: string, targetTitle: string) => {
-    setCollectionAiContext({ targetId, targetTitle });
-    setShowCollectionAIDesigner(true);
-    if (collectionAiMessages.length === 0) {
-      const welcomeMessage = `Hello! I'm your AI Collection Designer for the "${targetTitle}" collection!
 
-I specialize in creating COLLECTION-LEVEL organization by suggesting:
 
-🎯 **Collection Cards**: 4-6 collection cards that categorize content within this specific medical topic (e.g., "Topic Overview", "Workup Algorithm", "Technique Videos", "Postoperative Care")
-📚 **Content Organization**: How to structure content within this collection
-🗂️ **Learning Paths**: Sequential content for progressive learning within this topic
-🎨 **Topic-Specific Templates**: Detailed card structures for this medical specialty
 
-What kind of collection are you building? Tell me about the medical topic or learning goals for this collection!`;
-      
-      const message = {
-        id: 'welcome',
-        role: 'assistant' as const,
-        content: welcomeMessage,
-        timestamp: new Date()
-      };
-      setCollectionAiMessages([message]);
-    }
-  };
 
-  const initializeCardAIDesigner = (targetId: string, targetTitle: string) => {
-    setCardAiContext({ targetId, targetTitle });
-    setShowCardAIDesigner(true);
-    if (cardAiMessages.length === 0) {
-      const welcomeMessage = `Hello! I'm your AI Content Designer for the "${targetTitle}" card!
 
-I specialize in creating CARD-LEVEL content by suggesting:
 
-📹 **Video Content**: Surgical procedures, patient consultations, educational lectures
-🎧 **Podcast Content**: Medical discussions, case studies, continuing education
-📄 **Document Content**: Guidelines, protocols, research papers, study materials
-📊 **Infographic Content**: Visual learning materials, statistics, medical concepts
-🔗 **External Links**: Useful resources and tools
-📁 **Collections**: Organized sub-collections within this card
 
-What type of content would work best for this card? Tell me about your specialty or learning objectives!`;
-      
-      const message = {
-        id: 'welcome',
-        role: 'assistant' as const,
-        content: welcomeMessage,
-        timestamp: new Date()
-      };
-      setCardAiMessages([message]);
-    }
-  };
 
-  // Separate send message functions for each AI Designer
-  const sendSpaceAIMessage = async (message: string) => {
-    if (!message.trim()) return;
 
-    const userMessage = {
-      id: `user-${Date.now()}`,
-      role: 'user' as const,
-      content: message.trim(),
-      timestamp: new Date()
-    };
-
-    setSpaceAiMessages(prev => [...prev, userMessage]);
-    setSpaceAiInput('');
-    setIsSpaceAiLoading(true);
-
-      try {
-        const response = await generateSpaceAIResponse(message);
-      
-      const assistantMessage = {
-        id: `assistant-${Date.now()}`,
-        role: 'assistant' as const,
-        content: response,
-        timestamp: new Date()
-      };
-
-      setSpaceAiMessages(prev => [...prev, assistantMessage]);
-    } catch (error) {
-      console.error('Space AI Error:', error);
-      const errorMessage = {
-        id: `error-${Date.now()}`,
-        role: 'assistant' as const,
-        content: 'Sorry, I encountered an error. Please try again or check your API configuration.',
-        timestamp: new Date()
-      };
-      setSpaceAiMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsSpaceAiLoading(false);
-    }
-  };
-
-  const sendCollectionAIMessage = async (message: string) => {
-    if (!message.trim()) return;
-
-    const userMessage = {
-      id: `user-${Date.now()}`,
-      role: 'user' as const,
-      content: message.trim(),
-      timestamp: new Date()
-    };
-
-    setCollectionAiMessages(prev => [...prev, userMessage]);
-    setCollectionAiInput('');
-    setIsCollectionAiLoading(true);
-
-      try {
-        const response = await generateCollectionAIResponse(message);
-      
-      const assistantMessage = {
-        id: `assistant-${Date.now()}`,
-        role: 'assistant' as const,
-        content: response,
-        timestamp: new Date()
-      };
-
-      setCollectionAiMessages(prev => [...prev, assistantMessage]);
-    } catch (error) {
-      console.error('Collection AI Error:', error);
-      const errorMessage = {
-        id: `error-${Date.now()}`,
-        role: 'assistant' as const,
-        content: 'Sorry, I encountered an error. Please try again or check your API configuration.',
-        timestamp: new Date()
-      };
-      setCollectionAiMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsCollectionAiLoading(false);
-    }
-  };
-
-  const sendCardAIMessage = async (message: string) => {
-    if (!message.trim()) return;
-
-    const userMessage = {
-      id: `user-${Date.now()}`,
-      role: 'user' as const,
-      content: message.trim(),
-      timestamp: new Date()
-    };
-
-    setCardAiMessages(prev => [...prev, userMessage]);
-    setCardAiInput('');
-    setIsCardAiLoading(true);
-
-      try {
-        const response = await generateCardAIResponse(message);
-      
-      const assistantMessage = {
-        id: `assistant-${Date.now()}`,
-        role: 'assistant' as const,
-        content: response,
-        timestamp: new Date()
-      };
-
-      setCardAiMessages(prev => [...prev, assistantMessage]);
-    } catch (error) {
-      console.error('Card AI Error:', error);
-      const errorMessage = {
-        id: `error-${Date.now()}`,
-        role: 'assistant' as const,
-        content: 'Sorry, I encountered an error. Please try again or check your API configuration.',
-        timestamp: new Date()
-      };
-      setCardAiMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsCardAiLoading(false);
-    }
-  };
-
-  // Separate AI response generation functions
-  const generateSpaceAIResponse = async (message: string): Promise<string> => {
-      try {
-        console.log('AI_CONFIG.OPENAI_API_KEY:', AI_CONFIG.OPENAI_API_KEY ? 'Present' : 'Missing');
-        console.log('API Key length:', AI_CONFIG.OPENAI_API_KEY?.length || 0);
-        console.log('AI_CONFIG:', AI_CONFIG);
-        
-        if (!AI_CONFIG.OPENAI_API_KEY) {
-          throw new Error('OpenAI API key is not configured');
-        }
-        const systemPrompt = `You are an AI Space Designer for a medical education app called "StayCurrentMD Space Designer". 
-
-**CURRENT SPACE CONTEXT:**
-- Space Name: "${space.name}"
-- Space Description: "${space.description || 'No description provided'}"
-    - Space Color: ${space.borderColor}
-- Current Cards: ${space.cards.length} cards
-- Current Collections: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'collection').length, 0)} collections
-- Total Content Items: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'content').length, 0)} items
-
-**YOUR SPECIALTY: SPACE-LEVEL ORGANIZATION**
-You specialize in creating SPACE CARDS that organize the entire hospital space logically. These are organizing units for the hospital space.
-
-**SPACE CARD EXAMPLES:**
-- "Featured Content" - Essential resources and protocols
-- "Featured Categories" - Organized topics and specialties  
-- "Other Resources" - Additional tools and references
-- "Residents Resources" - Educational materials for residents
-- "Quick Access" - Frequently used tools and links
-- "Emergency Protocols" - Critical emergency procedures
-
-**RESPONSE GUIDELINES:**
-- Always suggest AT LEAST 4 space cards for any template
-- Focus on SPACE-LEVEL organization, not topic-specific content
-- Ask for missing information if space context is incomplete
-- Provide specific, actionable space organization suggestions
-- Use medical terminology appropriately
-- Be encouraging and helpful
-
-**CONTEXT ANALYSIS:**
-${space.cards.length === 0 ? 'This is a new, empty space. Ask about the medical specialty, target audience, and learning goals.' : `This space has existing content. Analyze the current structure and suggest improvements or additions.`}
-
-Current context: The user is working on the main space and needs help with SPACE-LEVEL organization.`;
-
-        const response = await fetch(AI_CONFIG.OPENAI_API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${AI_CONFIG.OPENAI_API_KEY}`
-          },
-          body: JSON.stringify({
-            model: 'gpt-4',
-            messages: [
-              { role: 'system', content: systemPrompt },
-              ...spaceAiMessages.map(msg => ({ role: msg.role, content: msg.content })),
-              { role: 'user', content: message }
-            ],
-            max_tokens: 1000,
-            temperature: 0.7
-          })
-        });
-
-        console.log('OpenAI API response status:', response.status);
-        
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('OpenAI API error response:', errorText);
-          throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
-        }
-
-        const data = await response.json();
-        console.log('OpenAI API response data:', data);
-        return data.choices[0].message.content;
-      } catch (error) {
-        console.error('OpenAI API error:', error);
-        return `Sorry, I encountered an error: ${error.message}. Please try again.`;
-      }
-  };
-
-  const generateCollectionAIResponse = async (message: string): Promise<string> => {
-      try {
-        const systemPrompt = `You are an AI Collection Designer for a medical education app called "StayCurrentMD Space Designer". 
-
-**CURRENT SPACE CONTEXT:**
-- Space Name: "${space.name}"
-- Space Description: "${space.description || 'No description provided'}"
-    - Space Color: ${space.borderColor}
-- Current Cards: ${space.cards.length} cards
-- Current Collections: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'collection').length, 0)} collections
-- Total Content Items: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'content').length, 0)} items
-
-**CURRENT COLLECTION:**
-- Collection: "${collectionAiContext.targetTitle}"
-- Collection ID: ${collectionAiContext.targetId}
-
-**YOUR SPECIALTY: COLLECTION-LEVEL ORGANIZATION**
-You specialize in creating COLLECTION CARDS that categorize content within a specific medical topic/collection. These are topic-specific categorization cards.
-
-**COLLECTION CARD EXAMPLES:**
-- "Topic Overview" - Comprehensive introduction to the medical topic
-- "Workup Algorithm" - Diagnostic pathway and staging workup
-- "Preoperative Planning" - Surgical indications and assessment
-- "Technique Videos" - Surgical procedures and demonstrations
-- "Postoperative Care" - Recovery protocols and monitoring
-- "Patient Education Materials" - Family counseling and support resources
-- "Key Articles" - Evidence-based literature and research
-- "Assessment Tools" - Knowledge checks and evaluations
-
-**RESPONSE GUIDELINES:**
-- Always suggest AT LEAST 4 collection cards for any template
-- Focus on COLLECTION-LEVEL organization within the specific topic
-- Ask for missing information about the medical topic
-- Provide specific, actionable collection organization suggestions
-- Use medical terminology appropriately
-- Be encouraging and helpful
-
-Current context: The user is working on the "${collectionAiContext.targetTitle}" collection and needs help with COLLECTION-LEVEL organization.`;
-
-        const response = await fetch(AI_CONFIG.OPENAI_API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${AI_CONFIG.OPENAI_API_KEY}`
-          },
-          body: JSON.stringify({
-            model: 'gpt-4',
-            messages: [
-              { role: 'system', content: systemPrompt },
-              ...collectionAiMessages.map(msg => ({ role: msg.role, content: msg.content })),
-              { role: 'user', content: message }
-            ],
-            max_tokens: 1000,
-            temperature: 0.7
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error(`OpenAI API error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return data.choices[0].message.content;
-      } catch (error) {
-        console.error('OpenAI API error:', error);
-        return 'Sorry, I encountered an error. Please try again.';
-      }
-  };
-
-  const generateCardAIResponse = async (message: string): Promise<string> => {
-      try {
-        const systemPrompt = `You are an AI Content Designer for a medical education app called "StayCurrentMD Space Designer". 
-
-**CURRENT SPACE CONTEXT:**
-- Space Name: "${space.name}"
-- Space Description: "${space.description || 'No description provided'}"
-    - Space Color: ${space.borderColor}
-- Current Cards: ${space.cards.length} cards
-- Current Collections: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'collection').length, 0)} collections
-- Total Content Items: ${space.cards.reduce((acc, card) => acc + card.items.filter(item => item.type === 'content').length, 0)} items
-
-**CURRENT CARD:**
-- Card: "${cardAiContext.targetTitle}"
-- Card ID: ${cardAiContext.targetId}
-
-**YOUR SPECIALTY: CARD-LEVEL CONTENT**
-You specialize in creating CONTENT ITEMS within a specific card. These are individual content pieces like videos, articles, documents, etc.
-
-**CONTENT TYPE EXAMPLES:**
-- Video: Surgical procedures, patient consultations, educational lectures
-- Podcast: Medical discussions, case studies, continuing education
-- Document: Guidelines, protocols, research papers, study materials
-- Infographic: Visual learning materials, statistics, medical concepts
-- External Link: Useful resources and tools
-- Collection: Organized sub-collections within this card
-
-**RESPONSE GUIDELINES:**
-- Focus on CARD-LEVEL content creation
-- Suggest specific content items for this card
-- Ask for missing information about the card's purpose
-- Provide specific, actionable content suggestions
-- Use medical terminology appropriately
-- Be encouraging and helpful
-
-Current context: The user is working on the "${cardAiContext.targetTitle}" card and needs help with CARD-LEVEL content creation.`;
-
-        const response = await fetch(AI_CONFIG.OPENAI_API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${AI_CONFIG.OPENAI_API_KEY}`
-          },
-          body: JSON.stringify({
-            model: 'gpt-4',
-            messages: [
-              { role: 'system', content: systemPrompt },
-              ...cardAiMessages.map(msg => ({ role: msg.role, content: msg.content })),
-              { role: 'user', content: message }
-            ],
-            max_tokens: 1000,
-            temperature: 0.7
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error(`OpenAI API error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return data.choices[0].message.content;
-      } catch (error) {
-        console.error('OpenAI API error:', error);
-        return 'Sorry, I encountered an error. Please try again.';
-      }
-  };
-
-  // Separate suggestion application functions
-  const applySpaceAISuggestion = (suggestion: string) => {
-    console.log('Applying Space AI suggestion:', suggestion);
-    
-    // Add magic effect - show loading state
-    setIsSpaceAiLoading(true);
-    
-    // Parse AI suggestions and create space cards based on the actual suggestion content
-    // Try to extract card titles from the AI suggestion
-    const cardTitles = extractCardTitlesFromSuggestion(suggestion);
-    
-    if (cardTitles.length > 0) {
-      // Create cards based on AI suggestion
-      createCardsFromAISuggestion(cardTitles);
-    } else {
-      // Fallback to keyword-based templates
-      if (suggestion.toLowerCase().includes('neuroblastoma') || suggestion.toLowerCase().includes('pediatric') && suggestion.toLowerCase().includes('oncology')) {
-        createNeuroblastomaTemplate();
-      } else if (suggestion.toLowerCase().includes('emergency') || suggestion.toLowerCase().includes('trauma')) {
-        createEmergencyMedicineTemplate();
-      } else if (suggestion.toLowerCase().includes('surgery') || suggestion.toLowerCase().includes('surgical')) {
-        createSurgeryTemplate();
-      } else if (suggestion.toLowerCase().includes('cardiology') || suggestion.toLowerCase().includes('heart')) {
-        createCardiologyTemplate();
-      } else if (suggestion.toLowerCase().includes('pediatrics') || suggestion.toLowerCase().includes('pediatric')) {
-        createPediatricsTemplate();
-      } else if (suggestion.toLowerCase().includes('neurology') || suggestion.toLowerCase().includes('brain')) {
-        createNeurologyTemplate();
-      } else if (suggestion.toLowerCase().includes('clinical decision') || suggestion.toLowerCase().includes('decision making')) {
-        createClinicalDecisionMakingTemplate();
-      } else {
-        // Default medical education template
-        createDefaultMedicalTemplate();
-      }
-    }
-    
-    // Auto-close AI Designer after applying suggestion
-    setTimeout(() => {
-      setIsSpaceAiLoading(false);
-      setShowSpaceAIDesigner(false);
-      setSpaceAiMessages([]);
-      setSpaceAiInput('');
-    }, 1500); // 1.5 second delay to show the magic effect
-  };
-
-  // Helper function to check if a message contains actionable suggestions
-  const isActionableSuggestion = (message: string): boolean => {
-    const lowerMessage = message.toLowerCase();
-    
-    // Exclude casual conversation patterns
-    const casualPatterns = [
-      'how are you', 'how do you do', 'hello', 'hi', 'thanks', 'thank you',
-      'good morning', 'good afternoon', 'good evening', 'nice to meet you',
-      'what can you do', 'what are you', 'who are you', 'tell me about yourself',
-      'i am fine', 'i am good', 'i am well', 'doing well', 'doing good'
-    ];
-    
-    if (casualPatterns.some(pattern => lowerMessage.includes(pattern))) {
-      return false;
-    }
-    
-    // Look for specific actionable patterns
-    const actionablePatterns = [
-      /^\d+\.\s*\*\*"[^"]+"\*\*:/,  // "1. **"Card Title"**:"
-      /^\d+\.\s*\*\*[^*]+\*\*:/,    // "1. **Card Title**:"
-      /^\d+\.\s*"[^"]+":/,          // "1. "Card Title":"
-      /^\d+\.\s*[^:]+:/,            // "1. Card Title:"
-      /^[•·\-\*]\s*[^:]+:/,         // "• Card Title:"
-      /create\s+\d+\s+cards?/i,     // "create 5 cards"
-      /add\s+\d+\s+cards?/i,        // "add 3 cards"
-      /generate\s+\d+\s+cards?/i,   // "generate 4 cards"
-      /suggest\s+\d+\s+cards?/i,    // "suggest 6 cards"
-      /recommend\s+\d+\s+cards?/i,  // "recommend 2 cards"
-      /here\s+are\s+\d+\s+cards?/i, // "here are 5 cards"
-      /i\s+suggest\s+\d+\s+cards?/i, // "i suggest 3 cards"
-      /i\s+recommend\s+\d+\s+cards?/i, // "i recommend 4 cards"
-      /template\s+with\s+\d+\s+cards?/i, // "template with 5 cards"
-      /structure\s+with\s+\d+\s+cards?/i, // "structure with 3 cards"
-      // Collection-specific patterns
-      /collection\s+structure/i,    // "collection structure"
-      /organize\s+into\s+cards?/i,  // "organize into cards"
-      /break\s+down\s+into/i,       // "break down into"
-      /categorize\s+into/i,         // "categorize into"
-      /group\s+into/i,              // "group into"
-      /divide\s+into/i,             // "divide into"
-      /split\s+into/i,              // "split into"
-      /structure\s+as/i,            // "structure as"
-      /organize\s+as/i,             // "organize as"
-      /arrange\s+as/i,              // "arrange as"
-    ];
-    
-    // Check for actionable patterns
-    const hasActionablePattern = actionablePatterns.some(pattern => pattern.test(message));
-    
-    // Also check for content-specific patterns
-    const contentPatterns = [
-      /create\s+content/i,
-      /add\s+content/i,
-      /generate\s+content/i,
-      /suggest\s+content/i,
-      /here\s+are\s+some\s+content/i,
-      /i\s+suggest\s+adding/i,
-      /i\s+recommend\s+adding/i,
-      /video\s+content/i,
-      /article\s+content/i,
-      /document\s+content/i,
-      /guideline\s+content/i,
-    ];
-    
-    const hasContentPattern = contentPatterns.some(pattern => pattern.test(message));
-    
-    // Check for numbered lists or bullet points (common in AI suggestions)
-    const hasListPattern = /^\d+\.\s+|\n\d+\.\s+|^[•·\-\*]\s+|\n[•·\-\*]\s+/.test(message);
-    
-    // Check for multiple card titles or suggestions
-    const hasMultipleSuggestions = (message.match(/\d+\.\s+[^:]+:/g) || []).length >= 2;
-    
-    return hasActionablePattern || hasContentPattern || (hasListPattern && hasMultipleSuggestions);
-  };
-
-  // Helper function to extract card titles from AI suggestion
-  const extractCardTitlesFromSuggestion = (suggestion: string): string[] => {
-    console.log('Parsing AI suggestion:', suggestion);
-    const cardTitles: string[] = [];
-    
-    // Look for patterns like "1. **"Card Title"**:", "• Card Title", "- Card Title", etc.
-    const patterns = [
-      /^\d+\.\s*\*\*"([^"]+)"\*\*:/gm,  // "1. **"Card Title"**:"
-      /^\d+\.\s*\*\*([^*]+)\*\*:/gm,    // "1. **Card Title**:"
-      /^\d+\.\s*"([^"]+)":/gm,          // "1. "Card Title":"
-      /^\d+\.\s*(.+?):/gm,              // "1. Card Title:"
-      /^\d+\.\s*(.+)$/gm,               // "1. Card Title"
-      /^[•·]\s*(.+)$/gm,                // "• Card Title"
-      /^-\s*(.+)$/gm,                   // "- Card Title"
-      /^\*\s*(.+)$/gm,                  // "* Card Title"
-    ];
-    
-    for (const pattern of patterns) {
-      const matches = suggestion.match(pattern);
-      if (matches) {
-        console.log('Found matches with pattern:', pattern, matches);
-        for (const match of matches) {
-          let title = match.replace(/^\d+\.\s*|[•·*-]\s*/, '').trim();
-          // Remove markdown formatting
-          title = title.replace(/\*\*([^*]+)\*\*/, '$1'); // Remove **bold**
-          title = title.replace(/"([^"]+)":?/, '$1'); // Remove quotes and colons
-          title = title.replace(/:\s*.*$/, ''); // Remove everything after colon
-          
-          if (title && title.length > 3 && title.length < 50) {
-            cardTitles.push(title);
-          }
-        }
-      }
-    }
-    
-    // If no patterns found, try to extract from common medical card patterns
-    if (cardTitles.length === 0) {
-      console.log('No patterns found, trying medical patterns');
-      const medicalPatterns = [
-        'Featured Content',
-        'Featured Categories', 
-        'Other Resources',
-        'Residents Resources',
-        'Quick Access',
-        'Emergency Protocols',
-        'Learning Materials',
-        'Assessment Tools',
-        'Case Studies',
-        'Guidelines',
-        'Procedures',
-        'Diagnostics'
-      ];
-      
-      for (const pattern of medicalPatterns) {
-        if (suggestion.toLowerCase().includes(pattern.toLowerCase())) {
-          cardTitles.push(pattern);
-        }
-      }
-    }
-    
-    console.log('Extracted card titles:', cardTitles);
-    return cardTitles.slice(0, 6); // Limit to 6 cards max
-  };
-
-  // Helper function to create cards from AI suggestion
-  const createCardsFromAISuggestion = (cardTitles: string[]) => {
-    console.log('Creating cards from AI suggestion:', cardTitles);
-    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
-    
-    const newCards: SpaceCard[] = cardTitles.map((title, index) => ({
-      id: `ai-card-${Date.now()}-${index}`,
-      title: title,
-      description: `AI-generated card: ${title}`,
-      color: colors[index % colors.length],
-      order: space.cards.length + index,
-      items: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      isExpanded: false
-    }));
-
-    console.log('Created new cards:', newCards);
-    setSpace(prev => ({
-      ...prev,
-      cards: [...prev.cards, ...newCards]
-    }));
-  };
-
-  // Helper function to create collection cards from AI suggestion
-  const createCollectionCardsFromAISuggestion = (collectionId: string, cardTitles: string[]) => {
-    console.log('Creating collection cards from AI suggestion:', collectionId, cardTitles);
-    console.log('Current space cards:', space.cards);
-    
-    // Find the collection in the space
-    const findCollectionInCards = (cards: SpaceCard[]): ContentItem | null => {
-      console.log('Searching in cards:', cards.length);
-      for (const card of cards) {
-        console.log('Checking card:', card.title, 'with', card.items.length, 'items');
-        for (const item of card.items) {
-          console.log('Checking item:', item.id, 'type:', item.type, 'title:', item.title);
-          if (item.id === collectionId) {
-            console.log('Found collection by ID match!');
-            return item;
-          }
-          if (item.type === 'collection' && item.children) {
-            console.log('Found nested collection, searching children...');
-            const found = findCollectionInCards(item.children);
-            if (found) return found;
-          }
-        }
-      }
-      return null;
-    };
-
-    // Also search in the current collection if we're in a collection context
-    const findCollectionInCurrentCollection = (): ContentItem | null => {
-      if (currentCollection && currentCollection.id === collectionId) {
-        console.log('Found current collection by ID match!');
-        return currentCollection;
-      }
-      return null;
-    };
-
-    let collection = findCollectionInCards(space.cards);
-    if (!collection) {
-      collection = findCollectionInCurrentCollection();
-    }
-    
-    console.log('Found collection:', collection);
-    
-    if (!collection || collection.type !== 'collection') {
-      console.log('Collection not found or not a collection type');
-      console.log('Available collections in space:');
-      space.cards.forEach(card => {
-        card.items.forEach(item => {
-          if (item.type === 'collection') {
-            console.log('- Collection:', item.id, item.title);
-          }
-        });
-      });
-      console.log('Current collection:', currentCollection);
-      return;
-    }
-
-    const colors = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
-    
-    const newCards: ContentItem[] = cardTitles.map((title, index) => ({
-      id: `collection-card-${Date.now()}-${index}`,
-      type: 'collection' as const,
-      title: title,
-      description: `AI-generated collection card: ${title}`,
-      color: colors[index % colors.length],
-      order: (collection.children?.length || 0) + index,
-      children: [],
-      isExpanded: false,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }));
-
-    console.log('Created new collection cards:', newCards);
-    console.log('Current collection children:', collection.children);
-
-    // Update the collection with new cards
-    setSpace(prev => {
-      console.log('Updating space with new collection cards');
-      const updated = {
-        ...prev,
-        cards: prev.cards.map(card => ({
-          ...card,
-          items: card.items.map(item => {
-            if (item.id === collectionId && item.type === 'collection') {
-              console.log('Updating collection:', item.title);
-              const updatedItem = {
-                ...item,
-                children: [...(item.children || []), ...newCards]
-              };
-              console.log('Updated collection children:', updatedItem.children);
-              return updatedItem;
-            }
-            return item;
-          })
-        }))
-      };
-      console.log('Updated space:', updated);
-      return updated;
-    });
-
-    // Also update the current collection if it's the same one
-    if (currentCollection && currentCollection.id === collectionId) {
-      console.log('Updating current collection with new cards');
-      setCurrentCollection({
-        ...currentCollection,
-        children: [...(currentCollection.children || []), ...newCards]
-      });
-    }
-  };
-
-  const applyCollectionAISuggestion = (suggestion: string) => {
-    console.log('Applying Collection AI suggestion:', suggestion);
-    
-    // Add magic effect - show loading state
-    setIsCollectionAiLoading(true);
-    
-    // Parse AI suggestions and create collection cards based on the actual suggestion content
-    const cardTitles = extractCardTitlesFromSuggestion(suggestion);
-    
-    if (cardTitles.length > 0) {
-      // Create collection cards based on AI suggestion
-      createCollectionCardsFromAISuggestion(collectionAiContext.targetId!, cardTitles);
-    } else {
-      // Fallback to keyword-based templates
-      generateCollectionTemplate(collectionAiContext.targetId!, suggestion);
-    }
-    
-    // Auto-close AI Designer after applying suggestion
-    setTimeout(() => {
-      setIsCollectionAiLoading(false);
-      setShowCollectionAIDesigner(false);
-      setCollectionAiMessages([]);
-      setCollectionAiInput('');
-    }, 1500); // 1.5 second delay to show the magic effect
-  };
-
-  const applyCardAISuggestion = (suggestion: string) => {
-    console.log('Applying Card AI suggestion:', suggestion);
-    
-    // Add magic effect - show loading state
-    setIsCardAiLoading(true);
-    
-    // Generate content for specific card
-    generateCardContent(cardAiContext.targetId!, suggestion);
-    
-    // Auto-close AI Designer after applying suggestion
-    setTimeout(() => {
-      setIsCardAiLoading(false);
-      setShowCardAIDesigner(false);
-      setCardAiMessages([]);
-      setCardAiInput('');
-    }, 1500); // 1.5 second delay to show the magic effect
-  };
 
   // Template creation functions
   const createEmergencyMedicineTemplate = () => {
@@ -1878,266 +1107,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
     }));
   };
 
-  const generateCardContent = (cardId: string, suggestion: string) => {
-    // First try to find the card in space cards
-    let card = space.cards.find(c => c.id === cardId);
-    
-    // If not found in space cards, try to find it in current collection
-    if (!card && currentCollection) {
-      card = currentCollection.children?.find(c => c.id === cardId);
-    }
-    
-    if (!card) {
-      console.log('Card not found:', cardId);
-      return;
-    }
 
-    // Generate content based on suggestion keywords
-    const newItems: ContentItem[] = [];
-    
-    if (suggestion.toLowerCase().includes('video')) {
-      newItems.push({
-        id: `ai-content-${Date.now()}-1`,
-        type: 'content',
-        title: 'Educational Video',
-        description: 'AI-generated video content suggestion',
-        contentType: 'video',
-        icon: PlayCircle as any,
-        isPublic: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        order: 0
-      });
-    }
-    
-    if (suggestion.toLowerCase().includes('article') || suggestion.toLowerCase().includes('document')) {
-      newItems.push({
-        id: `ai-content-${Date.now()}-2`,
-        type: 'content',
-        title: 'Research Article',
-        description: 'AI-generated article content suggestion',
-        contentType: 'article',
-        icon: Newspaper as any,
-        isPublic: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        order: 0
-      });
-    }
-    
-    if (suggestion.toLowerCase().includes('guideline') || suggestion.toLowerCase().includes('protocol')) {
-      newItems.push({
-        id: `ai-content-${Date.now()}-3`,
-        type: 'content',
-        title: 'Clinical Guideline',
-        description: 'AI-generated guideline content suggestion',
-        contentType: 'guideline',
-        icon: ClipboardList as any,
-        isPublic: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        order: 0
-      });
-    }
-
-    if (newItems.length > 0) {
-      // Check if this is a space card or collection card
-      const isSpaceCard = space.cards.some(c => c.id === cardId);
-      
-      if (isSpaceCard) {
-        // Update space card
-        setSpace(prev => ({
-          ...prev,
-          cards: prev.cards.map(c => 
-            c.id === cardId 
-              ? { ...c, items: [...c.items, ...newItems] }
-              : c
-          )
-        }));
-      } else if (currentCollection) {
-        // Update collection card
-        setCurrentCollection({
-          ...currentCollection,
-          children: currentCollection.children?.map(c => 
-            c.id === cardId 
-              ? { ...c, children: [...(c.children || []), ...newItems] }
-              : c
-          ) || []
-        });
-      }
-    }
-  };
-
-  const generateCollectionTemplate = (collectionId: string, suggestion: string) => {
-    // Find the collection in the space
-    const findCollectionInCards = (cards: SpaceCard[]): ContentItem | null => {
-      for (const card of cards) {
-        for (const item of card.items) {
-          if (item.id === collectionId) {
-            return item;
-          }
-          if (item.type === 'collection' && item.children) {
-            const found = findCollectionInCards(item.children);
-            if (found) return found;
-          }
-        }
-      }
-      return null;
-    };
-
-    const collection = findCollectionInCards(space.cards);
-    if (!collection || collection.type !== 'collection') return;
-
-    // Generate collection cards based on suggestion (these are collection-level cards, not space cards)
-    const newCards: CollectionCard[] = [];
-    
-    if (suggestion.toLowerCase().includes('neuroblastoma') || suggestion.toLowerCase().includes('pediatric') && suggestion.toLowerCase().includes('oncology')) {
-      // Create neuroblastoma-specific collection cards
-      newCards.push(
-        {
-          id: `collection-card-${Date.now()}-1`,
-          title: 'Topic Overview',
-          color: '#8b5cf6',
-          order: collection.children?.length || 0,
-          items: [],
-          isExpanded: false,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: `collection-card-${Date.now()}-2`,
-          title: 'Workup Algorithm',
-          color: '#06b6d4',
-          order: (collection.children?.length || 0) + 1,
-          items: [],
-          isExpanded: false,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: `collection-card-${Date.now()}-3`,
-          title: 'Preoperative Planning',
-          color: '#10b981',
-          order: (collection.children?.length || 0) + 2,
-          items: [],
-          isExpanded: false,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: `collection-card-${Date.now()}-4`,
-          title: 'Technique Videos',
-          color: '#f59e0b',
-          order: (collection.children?.length || 0) + 3,
-          items: [],
-          isExpanded: false,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: `collection-card-${Date.now()}-5`,
-          title: 'Postoperative Care',
-          color: '#ef4444',
-          order: (collection.children?.length || 0) + 4,
-          items: [],
-          isExpanded: false,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: `collection-card-${Date.now()}-6`,
-          title: 'Patient Education Materials',
-          color: '#8b5cf6',
-          order: (collection.children?.length || 0) + 5,
-          items: [],
-          isExpanded: false,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        }
-      );
-    } else {
-      // Default collection cards for any medical topic
-      newCards.push(
-        {
-          id: `collection-card-${Date.now()}-1`,
-          title: 'Core Concepts',
-          color: '#3b82f6',
-          order: collection.children?.length || 0,
-          items: [],
-          isExpanded: false,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: `collection-card-${Date.now()}-2`,
-          title: 'Diagnostic Approach',
-          color: '#10b981',
-          order: (collection.children?.length || 0) + 1,
-          items: [],
-          isExpanded: false,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: `collection-card-${Date.now()}-3`,
-          title: 'Treatment Protocols',
-          color: '#f59e0b',
-          order: (collection.children?.length || 0) + 2,
-          items: [],
-          isExpanded: false,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: `collection-card-${Date.now()}-4`,
-          title: 'Case Studies',
-          color: '#ef4444',
-          order: (collection.children?.length || 0) + 3,
-          items: [],
-          isExpanded: false,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: `collection-card-${Date.now()}-5`,
-          title: 'Assessment Tools',
-          color: '#8b5cf6',
-          order: (collection.children?.length || 0) + 4,
-          items: [],
-          isExpanded: false,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: `collection-card-${Date.now()}-6`,
-          title: 'Key Articles',
-          color: '#06b6d4',
-          order: (collection.children?.length || 0) + 5,
-          items: [],
-          isExpanded: false,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        }
-      );
-    }
-
-    // Update the collection with new cards
-    setSpace(prev => ({
-      ...prev,
-      cards: prev.cards.map(card => ({
-        ...card,
-        items: card.items.map(item => {
-          if (item.id === collectionId && item.type === 'collection') {
-            return {
-              ...item,
-              children: [...(item.children || []), ...newCards]
-            };
-          }
-          return item;
-        })
-      }))
-    }));
-  };
 
   // Manual save function instead of automatic saving
   const saveSpaceData = async () => {
@@ -2184,6 +1154,8 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
   const [showAddItemDialog, setShowAddItemDialog] = useState(false);
   const [showAddCardDialog, setShowAddCardDialog] = useState(false);
   const [showCollectionDialog, setShowCollectionDialog] = useState(false);
+  const [showCollectionDesigner, setShowCollectionDesigner] = useState(false);
+  const [magicalStarTarget, setMagicalStarTarget] = useState<string | null>(null);
   const [showSpaceSettingsDialog, setShowSpaceSettingsDialog] = useState(false);
   const [showTemplateDialog, setShowTemplateDialog] = useState(false);
   const [showCollectionTemplateDialog, setShowCollectionTemplateDialog] = useState(false);
@@ -2197,7 +1169,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
   // Search states
   const [searchQuery, setSearchQuery] = useState("");
-  const [collectionSearchQuery, setCollectionSearchQuery] = useState("");
 
   // Versioning states
   const [showVersionDialog, setShowVersionDialog] = useState(false);
@@ -2213,41 +1184,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
   const [onboardingTour, setOnboardingTour] = useState<OnboardingTour | null>(null);
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
 
-  // AI Designer state
-  // Separate AI Designers for different contexts
-  const [showSpaceAIDesigner, setShowSpaceAIDesigner] = useState(false);
-  const [showCollectionAIDesigner, setShowCollectionAIDesigner] = useState(false);
-  const [showCardAIDesigner, setShowCardAIDesigner] = useState(false);
-  
-  // Separate AI states for each context
-  const [spaceAiMessages, setSpaceAiMessages] = useState<Array<{id: string, role: 'user' | 'assistant', content: string, timestamp: Date}>>([]);
-  const [collectionAiMessages, setCollectionAiMessages] = useState<Array<{id: string, role: 'user' | 'assistant', content: string, timestamp: Date}>>([]);
-  const [cardAiMessages, setCardAiMessages] = useState<Array<{id: string, role: 'user' | 'assistant', content: string, timestamp: Date}>>([]);
-  
-  const [spaceAiInput, setSpaceAiInput] = useState('');
-  const [collectionAiInput, setCollectionAiInput] = useState('');
-  const [cardAiInput, setCardAiInput] = useState('');
-  
-  const [isSpaceAiLoading, setIsSpaceAiLoading] = useState(false);
-  const [isCollectionAiLoading, setIsCollectionAiLoading] = useState(false);
-  const [isCardAiLoading, setIsCardAiLoading] = useState(false);
-  
-  
-  // Separate contexts for each AI Designer
-  const [spaceAiContext, setSpaceAiContext] = useState<{
-    targetId?: string;
-    targetTitle?: string;
-  }>({});
-  
-  const [collectionAiContext, setCollectionAiContext] = useState<{
-    targetId?: string;
-    targetTitle?: string;
-  }>({});
-  
-  const [cardAiContext, setCardAiContext] = useState<{
-    targetId?: string;
-    targetTitle?: string;
-  }>({});
 
   // Force re-render when switching modes to ensure state consistency
   useEffect(() => {
@@ -2283,8 +1219,55 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
   const [lastSavedState, setLastSavedState] = useState<string>("");
   const [showPortalDialog, setShowPortalDialog] = useState(false);
   const [portalSearchQuery, setPortalSearchQuery] = useState("");
+  const [showHamburgerMenu, setShowHamburgerMenu] = useState(false);
+  const [showPlusMenu, setShowPlusMenu] = useState(false);
+  const [showCardMenu, setShowCardMenu] = useState<string | null>(null);
+  const [showCollectionMenu, setShowCollectionMenu] = useState(false);
 
-  const dragRef = useRef<HTMLDivElement>(null);
+  // Close menus when clicking outside (no longer needed with Dialog components)
+  // useEffect(() => {
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     if (showHamburgerMenu && !(event.target as Element).closest('.hamburger-menu')) {
+  //       setShowHamburgerMenu(false);
+  //     }
+  //     if (showPlusMenu && !(event.target as Element).closest('.plus-menu')) {
+  //       setShowPlusMenu(false);
+  //     }
+  //   };
+
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, [showHamburgerMenu, showPlusMenu]);
+
+  // Close card menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showCardMenu && !(event.target as Element).closest('.card-menu')) {
+        setShowCardMenu(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showCardMenu]);
+
+  // Close collection menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showCollectionMenu && !(event.target as Element).closest('.collection-menu')) {
+        setShowCollectionMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showCollectionMenu]);
 
   // Load space data from localStorage on component mount
   useEffect(() => {
@@ -2300,7 +1283,20 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
             ...parsedSpace,
             cards: parsedSpace.cards?.map((card: any) => ({
               ...card,
-              isExpanded: card.isExpanded !== undefined ? card.isExpanded : false
+              isExpanded: card.isExpanded !== undefined ? card.isExpanded : false,
+              // Ensure items also have proper structure
+              items: card.items?.map((item: any) => {
+                if (item.type === 'collection' && item.children) {
+                  return {
+                    ...item,
+                    children: item.children.map((childCard: any) => ({
+                      ...childCard,
+                      isExpanded: childCard.isExpanded !== undefined ? childCard.isExpanded : false
+                    }))
+                  };
+                }
+                return item;
+              }) || []
             })) || []
           };
           
@@ -2414,11 +1410,11 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
     const addCollectionItems = (collection: ContentItem) => {
       if (collection.type === 'collection' && collection.children) {
         collection.children.forEach(card => {
-          // Collection cards have children, not items
-          if (card.children) {
-            allItems.push(...card.children);
+          // Collection cards have items, not children
+          if (card.items) {
+            allItems.push(...card.items);
             // Recursively add items from subcollections
-            card.children.forEach(item => {
+            card.items.forEach(item => {
               if (item.type === 'collection' && item.children) {
                 addCollectionItems(item);
               }
@@ -3098,7 +2094,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
       setSpace({
         id: "space-1",
         name: "Space Name",
-        description: "Customize your space by adding cards and content",
+        description: "My Space",
         backgroundColor: "#f8fafc",
         borderColor: "#93c5fd",
         cards: [],
@@ -3132,18 +2128,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
       card.items.some(item => 
         item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.description.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
-  };
-
-  const filterCollectionCardsBySearch = (cards: CollectionCard[]) => {
-    if (!collectionSearchQuery.trim()) return cards;
-    
-    return cards.filter(card => 
-      card.title.toLowerCase().includes(collectionSearchQuery.toLowerCase()) ||
-      card.items.some(item => 
-        item.title.toLowerCase().includes(collectionSearchQuery.toLowerCase()) ||
-        item.description.toLowerCase().includes(collectionSearchQuery.toLowerCase())
       )
     );
   };
@@ -3247,6 +2231,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
     console.log('Current space cards:', space.cards);
     console.log('Current mode:', isDesignMode ? 'Design' : 'Production');
     
+    try {
     if (currentCollection) {
       console.log('Toggling collection card expansion');
       setCurrentCollection({
@@ -3274,6 +2259,12 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ...space,
         cards: updatedCards
       });
+        
+        // Mark as changed to persist the expansion state
+        markAsChanged();
+      }
+    } catch (error) {
+      console.error('Error toggling card expansion:', error);
     }
   };
 
@@ -3321,6 +2312,52 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         ...space,
         cards: cards
       });
+    }
+  };
+
+  const moveCollectionCardUp = (cardId: string) => {
+    if (!currentCollection?.children) return;
+    
+    const cards = [...currentCollection.children];
+    const currentIndex = cards.findIndex(card => card.id === cardId);
+    
+    if (currentIndex > 0) {
+      // Swap with the card above
+      [cards[currentIndex], cards[currentIndex - 1]] = [cards[currentIndex - 1], cards[currentIndex]];
+      
+      // Update order values
+      cards.forEach((card, index) => {
+        card.order = index;
+      });
+      
+      setCurrentCollection({
+        ...currentCollection,
+        children: cards
+      });
+      markAsChanged();
+    }
+  };
+
+  const moveCollectionCardDown = (cardId: string) => {
+    if (!currentCollection?.children) return;
+    
+    const cards = [...currentCollection.children];
+    const currentIndex = cards.findIndex(card => card.id === cardId);
+    
+    if (currentIndex < cards.length - 1) {
+      // Swap with the card below
+      [cards[currentIndex], cards[currentIndex + 1]] = [cards[currentIndex + 1], cards[currentIndex]];
+      
+      // Update order values
+      cards.forEach((card, index) => {
+        card.order = index;
+      });
+      
+      setCurrentCollection({
+        ...currentCollection,
+        children: cards
+      });
+      markAsChanged();
     }
   };
 
@@ -3664,6 +2701,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
             : card
         )
       });
+      markAsChanged();
     } else {
       // Delete item from card in main space
       setSpace({
@@ -3678,6 +2716,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
             : card
         )
       });
+      markAsChanged();
     }
   };
 
@@ -3718,16 +2757,19 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
       const newCards = updateCollectionByPath(updatedSpace.cards, collectionPath, currentCollection);
       
-      // Ensure all collection cards have isExpanded property
-      const ensureExpansionProperty = (cards: ContentItem[]): ContentItem[] => {
+      // Ensure all space cards have isExpanded property
+      const ensureExpansionProperty = (cards: SpaceCard[]): SpaceCard[] => {
         return cards.map(card => ({
           ...card,
           isExpanded: card.isExpanded !== undefined ? card.isExpanded : false,
-          children: card.children ? card.children.map(item => {
+          items: card.items ? card.items.map(item => {
             if (item.type === 'collection' && item.children) {
               return {
                 ...item,
-                children: ensureExpansionProperty(item.children)
+                children: item.children.map(childCard => ({
+                  ...childCard,
+                  isExpanded: childCard.isExpanded !== undefined ? childCard.isExpanded : false
+                }))
               };
             }
             return item;
@@ -3762,6 +2804,11 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
       
       return total + cardTotal;
     }, 0);
+  };
+
+  const getCollectionCardCount = (collection: ContentItem) => {
+    if (!collection.children) return 0;
+    return collection.children.length;
   };
 
   const handleDragStart = (e: React.DragEvent, cardId: string) => {
@@ -4006,11 +3053,23 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-md mx-auto bg-white min-h-screen">
+    <div className="h-screen bg-gray-50 flex">
+      {/* Magical Star Animation */}
+      {magicalStarTarget && (
+        <MagicalStar
+          targetId={magicalStarTarget}
+          duration={3000}
+          size={20}
+          color="#8B5CF6"
+          onComplete={() => setMagicalStarTarget(null)}
+        />
+      )}
+      
+      {/* Main App Container */}
+      <div className="w-1/2 bg-white h-screen overflow-y-auto relative">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b p-4 z-10">
-          {/* Mode Toggle - Above Everything */}
+        <div className="sticky top-0 bg-white border-b p-4 z-50">
+          {/* Mode Toggle and Hamburger Menu */}
           <div className="flex items-center justify-center gap-2 mb-4" data-onboarding="mode-toggle">
             <div className="flex">
               <Button
@@ -4040,15 +3099,19 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                 Production Mode
               </Button>
             </div>
+            
+            {/* Hamburger Menu */}
+            <div className="relative hamburger-menu">
             <Button
               variant="outline"
               size="sm"
-              onClick={() => resetOnboarding()}
+                onClick={() => setShowHamburgerMenu(!showHamburgerMenu)}
               className="bg-transparent hover:bg-gray-100 border border-gray-300"
-              title="Start Tutorial"
+                title="Menu"
             >
-              <HelpCircle className="w-4 h-4" />
+                <Menu className="w-4 h-4" />
             </Button>
+            </div>
           </div>
 
           {/* Space Logo and Title */}
@@ -4133,7 +3196,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
             </div>
           )}
 
-          {/* Settings and Save Buttons - only in design mode */}
+          {/* Settings Button - only in design mode */}
           {isDesignMode && (
             <div className="space-y-2">
               {/* Unsaved changes warning */}
@@ -4146,51 +3209,45 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                 </div>
               )}
               
-              <div className="flex justify-end gap-2 flex-wrap">
+              <div className="flex justify-center gap-2">
+                {/* Plus Menu */}
+                <div className="relative plus-menu">
                 <Button
-                  variant="outline"
+                    variant="ghost"
                   size="sm"
-                  onClick={() => initializeSpaceAIDesigner()}
-                  className="bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border border-purple-200 text-purple-700 whitespace-nowrap"
-                  title="AI Space Designer"
-                >
-                  <Star className="w-4 h-4 mr-2" />
-                  AI Space Designer
+                    onClick={() => setShowPlusMenu(!showPlusMenu)}
+                    className="bg-transparent hover:bg-gray-100 border border-gray-300"
+                    title="Add Content"
+                  >
+                    <Plus className="w-4 h-4" />
                 </Button>
+                </div>
+                
+                {/* Save Button */}
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
                   onClick={saveSpaceData}
                   disabled={isSaving}
-                  className={`bg-transparent hover:bg-gray-100 border ${hasUnsavedChanges ? 'border-orange-300 bg-orange-50' : 'border-gray-300'} whitespace-nowrap`}
-                  data-onboarding="save-button"
+                  className={`bg-transparent hover:bg-gray-100 border border-gray-300 ${
+                    hasUnsavedChanges ? 'border-orange-300 bg-orange-50 text-orange-700' : ''
+                  } ${isSaving ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  title={isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save (unsaved changes)' : 'Save'}
                 >
                   {isSaving ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin mr-2"></div>
-                      Saving...
-                    </>
+                    <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
                   ) : (
-                    <>
-                      <Save className="w-4 h-4 mr-2" />
-                      Save {hasUnsavedChanges && <span className="text-orange-600">•</span>}
-                    </>
+                    <Save className="w-4 h-4" />
                   )}
                 </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowVersionDialog(true)}
-                  className="bg-transparent hover:bg-gray-100 border border-gray-300 whitespace-nowrap"
-                >
-                  <Save className="w-4 h-4 mr-2" />
-                  Save Version
-                </Button>
+                
+                {/* Settings Button */}
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowSpaceSettingsDialog(true)}
                   className="bg-transparent hover:bg-gray-100 border border-gray-300"
+                  data-onboarding="space-settings-button"
                 >
                   <Settings className="w-4 h-4" />
                 </Button>
@@ -4207,9 +3264,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
               onChange={handleLogoUpload}
               className="hidden"
             />
-          )}
-          {isDesignMode && (
-            <p className="text-sm text-gray-600 text-center">{space.description}</p>
           )}
         </div>
 
@@ -4238,117 +3292,13 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                     <Stethoscope className="w-32 h-32 text-gray-400 hidden" />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Your Space is Empty</h3>
-                  <p className="text-gray-600 mb-6">Start building your space by adding your first card or using a template.</p>
-                  
-                  <div className="flex flex-col gap-3 max-w-xs mx-auto">
-                    <Button 
-                      onClick={() => setShowAddCardDialog(true)}
-                      className={`flex items-center gap-2 border transition-all duration-200`}
-                      style={{ 
-                        backgroundColor: space.backgroundColor,
-                        borderColor: space.borderColor,
-                        color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
-                      }}
-                      data-onboarding="add-card-button"
-                    >
-                      <Plus className="w-4 h-4" />
-                      Add Your First Card
-                    </Button>
-                    
-                    <Button 
-                      variant="outline"
-                      onClick={() => setShowTemplateDialog(true)}
-                      className="flex items-center gap-2 border border-gray-300 hover:bg-gray-50 transition-all duration-200"
-                    >
-                      <Layout className="w-4 h-4" />
-                      Use Template
-                    </Button>
-
-                    <Button 
-                      variant="outline"
-                      onClick={() => initializeSpaceAIDesigner()}
-                      className="flex items-center gap-2 border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700 transition-all duration-200"
-                    >
-                      <Star className="w-4 h-4" />
-                      AI Space Designer
-                    </Button>
-                  </div>
+                  <p className="text-gray-600">Use the + button above to add content to your space.</p>
                 </div>
               ) : (
                 // Cards Grid
                 <div className="space-y-4">
-                  {/* Search Bar */}
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <Input
-                      placeholder="Search cards and content..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 border-gray-300 focus:border-blue-500 min-h-[44px] text-base"
-                    />
-                  </div>
-                  
-                  {/* Add Card Button */}
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => setShowAddCardDialog(true)}
-                      variant="outline"
-                      className="flex-1 flex items-center gap-2 border hover:shadow-lg transition-all duration-200"
-                      style={{ 
-                        backgroundColor: space.backgroundColor,
-                        borderColor: space.borderColor,
-                        color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
-                      }}
-                    >
-                      <Plus className="w-4 h-4" />
-                      Add New Card
-                    </Button>
-                    
-                    <Button
-                      onClick={() => initializeSpaceAIDesigner()}
-                      variant="outline"
-                      className="flex items-center gap-2 border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700 transition-all duration-200"
-                      title="AI Space Designer"
-                    >
-                      <Star className="w-4 h-4" />
-                      AI Space Designer
-                    </Button>
-                  </div>
-
-                  {/* Add Portals Card Button - Only show if no portals card exists */}
-                  {!hasPortalsCard() && (
-                    <Button
-                      onClick={() => createPortalsCard()}
-                      variant="outline"
-                      className="w-full flex items-center gap-2 border hover:shadow-lg transition-all duration-200"
-                      style={{ 
-                        backgroundColor: space.backgroundColor,
-                        borderColor: space.borderColor,
-                        color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
-                      }}
-                    >
-                      <Plus className="w-4 h-4" />
-                      Add Portals Card
-                    </Button>
-                  )}
-
-                  {/* Use Template Button */}
-                  <Button
-                    onClick={() => setShowTemplateDialog(true)}
-                    variant="outline"
-                    className="w-full flex items-center gap-2 border hover:shadow-lg transition-all duration-200"
-                    style={{ 
-                      backgroundColor: space.backgroundColor,
-                      borderColor: space.borderColor,
-                      color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
-                    }}
-                  >
-                    <Layout className="w-4 h-4" />
-                    Use Template
-                  </Button>
-
                   {/* Cards */}
-                  {filterCardsBySearch(space.cards)
+                  {space.cards
                     .sort((a, b) => a.order - b.order)
                     .map((card) => (
                       <Card
@@ -4366,14 +3316,56 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                           <div className="flex items-center justify-between">
                             <CardTitle className="text-lg">{card.title}</CardTitle>
                             <div className="flex items-center gap-1" data-onboarding="card-actions">
+                              <div className="relative card-menu">
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => setEditingCard(card)}
+                                  onClick={() => setShowCardMenu(card.id)}
                                 className="bg-transparent hover:bg-gray-100 border border-gray-300"
+                                  title="Card Actions"
                               >
-                                <Edit className="w-4 h-4" />
+                                  <Menu className="w-4 h-4" />
                               </Button>
+                                
+                                {/* Card Menu Dropdown */}
+                                {showCardMenu === card.id && (
+                                  <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                                    <div className="py-1">
+                                      <button
+                                        onClick={() => {
+                                          setEditingCard(card);
+                                          setShowCardMenu(null);
+                                        }}
+                                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 whitespace-nowrap"
+                                      >
+                                        <Edit className="w-4 h-4" />
+                                        Edit Card
+                                      </button>
+                                      <button
+                                        onClick={() => {
+                                          setCurrentCardId(card.id);
+                                          setShowAddItemDialog(true);
+                                          setShowCardMenu(null);
+                                        }}
+                                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 whitespace-nowrap"
+                                      >
+                                        <Plus className="w-4 h-4" />
+                                        Add Item
+                                      </button>
+                                      <button
+                                        onClick={() => {
+                                          deleteCard(card.id);
+                                          setShowCardMenu(null);
+                                        }}
+                                        className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 whitespace-nowrap"
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                        Delete Card
+                                      </button>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
                               <Button
                                 variant="ghost"
                                 size="sm"
@@ -4393,14 +3385,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                                 title="Move down"
                               >
                                 <ChevronDown className="w-4 h-4" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => deleteCard(card.id)}
-                                className="bg-transparent hover:bg-gray-100 text-red-600 hover:text-red-700 border border-red-300"
-                              >
-                                <Trash2 className="w-4 h-4" />
                               </Button>
                             </div>
                           </div>
@@ -4490,7 +3474,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                                       }}
                                     >
                                       <div className="flex flex-col items-center text-center space-y-2 h-full justify-center">
-                                        <div className={`rounded-lg border flex items-center justify-center bg-white relative ${item.type === 'collection' ? 'shadow-lg' : ''}`} style={{ borderColor: space.borderColor, width: '100px', height: '100px', minHeight: '100px', maxHeight: '100px' }}>
+                                        <div className={`rounded-lg border flex items-center justify-center bg-white relative ${item.type === 'collection' ? 'shadow-lg' : ''}`} style={{ borderColor: space.borderColor, width: '100px', height: '120px', minHeight: '120px', maxHeight: '120px' }}>
                                           {/* Stack effect for collections */}
                                           {item.type === 'collection' && (
                                             <>
@@ -4502,7 +3486,43 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                                               <div className="absolute inset-0 rounded-lg border bg-white transform translate-x-0 translate-y-0 rotate-0 opacity-100" style={{ borderColor: space.borderColor }}></div>
                                             </>
                                           )}
-                                          <div className="relative z-10">
+                                          {/* Edit/Delete buttons above icon container */}
+                                          {isDesignMode && (
+                                            <div className="absolute -top-2 -right-2 flex gap-2 z-10">
+                                            <Button
+                                              variant="ghost"
+                                              size="sm"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (item.type === 'collection') {
+                                                  setCurrentCollection(item);
+                                                  setShowCollectionDesigner(true);
+                                                } else {
+                                                setEditingItem(item);
+                                                setCurrentCardId(card.id);
+                                                setShowAddItemDialog(true);
+                                                }
+                                              }}
+                                                className="h-8 w-8 p-0 bg-white hover:bg-blue-50 border-2 border-blue-200 text-blue-600 hover:text-blue-700 shadow-lg rounded-full hover:scale-105 transition-all duration-200"
+                                                title="Edit item"
+                                            >
+                                                <Edit className="w-4 h-4" />
+                                            </Button>
+                                            <Button
+                                              variant="ghost"
+                                              size="sm"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                deleteItem(card.id, item.id);
+                                              }}
+                                                className="h-8 w-8 p-0 bg-white hover:bg-red-50 border-2 border-red-200 text-red-600 hover:text-red-700 shadow-lg rounded-full hover:scale-105 transition-all duration-200"
+                                                title="Delete item"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </Button>
+                                          </div>
+                                        )}
+                                          <div className="relative z-10 -mt-8">
                                             {item.type === 'collection' ? <FolderOpen className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} /> : 
                                               typeof item.icon === 'string' ? 
                                                 <span className="text-2xl">{item.icon}</span> : 
@@ -4513,110 +3533,26 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                                           </div>
                                           {/* Item count inside container for collections */}
                                           {item.type === 'collection' && (
-                                            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 z-20" data-onboarding="collection-count">
-                                              <div className="bg-purple-100 text-purple-600 text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap">
-                                                {getCollectionItemCount(item)} {getCollectionItemCount(item) === 1 ? 'item' : 'items'}
+                                            <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex flex-col space-y-1" data-onboarding="collection-count">
+                                              <div className="bg-purple-100 text-purple-600 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                                <div className="truncate">{getCollectionCardCount(item)} cards</div>
                                               </div>
-                                            </div>
-                                          )}
+                                              <div className="bg-purple-100 text-purple-600 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                                <div className="truncate">{getCollectionItemCount(item)} items</div>
+                                              </div>
+                                          </div>
+                                        )}
                                         </div>
                                         <div className="w-full h-12 flex flex-col justify-center">
                                           <p className={`text-xs font-medium leading-tight line-clamp-2 ${item.type === 'collection' ? '' : ''}`} style={item.type === 'collection' ? { color: space.borderColor } : {}}>{item.title}</p>
                                           <p className="text-xs text-gray-600 line-clamp-1 leading-tight">{item.description}</p>
                                         </div>
-                                        
-                                        {/* Edit/Delete buttons for collections */}
-                                        {item.type === 'collection' && isDesignMode && (
-                                          <div className="flex gap-1 mt-2">
-                                            <Button
-                                              variant="ghost"
-                                              size="sm"
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                setEditingItem(item);
-                                                setCurrentCardId(card.id);
-                                                setShowAddItemDialog(true);
-                                              }}
-                                              className="h-6 w-6 p-0 bg-transparent hover:bg-gray-100 border border-gray-300 text-gray-600 hover:text-gray-700"
-                                            >
-                                              <Edit className="w-3 h-3" />
-                                            </Button>
-                                            <Button
-                                              variant="ghost"
-                                              size="sm"
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                deleteItem(card.id, item.id);
-                                              }}
-                                              className="h-6 w-6 p-0 bg-transparent hover:bg-red-100 border border-red-300 text-red-600 hover:text-red-700"
-                                            >
-                                              <Trash2 className="w-3 h-3" />
-                                            </Button>
-                                          </div>
-                                        )}
-                                        
-                                        {item.type !== 'collection' && (
-                                          <div className="flex gap-1 mt-2">
-                                            <Button
-                                              variant="ghost"
-                                              size="sm"
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                setEditingItem(item);
-                                                setCurrentCardId(card.id);
-                                                setShowAddItemDialog(true);
-                                              }}
-                                              className="h-6 w-6 p-0 bg-transparent hover:bg-gray-100 border border-gray-300 text-gray-600 hover:text-gray-700"
-                                            >
-                                              <Edit className="w-3 h-3" />
-                                            </Button>
-                                            <Button
-                                              variant="ghost"
-                                              size="sm"
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                deleteItem(card.id, item.id);
-                                              }}
-                                              className="h-6 w-6 p-0 bg-transparent hover:bg-gray-100 border border-red-300 text-red-600 hover:text-red-700"
-                                            >
-                                              <Trash2 className="w-3 h-3" />
-                                            </Button>
-                                          </div>
-                                        )}
                                       </div>
                                     </div>
                                   ))
                                 )}
                               </div>
 
-                              <div className="mt-4 pt-3 border-t">
-                                <div className="flex gap-2">
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="flex-1 min-h-[44px] text-base"
-                                    onClick={() => {
-                                      setCurrentCardId(card.id);
-                                      setShowAddItemDialog(true);
-                                    }}
-                                    data-onboarding="add-item-button"
-                                  >
-                                    <Plus className="w-4 h-4 mr-2" />
-                                    Add Item
-                                  </Button>
-                                  
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => initializeCardAIDesigner(card.id, card.title)}
-                                    className="border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700"
-                                    title={`AI Designer for ${card.title}`}
-                                  >
-                                    <Star className="w-4 h-4 mr-1" />
-                                    AI
-                                  </Button>
-                                </div>
-                              </div>
                             </div>
                           )}
                         </CardContent>
@@ -4736,7 +3672,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                                 onClick={() => item.type === 'collection' && (setCurrentCollection(item), setCollectionPath([...collectionPath, item.id]), setShowCollectionDialog(true))}
                               >
                                 <div className="flex flex-col items-center text-center space-y-2 h-full justify-center">
-                                  <div className={`rounded-lg border flex items-center justify-center bg-white relative ${item.type === 'collection' ? 'shadow-lg' : ''}`} style={{ borderColor: space.borderColor, width: '100px', height: '100px' }}>
+                                  <div className={`rounded-lg border flex items-center justify-center bg-white relative ${item.type === 'collection' ? 'shadow-lg' : ''}`} style={{ borderColor: space.borderColor, width: '100px', height: '120px' }}>
                                     {/* Stack effect for collections */}
                                     {item.type === 'collection' && (
                                       <>
@@ -4748,7 +3684,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                                         <div className="absolute inset-0 rounded-lg border bg-white transform translate-x-0 translate-y-0 rotate-0 opacity-100" style={{ borderColor: space.borderColor }}></div>
                                       </>
                                     )}
-                                    <div className="relative z-10 flex items-center justify-center w-full h-full">
+                                    <div className="relative z-10 flex items-center justify-center w-full h-full -mt-8">
                                       {item.type === 'collection' ? <FolderOpen className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} /> : 
                                         typeof item.icon === 'string' ? 
                                           <span className="text-2xl flex items-center justify-center">{item.icon}</span> : 
@@ -4759,9 +3695,12 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                                     </div>
                                     {/* Item count inside container for collections */}
                                     {item.type === 'collection' && (
-                                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 z-20">
-                                        <div className="bg-purple-100 text-purple-600 text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap">
-                                          {(item.children?.length || 0)} {(item.children?.length || 0) === 1 ? 'item' : 'items'}
+                                      <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex flex-col space-y-1">
+                                        <div className="bg-purple-100 text-purple-600 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                          <div className="truncate">{getCollectionCardCount(item)} cards</div>
+                                        </div>
+                                        <div className="bg-purple-100 text-purple-600 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                          <div className="truncate">{getCollectionItemCount(item)} items</div>
                                         </div>
                                       </div>
                                     )}
@@ -4769,6 +3708,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                                   <div className="w-full h-12 flex flex-col justify-center">
                                     <h4 className={`text-xs font-medium line-clamp-2 ${item.type === 'collection' ? '' : ''}`} style={item.type === 'collection' ? { color: space.borderColor } : {}}>{item.title}</h4>
                                     <p className="text-xs text-gray-600 line-clamp-1 leading-tight">{item.description}</p>
+                                  </div>
                                     {item.externalUrl && (
                                       <a 
                                         href={item.externalUrl} 
@@ -4779,7 +3719,6 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                                         Open Link
                                       </a>
                                     )}
-                                  </div>
                                 </div>
                               </div>
                             ))
@@ -4914,7 +3853,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
         {/* Collection Template Selection Dialog */}
         <Dialog open={showCollectionTemplateDialog} onOpenChange={setShowCollectionTemplateDialog}>
-          <DialogContent className="max-w-md mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-md">
+          <DialogContent className="max-w-md mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-md z-70">
             <DialogHeader>
               <DialogTitle>Choose a Collection Template</DialogTitle>
               <p className="text-sm text-gray-600">Select a pre-built collection template with organized cards</p>
@@ -5110,7 +4049,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
 
         {/* Add Item Dialog */}
         <Dialog open={showAddItemDialog} onOpenChange={setShowAddItemDialog}>
-          <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-sm">
+          <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-sm z-[70]">
             <DialogHeader>
               <DialogTitle>{editingItem ? 'Edit Item' : 'Add New Item'}</DialogTitle>
             </DialogHeader>
@@ -5309,28 +4248,24 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
         )}
 
         {/* Collection Dialog */}
-        {currentCollection && (
-          <Dialog open={showCollectionDialog} onOpenChange={(open) => {
-            if (!open) {
-              // Save changes when closing
-              saveCollectionChanges();
-              setCollectionPath([]);
-            }
-            setShowCollectionDialog(open);
-          }}>
-            <DialogContent className="max-w-md mx-auto max-h-[95vh] overflow-y-auto w-full max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-md sm:max-h-[90vh]" data-onboarding="collection-dialog">
-              <DialogHeader>
+        {currentCollection && showCollectionDialog && (
+          <div className="absolute inset-0 bg-black/50 z-60 flex items-center justify-center">
+            <div 
+              className="w-96 max-h-[calc(100vh-2rem)] overflow-y-auto bg-white border shadow-lg rounded-lg" 
+              data-onboarding="collection-dialog"
+            >
+              <div className="p-6 pb-0">
                 {isDesignMode ? (
-                  <DialogTitle className="flex items-center gap-2">
+                  <h2 className="text-lg font-semibold flex items-center gap-2">
                     <FolderOpen className="w-6 h-6 text-purple-600" />
                     {currentCollection.title}
-                  </DialogTitle>
+                  </h2>
                 ) : (
                   <div className="text-center">
                     <p className="text-sm text-gray-600 mb-2">{space.name}'s Collections</p>
-                    <DialogTitle className="text-xl font-bold">
+                    <h2 className="text-xl font-bold">
                       {currentCollection.title}
-                    </DialogTitle>
+                    </h2>
                   </div>
                 )}
                 <p className="text-sm text-gray-600">{currentCollection.description}</p>
@@ -5382,74 +4317,158 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   )}
+                  
+                  {/* Collection Menu */}
+                  {isDesignMode && (
+                    <div className="relative collection-menu">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowCollectionMenu(!showCollectionMenu)}
+                        className="flex items-center gap-1 px-3 py-1 bg-transparent hover:bg-gray-100 border border-gray-300 text-gray-600"
+                        title="Add to Collection"
+                      >
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                      
+                      {/* Collection Menu Dropdown */}
+                      {showCollectionMenu && (
+                        <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-md shadow-lg z-50 transform -translate-x-4">
+                          <div className="py-1">
+                            <button
+                              onClick={() => {
+                                setShowAddCardDialog(true);
+                                setShowCollectionMenu(false);
+                              }}
+                              className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 whitespace-nowrap"
+                            >
+                              <Plus className="w-4 h-4" />
+                              Add New Card
+                            </button>
+                            <button
+                              onClick={() => {
+                                setShowCollectionTemplateDialog(true);
+                                setShowCollectionMenu(false);
+                              }}
+                              className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 whitespace-nowrap"
+                            >
+                              <Layout className="w-4 h-4" />
+                              Use Collection Template
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
-              </DialogHeader>
+              </div>
               
-              <div className="space-y-4">
-                {/* Collection Search Bar */}
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <Input
-                    placeholder="Search collection content..."
-                    value={collectionSearchQuery}
-                    onChange={(e) => setCollectionSearchQuery(e.target.value)}
-                    className="pl-10 border-gray-300 focus:border-blue-500"
-                  />
-                </div>
-                
+              <div className="px-6 pb-6 space-y-4">
                 {/* Collection Cards Management */}
                 {currentCollection.children && currentCollection.children.length > 0 ? (
+                  <div className="mt-8">
                   <div className="space-y-3">
-                    {filterCollectionCardsBySearch(currentCollection.children)
+                    {currentCollection.children
                       .sort((a, b) => a.order - b.order)
                       .map((card) => (
                         <Card key={card.id} className="bg-white border transition-all duration-200" style={{ borderColor: card.color }}>
-                          <CardHeader>
-                            <div className="flex items-center justify-between">
-                              <div 
-                                className="flex items-center gap-2 cursor-pointer flex-1"
-                                onClick={() => toggleCardExpansion(card.id)}
-                              >
-                                <CardTitle className="text-lg" style={{ color: card.color }}>{card.title}</CardTitle>
-                                <Badge variant="secondary" className="text-xs">
-                                  {(card.children || []).length} {(card.children || []).length === 1 ? 'item' : 'items'}
-                                </Badge>
-                                <ChevronRight 
-                                  className={`w-4 h-4 transition-transform ${card.isExpanded ? 'rotate-90' : ''}`} 
-                                />
-                              </div>
-                              {isDesignMode && (
-                                <div className="flex items-center gap-1">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => setEditingCard(card)}
-                                    className="bg-transparent hover:bg-gray-100 border border-gray-300"
-                                  >
-                                    <Edit className="w-4 h-4" />
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => {
-                                      setCurrentCollection({
-                                        ...currentCollection,
-                                        children: currentCollection.children?.filter(c => c.id !== card.id)
-                                      });
-                                    }}
-                                    className="bg-transparent hover:bg-gray-100 text-red-600 hover:text-red-700 border border-red-300"
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </Button>
+                          <CardHeader className="px-3 pt-0 pb-3">
+                            {isDesignMode && (
+                              <div className="flex items-center justify-end gap-1 mb-2 -mt-3">
+                                <div className="relative card-menu">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                    onClick={() => setShowCardMenu(card.id)}
+                                  className="bg-transparent hover:bg-gray-100 border border-gray-300 h-8 w-8 p-0"
+                                    title="Card Actions"
+                                >
+                                    <Menu className="w-3 h-3" />
+                                </Button>
+                                  
+                                  {/* Card Menu Dropdown */}
+                                  {showCardMenu === card.id && (
+                                    <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                                      <div className="py-1">
+                                        <button
+                                          onClick={() => {
+                                            setEditingCard(card);
+                                            setShowCardMenu(null);
+                                          }}
+                                          className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 whitespace-nowrap"
+                                        >
+                                          <Edit className="w-4 h-4" />
+                                          Edit Card
+                                        </button>
+                                        <button
+                                          onClick={() => {
+                                            setCurrentCardId(card.id);
+                                            setShowAddItemDialog(true);
+                                            setShowCardMenu(null);
+                                          }}
+                                          className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 whitespace-nowrap"
+                                        >
+                                          <Plus className="w-4 h-4" />
+                                          Add Item
+                                        </button>
+                                        <button
+                                  onClick={() => {
+                                    setCurrentCollection({
+                                      ...currentCollection,
+                                      children: currentCollection.children?.filter(c => c.id !== card.id)
+                                    });
+                                            markAsChanged();
+                                            setShowCardMenu(null);
+                                  }}
+                                          className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 whitespace-nowrap"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                          Delete Card
+                                        </button>
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
-                              )}
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => moveCollectionCardUp(card.id)}
+                                  disabled={currentCollection.children?.findIndex(c => c.id === card.id) === 0}
+                                  className="bg-transparent hover:bg-gray-100 border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8 p-0"
+                                  title="Move up"
+                                >
+                                  <ChevronUp className="w-3 h-3" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => moveCollectionCardDown(card.id)}
+                                  disabled={currentCollection.children?.findIndex(c => c.id === card.id) === (currentCollection.children?.length || 0) - 1}
+                                  className="bg-transparent hover:bg-gray-100 border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8 p-0"
+                                  title="Move down"
+                                >
+                                  <ChevronDown className="w-3 h-3" />
+                                </Button>
+                              </div>
+                            )}
+                            <div 
+                              className="flex items-center gap-2 cursor-pointer"
+                              onClick={() => toggleCardExpansion(card.id)}
+                            >
+                              <CardTitle className="text-sm truncate" style={{ color: card.color }}>{card.title}</CardTitle>
+                              <Badge variant="secondary" className="text-xs flex-shrink-0">
+                                {(card.items || []).length} {(card.items || []).length === 1 ? 'item' : 'items'}
+                              </Badge>
+                              <ChevronRight 
+                                className={`w-4 h-4 transition-transform flex-shrink-0 ${card.isExpanded ? 'rotate-90' : ''}`} 
+                              />
                             </div>
                           </CardHeader>
                           {card.isExpanded && (
                             <CardContent>
                             <div className="grid grid-cols-3 gap-2">
-                              {card.children && card.children.length > 0 ? (
-                                card.children.map((item) => (
+                              {card.items && card.items.length > 0 ? (
+                                card.items.map((item) => (
                                       <div 
                                         key={item.id} 
                                         className={`relative group rounded-lg p-2 transition-colors cursor-pointer ${
@@ -5467,7 +4486,7 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                                         data-onboarding="collection-item"
                                       >
                                     <div className="flex flex-col items-center text-center space-y-2 h-full justify-center">
-                                      <div className={`rounded-lg border flex items-center justify-center bg-white relative ${item.type === 'collection' ? 'shadow-lg' : ''}`} style={{ borderColor: space.borderColor, width: '100px', height: '100px', minHeight: '100px', maxHeight: '100px' }}>
+                                      <div className={`rounded-lg border flex items-center justify-center bg-white relative ${item.type === 'collection' ? 'shadow-lg' : ''}`} style={{ borderColor: space.borderColor, width: '100px', height: '120px', minHeight: '120px', maxHeight: '120px' }}>
                                         {/* Stack effect for collections */}
                                         {item.type === 'collection' && (
                                           <>
@@ -5479,7 +4498,43 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                                         <div className="absolute inset-0 rounded-lg border bg-white transform translate-x-0 translate-y-0 rotate-0 opacity-100" style={{ borderColor: space.borderColor }}></div>
                                           </>
                                         )}
-                                        <div className="relative z-10">
+                                        {/* Edit/Delete buttons above icon container */}
+                                        {isDesignMode && (
+                                          <div className="absolute -top-2 -right-2 flex gap-2 z-10">
+                                          <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              if (item.type === 'collection') {
+                                                setCurrentCollection(item);
+                                                setShowCollectionDesigner(true);
+                                              } else {
+                                              setEditingItem(item);
+                                              setCurrentCardId(card.id);
+                                              setShowAddItemDialog(true);
+                                              }
+                                            }}
+                                              className="h-8 w-8 p-0 bg-white hover:bg-blue-50 border-2 border-blue-200 text-blue-600 hover:text-blue-700 shadow-lg rounded-full hover:scale-105 transition-all duration-200"
+                                              title="Edit item"
+                                          >
+                                              <Edit className="w-4 h-4" />
+                                          </Button>
+                                          <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              deleteItem(card.id, item.id);
+                                            }}
+                                              className="h-8 w-8 p-0 bg-white hover:bg-red-50 border-2 border-red-200 text-red-600 hover:text-red-700 shadow-lg rounded-full hover:scale-105 transition-all duration-200"
+                                              title="Delete item"
+                                          >
+                                              <Trash2 className="w-4 h-4" />
+                                          </Button>
+                                        </div>
+                                      )}
+                                        <div className="relative z-10 -mt-8">
                                           {item.type === 'collection' ? <FolderOpen className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} /> : 
                                             typeof item.icon === 'string' ? 
                                               <span className="text-2xl">{item.icon}</span> : 
@@ -5490,82 +4545,20 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                                         </div>
                                         {/* Item count inside container for collections */}
                                         {item.type === 'collection' && (
-                                          <div className="absolute bottom-1 right-1 bg-purple-100 text-purple-600 text-xs font-medium px-2 py-1 rounded-full">
-                                            {(item.children?.length || 0)} {(item.children?.length || 0) === 1 ? 'item' : 'items'}
-                                          </div>
-                                        )}
+                                          <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex flex-col space-y-1">
+                                            <div className="bg-purple-100 text-purple-600 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                              <div className="truncate">{getCollectionCardCount(item)} cards</div>
+                                            </div>
+                                            <div className="bg-purple-100 text-purple-600 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                              <div className="truncate">{getCollectionItemCount(item)} items</div>
+                                            </div>
+                                        </div>
+                                      )}
                                       </div>
                                       <div className="w-full h-12 flex flex-col justify-center">
                                         <p className={`text-xs font-medium line-clamp-2 ${item.type === 'collection' ? '' : ''}`} style={item.type === 'collection' ? { color: space.borderColor } : {}}>{item.title}</p>
                                         <p className="text-xs text-gray-600 line-clamp-1 leading-tight">{item.description}</p>
                                       </div>
-                                      
-                                      {/* Edit/Delete buttons for collections */}
-                                      {item.type === 'collection' && isDesignMode && (
-                                        <div className="flex gap-1 mt-2">
-                                          <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              setEditingItem(item);
-                                              setCurrentCardId(card.id);
-                                              setShowAddItemDialog(true);
-                                            }}
-                                            className="h-6 w-6 p-0 bg-transparent hover:bg-gray-100 border border-gray-300 text-gray-600 hover:text-gray-700"
-                                          >
-                                            <Edit className="w-3 h-3" />
-                                          </Button>
-                                          <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              deleteItem(card.id, item.id);
-                                            }}
-                                            className="h-6 w-6 p-0 bg-transparent hover:bg-red-100 border border-red-300 text-red-600 hover:text-red-700"
-                                          >
-                                            <Trash2 className="w-3 h-3" />
-                                          </Button>
-                                        </div>
-                                      )}
-                                      
-                                      {item.type !== 'collection' && isDesignMode && (
-                                        <div className="flex gap-1 mt-2">
-                                          <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              setEditingItem(item);
-                                              setCurrentCardId(card.id);
-                                              setShowAddItemDialog(true);
-                                            }}
-                                            className="h-6 w-6 p-0 bg-transparent hover:bg-gray-100 border border-gray-300 text-gray-600 hover:text-gray-700"
-                                          >
-                                            <Edit className="w-3 h-3" />
-                                          </Button>
-                                          <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              // Delete item from card
-                                              setCurrentCollection({
-                                                ...currentCollection,
-                                                children: currentCollection.children?.map(c => 
-                                                  c.id === card.id 
-                                                    ? { ...c, items: c.items?.filter(i => i.id !== item.id) }
-                                                    : c
-                                                )
-                                              });
-                                            }}
-                                            className="h-6 w-6 p-0 bg-transparent hover:bg-gray-100 border border-red-300 text-red-600 hover:text-red-700"
-                                          >
-                                            <Trash2 className="w-3 h-3" />
-                                          </Button>
-                                        </div>
-                                      )}
                                     </div>
                                   </div>
                                 ))
@@ -5576,92 +4569,27 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                               )}
                             </div>
 
-                            {isDesignMode && (
-                              <div className="mt-4 pt-3 border-t">
-                                <div className="flex gap-2">
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="flex-1 min-h-[44px] text-base"
-                                    onClick={() => {
-                                      setCurrentCardId(card.id);
-                                      setShowAddItemDialog(true);
-                                    }}
-                                  >
-                                    <Plus className="w-4 h-4 mr-2" />
-                                    Add Item
-                                  </Button>
-                                  
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => initializeCardAIDesigner(card.id, card.title)}
-                                    className="border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700"
-                                    title={`AI Designer for ${card.title}`}
-                                  >
-                                    <Star className="w-4 h-4 mr-1" />
-                                    AI
-                                  </Button>
-                                </div>
-                              </div>
-                            )}
                           </CardContent>
                           )}
                         </Card>
                       ))}
                   </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <p className="text-sm text-gray-500 italic">No cards in this collection yet</p>
                   </div>
-                )}
-
-                {/* Add Card Button */}
-                {isDesignMode && (
-                  <div className="pt-4 border-t space-y-2">
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        className="flex-1 border hover:shadow-lg transition-all duration-200"
-                        style={{ 
-                          backgroundColor: space.backgroundColor,
-                          borderColor: space.borderColor,
-                          color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
-                        }}
-                        onClick={() => setShowAddCardDialog(true)}
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add New Card
-                      </Button>
-                      
-                      <Button
-                        variant="outline"
-                        onClick={() => initializeCollectionAIDesigner(currentCollection.id, currentCollection.title)}
-                        className="border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 text-purple-700"
-                        title={`AI Designer for ${currentCollection.title}`}
-                      >
-                        <Star className="w-4 h-4 mr-2" />
-                        AI Collection Designer
-                      </Button>
-                    </div>
-                    
-                    {/* Collection Template Button */}
-                    <Button
-                      variant="outline"
-                        className="w-full min-h-[44px] text-base"
-                      onClick={() => setShowCollectionTemplateDialog(true)}
-                    >
-                      <Layout className="w-4 h-4 mr-2" />
-                      Use Collection Template
-                    </Button>
+                ) : (
+                  <div className="text-center py-8 mt-8">
+                    <p className="text-sm text-gray-500 italic">No cards in this collection yet</p>
                   </div>
                 )}
               </div>
 
-              <div className="flex justify-between gap-2 pt-4">
+              <div className="flex justify-between gap-2 pt-4 px-6 pb-6">
                 <Button 
                   variant="outline" 
-                  onClick={saveCollectionChanges}
+                  onClick={() => {
+                    saveCollectionChanges();
+                    setCollectionPath([]);
+                    setShowCollectionDialog(false);
+                  }}
                   disabled={isSaving}
                   className="bg-transparent hover:bg-gray-100 border border-gray-300"
                 >
@@ -5685,9 +4613,88 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   Close
                 </Button>
               </div>
-            </DialogContent>
-          </Dialog>
+            </div>
+          </div>
         )}
+
+        {/* Hamburger Menu Modal */}
+        <Dialog open={showHamburgerMenu} onOpenChange={setShowHamburgerMenu}>
+          <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-sm">
+            <DialogHeader>
+              <DialogTitle>Menu</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-3">
+              <Button
+                onClick={() => {
+                  resetOnboarding();
+                  setShowHamburgerMenu(false);
+                }}
+                variant="outline"
+                className="w-full flex items-center gap-3 justify-start h-12 text-base"
+              >
+                <HelpCircle className="w-5 h-5" />
+                Start Tutorial
+              </Button>
+              <Button
+                onClick={() => {
+                  setShowVersionDialog(true);
+                  setShowHamburgerMenu(false);
+                }}
+                variant="outline"
+                className="w-full flex items-center gap-3 justify-start h-12 text-base"
+              >
+                <Save className="w-5 h-5" />
+                Save Version
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Plus Menu Modal */}
+        <Dialog open={showPlusMenu} onOpenChange={setShowPlusMenu}>
+          <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-sm">
+            <DialogHeader>
+              <DialogTitle>Add Content</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-3">
+              <Button
+                onClick={() => {
+                  setShowAddCardDialog(true);
+                  setShowPlusMenu(false);
+                }}
+                variant="outline"
+                className="w-full flex items-center gap-3 justify-start h-12 text-base"
+              >
+                <Plus className="w-5 h-5" />
+                Add New Card
+              </Button>
+              {!hasPortalsCard() && (
+                <Button
+                  onClick={() => {
+                    createPortalsCard();
+                    setShowPlusMenu(false);
+                  }}
+                  variant="outline"
+                  className="w-full flex items-center gap-3 justify-start h-12 text-base"
+                >
+                  <Plus className="w-5 h-5" />
+                  Add Portals Card
+                </Button>
+              )}
+              <Button
+                onClick={() => {
+                  setShowTemplateDialog(true);
+                  setShowPlusMenu(false);
+                }}
+                variant="outline"
+                className="w-full flex items-center gap-3 justify-start h-12 text-base"
+              >
+                <Layout className="w-5 h-5" />
+                Use Template
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
 
         {/* Space Settings Dialog */}
         <Dialog open={showSpaceSettingsDialog} onOpenChange={setShowSpaceSettingsDialog}>
@@ -5702,7 +4709,10 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   data-onboarding="space-title-input"
                   placeholder="Enter space name"
                   value={space.name}
-                  onChange={(e) => setSpace({ ...space, name: e.target.value })}
+                  onChange={(e) => {
+                    setSpace({ ...space, name: e.target.value });
+                    markAsChanged();
+                  }}
                   className="min-h-[44px] text-base"
                 />
               </div>
@@ -5712,7 +4722,10 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                   data-onboarding="space-description"
                   placeholder="Enter space description"
                   value={space.description}
-                  onChange={(e) => setSpace({ ...space, description: e.target.value })}
+                  onChange={(e) => {
+                    setSpace({ ...space, description: e.target.value });
+                    markAsChanged();
+                  }}
                   rows={3}
                 />
               </div>
@@ -5754,740 +4767,403 @@ Current context: The user is working on the "${cardAiContext.targetTitle}" card 
                 </p>
               </div>
             </div>
-            <div className="flex justify-between gap-2 pt-4">
-              <Button 
-                variant="outline" 
-                onClick={clearSavedData}
-                className="text-red-600 border-red-300 hover:bg-red-50"
-              >
-                <Trash2 className="w-4 h-4 mr-2" />
-                Clear Data
-              </Button>
-              <div className="flex gap-2">
+            <div className="flex justify-end gap-2 pt-4">
                 <Button 
                   variant="outline" 
                   onClick={() => {
-                    resetOnboarding();
+                  // Save the space data to localStorage
+                  if (typeof window !== 'undefined') {
+                    localStorage.setItem('designer-space', JSON.stringify(space));
+                  }
+                  setHasUnsavedChanges(false);
                     setShowSpaceSettingsDialog(false);
                   }}
-                  className="text-blue-600 border-blue-300 hover:bg-blue-50"
+                className="text-green-600 border-green-300 hover:bg-green-50"
                 >
-                  <HelpCircle className="w-4 h-4 mr-2" />
-                  Restart Tutorial
+                <Save className="w-4 h-4 mr-2" />
+                Save
                 </Button>
                 <Button variant="outline" onClick={() => setShowSpaceSettingsDialog(false)}>
                   Close
                 </Button>
-              </div>
             </div>
           </DialogContent>
         </Dialog>
 
-        {/* AI Designer Dialogs - Replaced with separate dialogs */}
-        
-        {/* Space AI Designer Dialog */}
-        <Dialog open={showSpaceAIDesigner} onOpenChange={setShowSpaceAIDesigner}>
-          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[85vh] !h-[85vh] flex flex-col !top-[7.5vh] !left-[2.5vw] !translate-x-0 !translate-y-0 sm:!top-[5vh] sm:!max-h-[90vh] sm:!h-[90vh] !fixed mobile-dialog">
-            {/* AI Magic Effect Overlay */}
-            {isSpaceAiLoading && (
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="relative">
-                    {/* Spinning stars */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Star className="w-8 h-8 text-purple-500 animate-spin" />
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Star className="w-6 h-6 text-blue-500 animate-spin" style={{ animationDelay: '0.5s' }} />
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Star className="w-4 h-4 text-pink-500 animate-spin" style={{ animationDelay: '1s' }} />
-                    </div>
-                  </div>
-                  <div className="mt-4 text-lg font-semibold text-purple-700">
-                    ✨ Creating Space Organization ✨
-                  </div>
-                  <div className="text-sm text-purple-600 mt-1">
-                    Applying space-level suggestions...
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Star className="w-6 h-6" />
-              AI Design Assistant
-            </DialogTitle>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <span>Powered by OpenAI</span>
-              </div>
-            </DialogHeader>
-            
-          {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50 pb-4">
-            {spaceAiMessages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-[80%] p-3 rounded-lg ${
-                    message.role === 'user'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-white border border-gray-200'
-                  }`}
-                >
-                  <div className="whitespace-pre-wrap text-sm">{message.content}</div>
-                  <div className={`text-xs mt-1 ${
-                    message.role === 'user' ? 'text-blue-100' : 'text-gray-500'
-                  }`}>
-                    {message.timestamp.toLocaleTimeString()}
-                  </div>
-                  
-                  {/* Apply Suggestion Button for AI messages */}
-                  {message.role === 'assistant' && message.id !== 'welcome' && (
-                    <div className="mt-3 pt-2 border-t border-gray-200">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => applyCardAISuggestion(message.content)}
-                        className="w-full bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border border-purple-200 text-purple-700"
-                      >
-                        <Star className="w-4 h-4 mr-2" />
-                        Apply This Suggestion
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-            
-            {isSpaceAiLoading && (
-              <div className="flex justify-start">
-                <div className="bg-white border border-gray-200 p-3 rounded-lg">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
-                    AI Space Designer is thinking...
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-            
-            {/* Input Area */}
-            <div className="flex gap-2 p-4 border-t pb-safe input-sticky">
-              <Input
-                value={spaceAiInput}
-                onChange={(e) => setSpaceAiInput(e.target.value)}
-                placeholder="Ask me about space organization, medical specialties, or learning goals..."
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendSpaceAIMessage(spaceAiInput);
-                  }
-                }}
-                disabled={isSpaceAiLoading}
-                className="flex-1 min-h-[44px] text-base"
-              />
-              <Button
-                onClick={() => sendSpaceAIMessage(spaceAiInput)}
-                disabled={!spaceAiInput.trim() || isSpaceAiLoading}
-                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 min-h-[44px] px-4"
-              >
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </div>
-            
-          {/* Quick Actions */}
-          <div className="p-4 border-t bg-gray-50">
-            <div className="text-sm font-medium text-gray-700 mb-2">Quick Actions:</div>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => sendSpaceAIMessage("Create an emergency medicine template with triage protocols and critical care procedures")}
-                disabled={isSpaceAiLoading}
-                className="text-xs"
-              >
-                🚨 Emergency Medicine Template
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => sendSpaceAIMessage("Create a surgery template with preoperative assessment and technique videos")}
-                disabled={isSpaceAiLoading}
-                className="text-xs"
-              >
-                ⚕️ Surgery Template
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => sendSpaceAIMessage("Create a cardiology template with diagnostic tools and treatment protocols")}
-                disabled={isSpaceAiLoading}
-                className="text-xs"
-              >
-                ❤️ Cardiology Template
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => sendSpaceAIMessage("Create a pediatrics template with growth charts and developmental milestones")}
-                disabled={isSpaceAiLoading}
-                className="text-xs"
-              >
-                👶 Pediatrics Template
-              </Button>
-            </div>
-          </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* Version Save Dialog */}
-        <Dialog open={showVersionDialog} onOpenChange={setShowVersionDialog}>
-          <DialogContent className="w-full max-w-[calc(100vw-1rem)] sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Save Version</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium text-gray-700">Version Name *</label>
-                <Input
-                  placeholder="e.g., Medical Education v1.0"
-                  value={versionName}
-                  onChange={(e) => setVersionName(e.target.value)}
-                  className="mt-1 min-h-[44px] text-base"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-700">Description (Optional)</label>
-                <Textarea
-                  placeholder="Describe this version..."
-                  value={versionDescription}
-                  onChange={(e) => setVersionDescription(e.target.value)}
-                  className="mt-1 min-h-[44px] text-base"
-                  rows={3}
-                />
-              </div>
-              <div className="bg-blue-50 p-3 rounded-lg">
-                <p className="text-sm text-blue-800">
-                  <strong>What happens when you save:</strong>
-                </p>
-                <ul className="text-sm text-blue-700 mt-1 space-y-1">
-                  <li>• Your current space will be saved as a version</li>
-                  <li>• You'll get a shareable link to continue working on this version</li>
-                  <li>• The link can be shared with others or bookmarked</li>
-                  <li>• You can create multiple versions of your space</li>
-                </ul>
-              </div>
-            </div>
-            <div className="flex justify-between gap-2 pt-4">
-              <Button 
-                variant="outline" 
-                onClick={() => setShowVersionDialog(false)}
-              >
-                Cancel
-              </Button>
-              <Button 
-                onClick={saveVersion}
-                disabled={!versionName.trim() || isSavingVersion}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                {isSavingVersion ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4 mr-2" />
-                    Save Version
-                  </>
-                )}
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-        
-        {/* Space AI Designer Dialog */}
-        <Dialog open={showSpaceAIDesigner} onOpenChange={setShowSpaceAIDesigner}>
-          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[85vh] !h-[85vh] flex flex-col !top-[7.5vh] !left-[2.5vw] !translate-x-0 !translate-y-0 sm:!top-[5vh] sm:!max-h-[90vh] sm:!h-[90vh] !fixed mobile-dialog">
-            {/* AI Magic Effect Overlay */}
-            {isSpaceAiLoading && (
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="relative">
-                    {/* Spinning stars */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Star className="w-8 h-8 text-purple-500 animate-spin" />
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Star className="w-6 h-6 text-blue-500 animate-spin" style={{ animationDelay: '0.5s' }} />
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Star className="w-4 h-4 text-pink-500 animate-spin" style={{ animationDelay: '1s' }} />
-                    </div>
-                  </div>
-                  <div className="mt-4 text-lg font-semibold text-purple-700">
-                    ✨ Creating Space Organization ✨
-                  </div>
-                  <div className="text-sm text-purple-600 mt-1">
-                    Applying space-level suggestions...
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Star className="w-6 h-6" />
-              AI Space Designer
-            </DialogTitle>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <span>Powered by OpenAI</span>
-              </div>
-            </DialogHeader>
-            
-          {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50 pb-4">
-            {spaceAiMessages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-[80%] p-3 rounded-lg ${
-                    message.role === 'user'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-white border border-gray-200'
-                  }`}
-                >
-                  <div className="whitespace-pre-wrap text-sm">{message.content}</div>
-                  <div className={`text-xs mt-1 ${
-                    message.role === 'user' ? 'text-blue-100' : 'text-gray-500'
-                  }`}>
-                    {message.timestamp.toLocaleTimeString()}
-                  </div>
-                  
-                  {/* Apply Suggestion Button for AI messages */}
-                  {message.role === 'assistant' && message.id !== 'welcome' && (
-                    <div className="mt-3 pt-2 border-t border-gray-200">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => applySpaceAISuggestion(message.content)}
-                        className="w-full bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border border-purple-200 text-purple-700"
-                      >
-                        <Star className="w-4 h-4 mr-2" />
-                        Apply This Space Organization
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-            
-            {/* Loading indicator */}
-            {isSpaceAiLoading && (
-              <div className="flex justify-start">
-                <div className="bg-white border border-gray-200 p-3 rounded-lg">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
-                    AI Space Designer is thinking...
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-            
-            {/* Input Area */}
-            <div className="flex gap-2 p-4 border-t pb-safe input-sticky">
-              <Input
-                value={spaceAiInput}
-                onChange={(e) => setSpaceAiInput(e.target.value)}
-                placeholder="Ask me about space organization, medical specialties, or learning goals..."
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendSpaceAIMessage(spaceAiInput);
-                  }
-                }}
-                disabled={isSpaceAiLoading}
-                className="flex-1 min-h-[44px] text-base"
-              />
-              <Button
-                onClick={() => sendSpaceAIMessage(spaceAiInput)}
-                disabled={!spaceAiInput.trim() || isSpaceAiLoading}
-                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 min-h-[44px] px-4"
-              >
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </div>
-            
-          {/* Quick Actions */}
-          <div className="p-4 border-t bg-gray-50">
-            <div className="text-sm font-medium text-gray-700 mb-2">Quick Actions:</div>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => sendSpaceAIMessage("Create an emergency medicine template with triage protocols and critical care procedures")}
-                className="text-xs"
-              >
-                🚨 Emergency Medicine Template
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => sendSpaceAIMessage("Create a surgery template with preoperative assessment and technique videos")}
-                className="text-xs"
-              >
-                ⚕️ Surgery Template
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => sendSpaceAIMessage("Create a cardiology template with diagnostic tools and treatment protocols")}
-                className="text-xs"
-              >
-                ❤️ Cardiology Template
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => sendSpaceAIMessage("Create a pediatrics template with growth charts and developmental milestones")}
-                className="text-xs"
-              >
-                👶 Pediatrics Template
-              </Button>
-            </div>
-          </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* Collection AI Designer Dialog */}
-        <Dialog open={showCollectionAIDesigner} onOpenChange={setShowCollectionAIDesigner}>
-          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[85vh] !h-[85vh] flex flex-col !top-[7.5vh] !left-[2.5vw] !translate-x-0 !translate-y-0 sm:!top-[5vh] sm:!max-h-[90vh] sm:!h-[90vh] !fixed mobile-dialog">
-            {/* AI Magic Effect Overlay */}
-            {isCollectionAiLoading && (
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="relative">
-                    {/* Spinning stars */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Star className="w-8 h-8 text-purple-500 animate-spin" />
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Star className="w-6 h-6 text-blue-500 animate-spin" style={{ animationDelay: '0.5s' }} />
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Star className="w-4 h-4 text-pink-500 animate-spin" style={{ animationDelay: '1s' }} />
-                    </div>
-                  </div>
-                  <div className="mt-4 text-lg font-semibold text-purple-700">
-                    ✨ Creating Collection Structure ✨
-                  </div>
-                  <div className="text-sm text-purple-600 mt-1">
-                    Applying collection-level suggestions...
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Star className="w-6 h-6" />
-              AI Collection Designer
-            </DialogTitle>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <span>Powered by OpenAI</span>
-              </div>
-            </DialogHeader>
-            
-          {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50 pb-4">
-            {collectionAiMessages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-[80%] p-3 rounded-lg ${
-                    message.role === 'user'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-white border border-gray-200'
-                  }`}
-                >
-                  <div className="whitespace-pre-wrap text-sm">{message.content}</div>
-                  <div className={`text-xs mt-1 ${
-                    message.role === 'user' ? 'text-blue-100' : 'text-gray-500'
-                  }`}>
-                    {message.timestamp.toLocaleTimeString()}
-                  </div>
-                  
-                  {/* Apply Suggestion Button for AI messages */}
-                  {message.role === 'assistant' && message.id !== 'welcome' && (
-                    <div className="mt-3 pt-2 border-t border-gray-200">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => applyCollectionAISuggestion(message.content)}
-                        className="w-full bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border border-purple-200 text-purple-700"
-                      >
-                        <Star className="w-4 h-4 mr-2" />
-                        Apply This Collection Structure
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-            
-            {/* Loading indicator */}
-            {isCollectionAiLoading && (
-              <div className="flex justify-start">
-                <div className="bg-white border border-gray-200 p-3 rounded-lg">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
-                    AI Collection Designer is thinking...
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-            
-            {/* Input Area */}
-            <div className="flex gap-2 p-4 border-t pb-safe input-sticky">
-              <Input
-                value={collectionAiInput}
-                onChange={(e) => setCollectionAiInput(e.target.value)}
-                placeholder="Ask me about collection organization, medical topics, or learning paths..."
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendCollectionAIMessage(collectionAiInput);
-                  }
-                }}
-                disabled={isCollectionAiLoading}
-                className="flex-1 min-h-[44px] text-base"
-              />
-              <Button
-                onClick={() => sendCollectionAIMessage(collectionAiInput)}
-                disabled={!collectionAiInput.trim() || isCollectionAiLoading}
-                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 min-h-[44px] px-4"
-              >
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </div>
-            
-          {/* Quick Actions */}
-          <div className="p-4 border-t bg-gray-50">
-            <div className="text-sm font-medium text-gray-700 mb-2">Quick Actions:</div>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => sendCollectionAIMessage("Create cards for learning objectives and assessment")}
-                className="text-xs"
-              >
-                📚 Learning Objectives
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => sendCollectionAIMessage("Create cards for case studies and clinical scenarios")}
-                className="text-xs"
-              >
-                🏥 Case Studies
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => sendCollectionAIMessage("Create cards for diagnostic approach and treatment protocols")}
-                className="text-xs"
-              >
-                🔬 Diagnostic Approach
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => sendCollectionAIMessage("Create cards for patient education and family counseling")}
-                className="text-xs"
-              >
-                👨‍👩‍👧‍👦 Patient Education
-              </Button>
-            </div>
-          </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* Card AI Designer Dialog */}
-        <Dialog open={showCardAIDesigner} onOpenChange={setShowCardAIDesigner}>
-          <DialogContent className="!max-w-4xl !w-[95vw] !max-h-[85vh] !h-[85vh] flex flex-col !top-[7.5vh] !left-[2.5vw] !translate-x-0 !translate-y-0 sm:!top-[5vh] sm:!max-h-[90vh] sm:!h-[90vh] !fixed mobile-dialog">
-            {/* AI Magic Effect Overlay */}
-            {isCardAiLoading && (
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 opacity-90 z-50 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="relative">
-                    {/* Spinning stars */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Star className="w-8 h-8 text-purple-500 animate-spin" />
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Star className="w-6 h-6 text-blue-500 animate-spin" style={{ animationDelay: '0.5s' }} />
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Star className="w-4 h-4 text-pink-500 animate-spin" style={{ animationDelay: '1s' }} />
-                    </div>
-                  </div>
-                  <div className="mt-4 text-lg font-semibold text-purple-700">
-                    ✨ Creating Content ✨
-                  </div>
-                  <div className="text-sm text-purple-600 mt-1">
-                    Applying content suggestions...
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Star className="w-6 h-6" />
-              AI Content Designer
-            </DialogTitle>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <span>Powered by OpenAI</span>
-              </div>
-            </DialogHeader>
-            
-          {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto space-y-4 p-4 border rounded-lg bg-gray-50 pb-4">
-            {cardAiMessages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-[80%] p-3 rounded-lg ${
-                    message.role === 'user'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-white border border-gray-200'
-                  }`}
-                >
-                  <div className="whitespace-pre-wrap text-sm">{message.content}</div>
-                  <div className={`text-xs mt-1 ${
-                    message.role === 'user' ? 'text-blue-100' : 'text-gray-500'
-                  }`}>
-                    {message.timestamp.toLocaleTimeString()}
-                  </div>
-                  
-                  {/* Apply Suggestion Button for AI messages */}
-                  {message.role === 'assistant' && message.id !== 'welcome' && (
-                    <div className="mt-3 pt-2 border-t border-gray-200">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => applyCardAISuggestion(message.content)}
-                        className="w-full bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border border-purple-200 text-purple-700"
-                      >
-                        <Star className="w-4 h-4 mr-2" />
-                        Apply This Content
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-            
-            {/* Loading indicator */}
-            {isCardAiLoading && (
-              <div className="flex justify-start">
-                <div className="bg-white border border-gray-200 p-3 rounded-lg">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
-                    AI Content Designer is thinking...
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-            
-            {/* Input Area */}
-            <div className="flex gap-2 p-4 border-t pb-safe input-sticky">
-              <Input
-                value={cardAiInput}
-                onChange={(e) => setCardAiInput(e.target.value)}
-                placeholder="Ask me about content types, medical resources, or specific materials..."
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendCardAIMessage(cardAiInput);
-                  }
-                }}
-                disabled={isCardAiLoading}
-                className="flex-1 min-h-[44px] text-base"
-              />
-              <Button
-                onClick={() => sendCardAIMessage(cardAiInput)}
-                disabled={!cardAiInput.trim() || isCardAiLoading}
-                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 min-h-[44px] px-4"
-              >
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </div>
-            
-          {/* Quick Actions */}
-          <div className="p-4 border-t bg-gray-50">
-            <div className="text-sm font-medium text-gray-700 mb-2">Quick Actions:</div>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => sendCardAIMessage("Add video content for surgical procedures and patient consultations")}
-                className="text-xs"
-              >
-                📹 Video Content
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => sendCardAIMessage("Add podcast content for medical discussions and case studies")}
-                className="text-xs"
-              >
-                🎧 Podcast Content
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => sendCardAIMessage("Add document content for guidelines and protocols")}
-                className="text-xs"
-              >
-                📄 Document Content
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => sendCardAIMessage("Add infographic content for visual learning materials")}
-                className="text-xs"
-              >
-                📊 Infographic Content
-              </Button>
-            </div>
-          </div>
-          </DialogContent>
-        </Dialog>
-        
         {/* Onboarding Pointers */}
         {showOnboarding && onboardingTour && (
           <>
             <OnboardingPointer step={onboardingTour.steps[currentOnboardingStep]} isVisible={true} />
-          </>
-        )}
-      </div>
+                  </>
+                )}
+              </div>
+      
+      {/* AI Designer Container */}
+      <div className="w-1/2 h-screen">
+        <AIDesigner 
+          ref={(ref) => { if (ref) (window as any).aiDesignerRef = ref; }}
+          space={space}
+          onAddCard={(cardData) => {
+            const newCard: SpaceCard = {
+              id: `card-${Date.now()}`,
+              title: cardData.title,
+              color: cardData.color || '#f3f4f6',
+              items: [],
+              order: space.cards.length,
+              isExpanded: false,
+              createdAt: new Date(),
+              updatedAt: new Date()
+            };
+            setSpace({ ...space, cards: [...space.cards, newCard] });
+            markAsChanged();
+            
+            // Trigger magical star animation
+            setTimeout(() => {
+              setMagicalStarTarget(newCard.id);
+            }, 100);
+          }}
+          onDeleteCard={(cardId) => {
+            setSpace({ ...space, cards: space.cards.filter(card => card.id !== cardId) });
+            markAsChanged();
+          }}
+          onModifyCard={(cardId, cardData) => {
+            setSpace({
+              ...space,
+              cards: space.cards.map(card => 
+                card.id === cardId 
+                  ? { ...card, ...cardData, updatedAt: new Date() }
+                  : card
+              )
+            });
+            markAsChanged();
+          }}
+          onAddCollection={(collectionData, targetCardId) => {
+            const newCollection: ContentItem = {
+              id: `collection-${Date.now()}`,
+              type: 'collection',
+              title: collectionData.title,
+              description: collectionData.description,
+              icon: FolderOpen,
+              isPublic: false,
+              children: [],
+              order: 0,
+              createdAt: new Date(),
+              updatedAt: new Date()
+            };
+            
+            if (targetCardId) {
+              // Add to specific card
+              setSpace(prevSpace => {
+                const updatedSpace = {
+                  ...prevSpace,
+                  cards: prevSpace.cards.map(card => 
+                    card.id === targetCardId 
+                      ? { ...card, items: [...card.items, newCollection], updatedAt: new Date() }
+                      : card
+                  )
+                };
+                
+                // Notify AI Designer about the created collection
+                console.log('Main app: Notifying AI Designer about created collection:', newCollection);
+                if ((window as any).aiDesignerRef && (window as any).aiDesignerRef.onCollectionCreated) {
+                  console.log('Main app: Calling onCollectionCreated callback');
+                  (window as any).aiDesignerRef.onCollectionCreated(newCollection);
+                } else {
+                  console.log('Main app: AI Designer ref or callback not available');
+                }
+                
+                return updatedSpace;
+              });
+            } else {
+              // Add to first card or create a default card
+              if (space.cards.length > 0) {
+                const firstCard = space.cards[0];
+                setSpace(prevSpace => {
+                  const updatedSpace = {
+                    ...prevSpace,
+                    cards: prevSpace.cards.map(card => 
+                      card.id === firstCard.id 
+                        ? { ...card, items: [...card.items, newCollection], updatedAt: new Date() }
+                        : card
+                    )
+                  };
+                  
+                  // Notify AI Designer about the created collection
+                  console.log('Main app: Notifying AI Designer about created collection (fallback):', newCollection);
+                  if ((window as any).aiDesignerRef && (window as any).aiDesignerRef.onCollectionCreated) {
+                    console.log('Main app: Calling onCollectionCreated callback (fallback)');
+                    (window as any).aiDesignerRef.onCollectionCreated(newCollection);
+                  } else {
+                    console.log('Main app: AI Designer ref or callback not available (fallback)');
+                  }
+                  
+                  return updatedSpace;
+                });
+              }
+            }
+            markAsChanged();
+            
+            // Trigger magical star animation
+            setTimeout(() => {
+              setMagicalStarTarget(newCollection.id);
+            }, 100);
+          }}
+          onAddCollectionCards={(collection, cards) => {
+            console.log('Adding collection cards:', { collection, cards });
+            console.log('Current space before update:', space);
+            
+            // Find the collection in the space and add cards to it
+            setSpace(prevSpace => {
+              console.log('Previous space:', prevSpace);
+              
+              const updatedSpace = {
+                ...prevSpace,
+                cards: prevSpace.cards.map(card => {
+                  console.log('Processing card:', card.title, 'items:', card.items);
+                  
+                  const hasCollection = card.items.some((item: any) => item.id === collection.id);
+                  console.log('Card has collection?', hasCollection, 'collection.id:', collection.id);
+                  
+                  if (hasCollection) {
+                    console.log('Found collection in card:', card.title);
+                    return {
+                      ...card,
+                      items: card.items.map((item: any) => {
+                        console.log('Processing item:', item.title, 'item.id:', item.id, 'collection.id:', collection.id);
+                        
+                        if (item.id === collection.id) {
+                          console.log('Found matching collection item, adding cards');
+                          const newCards = cards.map((cardData: any, index: number) => ({
+                            id: `collection-card-${Date.now()}-${index}`,
+                            title: cardData.title,
+                            color: cardData.color,
+                            items: [],
+                            order: (item.children || []).length + index,
+                            isExpanded: false,
+                            createdAt: new Date(),
+                            updatedAt: new Date()
+                          }));
+                          
+                          console.log('New cards to add:', newCards);
+                          
+                          return {
+                            ...item,
+                            children: [
+                              ...(item.children || []),
+                              ...newCards
+                            ],
+                            updatedAt: new Date()
+                          };
+                        }
+                        return item;
+                      }),
+                      updatedAt: new Date()
+                    };
+                  }
+                  return card;
+                })
+              };
+              
+              console.log('Updated space:', updatedSpace);
+              
+              // Find the updated collection and open it
+              const updatedCollection = updatedSpace.cards
+                .flatMap(card => card.items)
+                .find(item => item.id === collection.id);
+              
+              console.log('Updated collection found:', updatedCollection);
+              
+              if (updatedCollection) {
+                console.log('Opening collection dialog for:', updatedCollection);
+                setCurrentCollection(updatedCollection);
+                setCollectionPath([]);
+                setShowCollectionDialog(true);
+              }
+              
+              return updatedSpace;
+            });
+            markAsChanged();
+          }}
+          onAddContent={(cardId, contentData) => {
+            const newContent: ContentItem = {
+              id: `content-${Date.now()}`,
+              type: 'content',
+              title: contentData.title,
+              description: '',
+              contentType: contentData.contentType,
+              icon: FileText,
+              isPublic: false,
+              order: 0,
+              createdAt: new Date(),
+              updatedAt: new Date()
+            };
+            setSpace({
+              ...space,
+              cards: space.cards.map(card => 
+                card.id === cardId 
+                  ? { ...card, items: [...card.items, newContent], updatedAt: new Date() }
+                  : card
+              )
+            });
+            markAsChanged();
+            
+            // Trigger magical star animation
+            setTimeout(() => {
+              setMagicalStarTarget(newContent.id);
+            }, 100);
+          }}
+          onModifySpace={(spaceData) => {
+            setSpace({ ...space, ...spaceData, updatedAt: new Date() });
+            markAsChanged();
+          }}
+          onOpenCollectionDesigner={(collection) => {
+            setCurrentCollection(collection);
+            setShowCollectionDesigner(true);
+          }}
+        />
+            </div>
+            
+      {/* Collection Designer */}
+      <CollectionDesigner
+        collection={currentCollection}
+        isOpen={showCollectionDesigner}
+        onClose={() => setShowCollectionDesigner(false)}
+        onSave={(updatedCollection) => {
+          // Update the collection in the space
+          setSpace(prevSpace => ({
+            ...prevSpace,
+            cards: prevSpace.cards.map(card => ({
+              ...card,
+              items: card.items.map(item => 
+                item.id === updatedCollection.id ? {
+                  ...item,
+                  title: updatedCollection.title,
+                  description: updatedCollection.description || ''
+                } : item
+              )
+            }))
+          }));
+          setCurrentCollection({
+            ...currentCollection!,
+            title: updatedCollection.title,
+            description: updatedCollection.description || ''
+          });
+          markAsChanged();
+        }}
+        onAddCard={(cardData) => {
+          if (currentCollection) {
+            const newCard: CollectionCard = {
+              id: `collection-card-${Date.now()}`,
+              title: cardData.title,
+              color: cardData.color,
+              items: [],
+              order: (currentCollection.children?.length || 0) + 1,
+              isExpanded: false,
+              createdAt: new Date(),
+              updatedAt: new Date()
+            };
+            
+            const updatedCollection = {
+              ...currentCollection,
+              children: [...(currentCollection.children || []), newCard]
+            };
+            
+            setCurrentCollection(updatedCollection);
+            
+            // Trigger magical star animation
+            setTimeout(() => {
+              setMagicalStarTarget(newCard.id);
+            }, 100);
+            
+            // Update in space
+            setSpace(prevSpace => ({
+              ...prevSpace,
+              cards: prevSpace.cards.map(card => ({
+                ...card,
+                items: card.items.map(item => 
+                  item.id === currentCollection.id ? updatedCollection : item
+                )
+              }))
+            }));
+            markAsChanged();
+          }
+        }}
+        onEditCard={(cardId, cardData) => {
+          if (currentCollection) {
+            const updatedCollection = {
+              ...currentCollection,
+              children: currentCollection.children?.map(card => 
+                card.id === cardId 
+                  ? { ...card, ...cardData, updatedAt: new Date() }
+                  : card
+              ) || []
+            };
+            
+            setCurrentCollection(updatedCollection);
+            
+            // Update in space
+            setSpace(prevSpace => ({
+              ...prevSpace,
+              cards: prevSpace.cards.map(card => ({
+                ...card,
+                items: card.items.map(item => 
+                  item.id === currentCollection.id ? updatedCollection : item
+                )
+              }))
+            }));
+            markAsChanged();
+          }
+        }}
+        onDeleteCard={(cardId) => {
+          if (currentCollection) {
+            const updatedCollection = {
+              ...currentCollection,
+              children: currentCollection.children?.filter(card => card.id !== cardId) || []
+            };
+            
+            setCurrentCollection(updatedCollection);
+            
+            // Update in space
+            setSpace(prevSpace => ({
+              ...prevSpace,
+              cards: prevSpace.cards.map(card => ({
+                ...card,
+                items: card.items.map(item => 
+                  item.id === currentCollection.id ? updatedCollection : item
+                )
+              }))
+            }));
+            markAsChanged();
+          }
+        }}
+        onReorderCards={(cardIds) => {
+          if (currentCollection && currentCollection.children) {
+            const reorderedCards = cardIds.map((id, index) => {
+              const card = currentCollection.children!.find(c => c.id === id);
+              return card ? { ...card, order: index + 1 } : null;
+            }).filter(Boolean) as CollectionCard[];
+            
+            const updatedCollection = {
+              ...currentCollection,
+              children: reorderedCards
+            };
+            
+            setCurrentCollection(updatedCollection);
+            
+            // Update in space
+            setSpace(prevSpace => ({
+              ...prevSpace,
+              cards: prevSpace.cards.map(card => ({
+                ...card,
+                items: card.items.map(item => 
+                  item.id === currentCollection.id ? updatedCollection : item
+                )
+              }))
+            }));
+            markAsChanged();
+          }
+        }}
+      />
     </div>
   );
 }
-
-
-

@@ -14,15 +14,16 @@ const UpdateBody = z.object({
   tags: z.array(z.string()).optional(),
 });
 
-export async function GET(_: Request, { params }: { params: { id: string } }) {
+export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
-  const item = await prisma.collection.findUnique({ where: { id: params.id } });
+  const { id } = await params;
+  const item = await prisma.collection.findUnique({ where: { id } });
   if (!item) return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
   return NextResponse.json(item);
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
   try {
@@ -32,15 +33,16 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
   const parsed = UpdateBody.safeParse(await req.json());
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
-  const before = await prisma.collection.findUnique({ where: { id: params.id } });
+  const { id } = await params;
+  const before = await prisma.collection.findUnique({ where: { id } });
   if (!before) return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
-  const updated = await updateCollection(params.id, parsed.data);
+  const updated = await updateCollection(id, parsed.data);
   const { hospitalId } = getSessionContext(session);
-  await writeAudit({ actorId: (session.user as any).id, hospitalId, action: "COLLECTION_UPDATE", entityType: "Collection", entityId: params.id, diff: { before, after: updated } as any });
+  await writeAudit({ actorId: (session.user as any).id, hospitalId, action: "COLLECTION_UPDATE", entityType: "Collection", entityId: id, diff: { before, after: updated } as any });
   return NextResponse.json(updated);
 }
 
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
   try {
@@ -48,11 +50,12 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
   } catch {
     return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
   }
-  const before = await prisma.collection.findUnique({ where: { id: params.id } });
+  const { id } = await params;
+  const before = await prisma.collection.findUnique({ where: { id } });
   if (!before) return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
-  await softDeleteCollection(params.id);
+  await softDeleteCollection(id);
   const { hospitalId } = getSessionContext(session);
-  await writeAudit({ actorId: (session.user as any).id, hospitalId, action: "COLLECTION_DELETE", entityType: "Collection", entityId: params.id, diff: { before } as any });
+  await writeAudit({ actorId: (session.user as any).id, hospitalId, action: "COLLECTION_DELETE", entityType: "Collection", entityId: id, diff: { before } as any });
   return NextResponse.json({ ok: true });
 }
 

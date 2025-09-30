@@ -19,15 +19,16 @@ const UpdateCardBody = z.object({
   visible: z.boolean().optional(),
 });
 
-export async function GET(_: Request, { params }: { params: { id: string } }) {
+export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
-  const card = await prisma.card.findUnique({ where: { id: params.id } });
+  const { id } = await params;
+  const card = await prisma.card.findUnique({ where: { id } });
   if (!card) return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
   return NextResponse.json(card);
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
   try {
@@ -39,22 +40,23 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (!parse.success) {
     return NextResponse.json({ error: parse.error.flatten() }, { status: 422 });
   }
-  const before = await prisma.card.findUnique({ where: { id: params.id } });
+  const { id } = await params;
+  const before = await prisma.card.findUnique({ where: { id } });
   if (!before) return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
-  const updated = await updateCard(params.id, parse.data);
+  const updated = await updateCard(id, parse.data);
   const { hospitalId } = getSessionContext(session);
   await writeAudit({
     actorId: (session.user as any).id,
     hospitalId,
     action: "CARD_UPDATE",
     entityType: "Card",
-    entityId: params.id,
+    entityId: id,
     diff: { before, after: updated } as any,
   });
   return NextResponse.json(updated);
 }
 
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
   try {
@@ -62,16 +64,17 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
   } catch {
     return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
   }
-  const before = await prisma.card.findUnique({ where: { id: params.id } });
+  const { id } = await params;
+  const before = await prisma.card.findUnique({ where: { id } });
   if (!before) return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
-  await deleteCard(params.id);
+  await deleteCard(id);
   const { hospitalId } = getSessionContext(session);
   await writeAudit({
     actorId: (session.user as any).id,
     hospitalId,
     action: "CARD_DELETE",
     entityType: "Card",
-    entityId: params.id,
+    entityId: id,
     diff: { before } as any,
   });
   return NextResponse.json({ ok: true });
