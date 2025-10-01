@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { useState, useRef, useEffect } from "react";
 import React from "react";
-import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle, ChevronUp, ChevronDown, Share, Heart, Search, HelpCircle, ArrowRight, ArrowLeft, FileVideo, Headphones, File, BarChart3, ClipboardList, Newspaper, Gamepad2, Menu, Stethoscope, Star } from "lucide-react";
+import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle, ChevronUp, ChevronDown, Share, Heart, Search, HelpCircle, ArrowRight, ArrowLeft, FileVideo, Headphones, File, BarChart3, ClipboardList, Newspaper, Gamepad2, Menu, Stethoscope, Star, Bot } from "lucide-react";
 import AIDesigner from '@/components/AIDesigner';
 import CollectionDesigner from '@/components/CollectionDesigner';
 import MagicalStar from '@/components/MagicalStar';
@@ -1152,13 +1152,16 @@ export default function DesignerPage() {
   const [editingCard, setEditingCard] = useState<SpaceCard | CollectionCard | null>(null);
   const [editingItem, setEditingItem] = useState<ContentItem | null>(null);
   const [showAddItemDialog, setShowAddItemDialog] = useState(false);
-  const [showAddCardDialog, setShowAddCardDialog] = useState(false);
   const [showCollectionDialog, setShowCollectionDialog] = useState(false);
   const [showCollectionDesigner, setShowCollectionDesigner] = useState(false);
   const [magicalStarTarget, setMagicalStarTarget] = useState<string | null>(null);
   const [showSpaceSettingsDialog, setShowSpaceSettingsDialog] = useState(false);
   const [showTemplateDialog, setShowTemplateDialog] = useState(false);
   const [showCollectionTemplateDialog, setShowCollectionTemplateDialog] = useState(false);
+  const [showAddCardDialog, setShowAddCardDialog] = useState(false);
+  const [showEditCardDialog, setShowEditCardDialog] = useState(false);
+  const [editCardTitle, setEditCardTitle] = useState("");
+  const [editCardColor, setEditCardColor] = useState("#f3f4f6");
   const [isEditingSpaceTitle, setIsEditingSpaceTitle] = useState(false);
   const [showLogoUpload, setShowLogoUpload] = useState(false);
   const [currentCardId, setCurrentCardId] = useState<string | null>(null);
@@ -1221,6 +1224,7 @@ export default function DesignerPage() {
   const [portalSearchQuery, setPortalSearchQuery] = useState("");
   const [showHamburgerMenu, setShowHamburgerMenu] = useState(false);
   const [showPlusMenu, setShowPlusMenu] = useState(false);
+  const [showAIDesigner, setShowAIDesigner] = useState(false);
   const [showCardMenu, setShowCardMenu] = useState<string | null>(null);
   const [showCollectionMenu, setShowCollectionMenu] = useState(false);
 
@@ -2204,6 +2208,15 @@ export default function DesignerPage() {
     }
   };
 
+  const handleAddCard = () => {
+    addCard();
+  };
+
+  const handleEditCard = () => {
+    // TODO: Implement edit card functionality
+    setShowEditCardDialog(false);
+  };
+
   const updateCard = (updatedCard: SpaceCard | CollectionCard) => {
     if (currentCollection) {
       // Update CollectionCard in collection
@@ -2433,13 +2446,64 @@ export default function DesignerPage() {
       if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         return `${getBaseUrl()}?version=${slug}`;
       }
-      // For production, use path segments
-      return `https://designer.ramyshaaban.org/${slug}`;
+      // For production, use path segments with /designer/ prefix
+      return `https://designer.ramyshaaban.org/designer/${slug}`;
     }
     return `${getBaseUrl()}?version=${slug}`; // fallback
   };
 
   // Versioning functions
+  const saveProductionVersion = async () => {
+    try {
+      // Generate a unique version ID
+      const versionId = `production-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Generate a clean slug from the space name
+      const versionSlug = space.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'production';
+      
+      // Create production version data (same as regular version but with production prefix)
+      const versionData = {
+        id: versionId,
+        slug: versionSlug,
+        name: `${space.name} - Production`,
+        description: `Production version of ${space.name}`,
+        space: space,
+        timestamp: new Date().toISOString(),
+        isProduction: true
+      };
+
+      // Save to localStorage
+      const savedVersions = JSON.parse(localStorage.getItem('designer-versions') || '[]');
+      savedVersions.push(versionData);
+      localStorage.setItem('designer-versions', JSON.stringify(savedVersions));
+
+      // Generate shareable URL
+      const versionUrl = `${window.location.origin}/designer/${versionSlug}`;
+      
+      // Update saved versions list
+      setSavedVersions(prev => [...prev, {
+        id: versionId,
+        name: versionData.name,
+        description: versionData.description,
+        timestamp: new Date(versionData.timestamp),
+        url: versionUrl
+      }]);
+
+      // Show success message
+      const shareText = `Production version "${versionData.name}" saved! Share this link: ${versionUrl}`;
+      alert(shareText);
+      
+      // Copy to clipboard
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(versionUrl);
+      }
+      
+    } catch (error) {
+      console.error('Error saving production version:', error);
+      alert('Failed to save production version. Please try again.');
+    }
+  };
+
   const saveVersion = async () => {
     if (!versionName.trim()) {
       alert('Please enter a version name');
@@ -3053,7 +3117,7 @@ export default function DesignerPage() {
   };
 
   return (
-    <div className="h-screen bg-gray-50 flex">
+    <div className="h-screen bg-gray-50 flex justify-center">
       {/* Magical Star Animation */}
       {magicalStarTarget && (
         <MagicalStar
@@ -3066,7 +3130,7 @@ export default function DesignerPage() {
       )}
       
       {/* Main App Container */}
-      <div className="w-1/2 bg-white h-screen overflow-y-auto relative">
+      <div className={`${showAIDesigner ? 'w-1/2' : 'w-full'} max-w-md bg-white h-screen overflow-y-auto relative`}>
         {/* Header */}
         <div className="sticky top-0 bg-white border-b p-4 z-50">
           {/* Mode Toggle and Hamburger Menu */}
@@ -3099,6 +3163,21 @@ export default function DesignerPage() {
                 Production Mode
               </Button>
             </div>
+            
+            {/* AI Designer Button - Only in Design Mode */}
+            {isDesignMode && (
+            <div className="relative">
+            <Button
+              variant="outline"
+              size="sm"
+                onClick={() => setShowAIDesigner(!showAIDesigner)}
+              className="bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 border border-purple-500 text-white shadow-lg shadow-purple-500/50 hover:shadow-purple-500/70 hover:text-purple-200 hover:drop-shadow-[0_0_8px_rgba(196,181,253,0.8)] transition-all duration-300"
+                title="AI Designer"
+            >
+                <Bot className="w-4 h-4" />
+            </Button>
+            </div>
+            )}
             
             {/* Hamburger Menu */}
             <div className="relative hamburger-menu">
@@ -3140,7 +3219,7 @@ export default function DesignerPage() {
               
               {/* Space Name */}
               <div data-onboarding="space-title">
-                {isEditingSpaceTitle ? (
+                {isDesignMode && isEditingSpaceTitle ? (
                   <Input
                     value={space.name}
                     onChange={(e) => setSpace({ ...space, name: e.target.value })}
@@ -3157,8 +3236,8 @@ export default function DesignerPage() {
                   />
                 ) : (
                   <h1 
-                    className="text-xl font-bold text-gray-900 cursor-pointer hover:text-gray-600 transition-colors"
-                    onClick={() => setIsEditingSpaceTitle(true)}
+                    className={`text-xl font-bold text-gray-900 ${isDesignMode ? 'cursor-pointer hover:text-gray-600 transition-colors' : ''}`}
+                    onClick={isDesignMode ? () => setIsEditingSpaceTitle(true) : undefined}
                   >
                     {space.name}
                   </h1>
@@ -3910,6 +3989,100 @@ export default function DesignerPage() {
           </DialogContent>
         </Dialog>
 
+        {/* Add Card Dialog */}
+        <Dialog open={showAddCardDialog} onOpenChange={setShowAddCardDialog}>
+          <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-sm z-70">
+            <DialogHeader>
+              <DialogTitle>Add New Card</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">Card Title</label>
+                <Input
+                  placeholder="Enter card title"
+                  value={newCardTitle}
+                  onChange={(e) => setNewCardTitle(e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Card Color</label>
+                <div className="flex items-center gap-3 mt-2">
+                  <input
+                    type="color"
+                    value={newCardColor}
+                    onChange={(e) => setNewCardColor(e.target.value)}
+                    className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                  />
+                  <Input
+                    value={newCardColor}
+                    onChange={(e) => setNewCardColor(e.target.value)}
+                    placeholder="#f3f4f6"
+                    className="font-mono text-sm"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Choose a color for this collection card</p>
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setShowAddCardDialog(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleAddCard} disabled={!newCardTitle.trim()}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Card
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Edit Card Dialog */}
+        <Dialog open={showEditCardDialog} onOpenChange={setShowEditCardDialog}>
+          <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-sm z-70">
+            <DialogHeader>
+              <DialogTitle>Edit Card</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">Card Title</label>
+                <Input
+                  placeholder="Enter card title"
+                  value={editCardTitle}
+                  onChange={(e) => setEditCardTitle(e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Card Color</label>
+                <div className="flex items-center gap-3 mt-2">
+                  <input
+                    type="color"
+                    value={editCardColor}
+                    onChange={(e) => setEditCardColor(e.target.value)}
+                    className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                  />
+                  <Input
+                    value={editCardColor}
+                    onChange={(e) => setEditCardColor(e.target.value)}
+                    placeholder="#f3f4f6"
+                    className="font-mono text-sm"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Choose a color for this collection card</p>
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setShowEditCardDialog(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleEditCard} disabled={!editCardTitle.trim()}>
+                  <Save className="w-4 h-4 mr-2" />
+                  Save Changes
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
         {/* Menu Button Search Dialog */}
         <Dialog open={showMenuButtonSearch} onOpenChange={setShowMenuButtonSearch}>
           <DialogContent className="max-w-md mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-md">
@@ -4646,6 +4819,17 @@ export default function DesignerPage() {
                 <Save className="w-5 h-5" />
                 Save Version
               </Button>
+              <Button
+                onClick={() => {
+                  saveProductionVersion();
+                  setShowHamburgerMenu(false);
+                }}
+                variant="outline"
+                className="w-full flex items-center gap-3 justify-start h-12 text-base"
+              >
+                <Eye className="w-5 h-5" />
+                Save Production Version
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -4799,7 +4983,8 @@ export default function DesignerPage() {
               </div>
       
       {/* AI Designer Container */}
-      <div className="w-1/2 h-screen">
+      {showAIDesigner && (
+      <div className="w-1/2 max-w-md h-screen">
         <AIDesigner 
           ref={(ref) => { if (ref) (window as any).aiDesignerRef = ref; }}
           space={space}
@@ -5021,8 +5206,9 @@ export default function DesignerPage() {
             setShowCollectionDesigner(true);
           }}
         />
-            </div>
-            
+      </div>
+      )}
+      
       {/* Collection Designer */}
       <CollectionDesigner
         collection={currentCollection}
@@ -5163,6 +5349,10 @@ export default function DesignerPage() {
             markAsChanged();
           }
         }}
+        showAddCardDialog={showAddCardDialog}
+        setShowAddCardDialog={setShowAddCardDialog}
+        showEditCardDialog={showEditCardDialog}
+        setShowEditCardDialog={setShowEditCardDialog}
       />
     </div>
   );

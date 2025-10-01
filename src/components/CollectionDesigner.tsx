@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogPortal } from '@/components/ui/dialog';
 import { 
   Plus, 
   Edit, 
@@ -52,6 +52,10 @@ interface CollectionDesignerProps {
   onEditCard: (cardId: string, cardData: any) => void;
   onDeleteCard: (cardId: string) => void;
   onReorderCards: (cardIds: string[]) => void;
+  showAddCardDialog: boolean;
+  setShowAddCardDialog: (show: boolean) => void;
+  showEditCardDialog: boolean;
+  setShowEditCardDialog: (show: boolean) => void;
 }
 
 const CollectionDesigner: React.FC<CollectionDesignerProps> = ({
@@ -62,11 +66,13 @@ const CollectionDesigner: React.FC<CollectionDesignerProps> = ({
   onAddCard,
   onEditCard,
   onDeleteCard,
-  onReorderCards
+  onReorderCards,
+  showAddCardDialog,
+  setShowAddCardDialog,
+  showEditCardDialog,
+  setShowEditCardDialog
 }) => {
   const [activeTab, setActiveTab] = useState<'cards' | 'settings'>('cards');
-  const [showAddCardDialog, setShowAddCardDialog] = useState(false);
-  const [showEditCardDialog, setShowEditCardDialog] = useState(false);
   const [editingCard, setEditingCard] = useState<CollectionCard | null>(null);
   
   // Add Card Form
@@ -159,8 +165,9 @@ const CollectionDesigner: React.FC<CollectionDesignerProps> = ({
 
   return (
     <>
+
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-4xl mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)] sm:max-w-4xl h-[80vh] flex flex-col">
+        <DialogContent className="max-w-4xl mx-auto max-w-[calc(100vw-2rem)] w-[calc(100vw-2rem)] sm:max-w-4xl h-[80vh] flex flex-col z-[60]">
           <DialogHeader className="flex-shrink-0">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -211,7 +218,10 @@ const CollectionDesigner: React.FC<CollectionDesignerProps> = ({
                 {/* Add Card Button */}
                 <div className="flex justify-between items-center">
                   <h3 className="text-lg font-semibold">Collection Cards</h3>
-                  <Button onClick={() => setShowAddCardDialog(true)}>
+                  <Button onClick={() => {
+                    console.log('Add Card button clicked, setting showAddCardDialog to true');
+                    setShowAddCardDialog(true);
+                  }}>
                     <Plus className="w-4 h-4 mr-2" />
                     Add Card
                   </Button>
@@ -287,7 +297,10 @@ const CollectionDesigner: React.FC<CollectionDesignerProps> = ({
                     <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">No cards yet</h3>
                     <p className="text-gray-600 mb-4">Add your first card to get started</p>
-                    <Button onClick={() => setShowAddCardDialog(true)}>
+                    <Button onClick={() => {
+                      console.log('Add First Card button clicked, setting showAddCardDialog to true');
+                      setShowAddCardDialog(true);
+                    }}>
                       <Plus className="w-4 h-4 mr-2" />
                       Add First Card
                     </Button>
@@ -335,97 +348,6 @@ const CollectionDesigner: React.FC<CollectionDesignerProps> = ({
         </DialogContent>
       </Dialog>
 
-      {/* Add Card Dialog */}
-      <Dialog open={showAddCardDialog} onOpenChange={setShowAddCardDialog}>
-        <DialogContent className="max-w-sm mx-auto">
-          <DialogHeader>
-            <DialogTitle>Add New Card</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Card Title</label>
-              <Input
-                placeholder="Enter card title"
-                value={newCardTitle}
-                onChange={(e) => setNewCardTitle(e.target.value)}
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Card Color</label>
-              <div className="flex items-center gap-3 mt-2">
-                <input
-                  type="color"
-                  value={newCardColor}
-                  onChange={(e) => setNewCardColor(e.target.value)}
-                  className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
-                />
-                <Input
-                  value={newCardColor}
-                  onChange={(e) => setNewCardColor(e.target.value)}
-                  placeholder="#f3f4f6"
-                  className="font-mono text-sm"
-                />
-              </div>
-            </div>
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowAddCardDialog(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleAddCard} disabled={!newCardTitle.trim()}>
-                <Plus className="w-4 h-4 mr-2" />
-                Add Card
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Edit Card Dialog */}
-      <Dialog open={showEditCardDialog} onOpenChange={setShowEditCardDialog}>
-        <DialogContent className="max-w-sm mx-auto">
-          <DialogHeader>
-            <DialogTitle>Edit Card</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Card Title</label>
-              <Input
-                placeholder="Enter card title"
-                value={editCardTitle}
-                onChange={(e) => setEditCardTitle(e.target.value)}
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Card Color</label>
-              <div className="flex items-center gap-3 mt-2">
-                <input
-                  type="color"
-                  value={editCardColor}
-                  onChange={(e) => setEditCardColor(e.target.value)}
-                  className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
-                />
-                <Input
-                  value={editCardColor}
-                  onChange={(e) => setEditCardColor(e.target.value)}
-                  placeholder="#f3f4f6"
-                  className="font-mono text-sm"
-                />
-              </div>
-            </div>
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowEditCardDialog(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleEditCard} disabled={!editCardTitle.trim()}>
-                <Save className="w-4 h-4 mr-2" />
-                Save Changes
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };
