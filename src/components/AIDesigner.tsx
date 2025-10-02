@@ -427,25 +427,23 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
       // Check if this is an AI description generation response
       if (pendingActions.length > 0 && pendingActions[0].type === 'ai_description') {
         console.log('AI description generation response received');
-        // Update space description with AI response
-        if (onModifySpace) {
-          onModifySpace({ description: aiResponse.message });
-        }
         
-        // Add AI response message
+        // Add AI response message with the generated description
         const aiMessage: Message = {
           id: (Date.now() + 1).toString(),
           type: 'ai',
-          content: `Perfect! I've generated and updated your space description.`,
+          content: `Here's the AI-generated description for your space:\n\n"${aiResponse.message}"`,
           timestamp: new Date()
         };
         setMessages(prev => [...prev, aiMessage]);
         
-        // Show back to main options button
+        // Show options to apply or regenerate the description
         setPendingActions([{
-          type: 'back_to_main_options',
-          data: {},
-          message: 'What would you like to do next?'
+          type: 'ai_description_review',
+          data: {
+            generatedDescription: aiResponse.message
+          },
+          message: 'Would you like to apply this description to your space?'
         }]);
         setIsTyping(false);
         return;
@@ -1135,6 +1133,38 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
         } else {
           console.log('Missing field or value in modify_space action:', data);
         }
+        break;
+      case 'apply_ai_description':
+        // Apply the AI-generated description to the space
+        if (onModifySpace && data.description) {
+          onModifySpace({ description: data.description });
+          
+          // Add success message
+          const successMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            type: 'ai',
+            content: `Perfect! I've applied the AI-generated description to your space.`,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, successMessage]);
+          
+          // Show back to main options
+          setPendingActions([{
+            type: 'back_to_main_options',
+            data: {},
+            message: 'What would you like to do next?'
+          }]);
+        }
+        break;
+      case 'regenerate_ai_description':
+        // Regenerate the AI description
+        setPendingActions([{
+          type: 'ai_description',
+          data: {},
+          message: 'Generating a new AI description...'
+        }]);
+        const newDescriptionPrompt = `Generate a different professional medical space description for: "${space.name}". Make it unique and different from the previous one. Consider the medical specialty and context. Return only the description text, no JSON formatting.`;
+        handleSendMessage(newDescriptionPrompt, true);
         break;
       case 'back_to_main_options':
         handleBackToMainOptions();
@@ -1935,6 +1965,42 @@ Return JSON array:
                     <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                       <p className="text-sm text-blue-800 mb-3">{action.message}</p>
                       <p className="text-xs text-blue-600">Type your space description in the input field below and press Enter or click Send.</p>
+                    </div>
+                  )}
+
+                  {action.type === 'ai_description_review' && (
+                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <p className="text-sm text-blue-800 mb-3">{action.message}</p>
+                      <div className="flex gap-2 flex-wrap">
+                        <Button
+                          onClick={() => executeAction('apply_ai_description', {
+                            description: action.data.generatedDescription
+                          })}
+                          className="bg-blue-600 hover:bg-blue-700 text-white"
+                          size="sm"
+                        >
+                          <Check className="w-4 h-4 mr-2" />
+                          Apply Description
+                        </Button>
+                        <Button
+                          onClick={() => executeAction('regenerate_ai_description', {})}
+                          variant="outline"
+                          size="sm"
+                          className="border-blue-300 text-blue-700 hover:bg-blue-50"
+                        >
+                          <Sparkles className="w-4 h-4 mr-2" />
+                          Generate Different One
+                        </Button>
+                        <Button
+                          onClick={() => executeAction('back_to_main_options', {})}
+                          variant="outline"
+                          size="sm"
+                          className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                        >
+                          <X className="w-4 h-4 mr-2" />
+                          Cancel
+                        </Button>
+                      </div>
                     </div>
                   )}
 
