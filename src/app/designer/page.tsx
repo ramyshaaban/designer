@@ -144,6 +144,7 @@ export default function DesignerPage() {
 
 
 
+
   // Track changes to space
   const markAsChanged = () => {
     setHasUnsavedChanges(true);
@@ -1222,6 +1223,18 @@ export default function DesignerPage() {
   const [lastSavedState, setLastSavedState] = useState<string>("");
   const [showPortalDialog, setShowPortalDialog] = useState(false);
   const [portalSearchQuery, setPortalSearchQuery] = useState("");
+
+  // Auto-save space data when it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined' && hasUnsavedChanges) {
+      const timer = setTimeout(() => {
+        console.log('Auto-saving space data');
+        localStorage.setItem('designer-space', JSON.stringify(space));
+      }, 500); // Debounce for 500ms
+      
+      return () => clearTimeout(timer);
+    }
+  }, [space, hasUnsavedChanges]);
   const [showHamburgerMenu, setShowHamburgerMenu] = useState(false);
   const [showPlusMenu, setShowPlusMenu] = useState(false);
   const [showAIDesigner, setShowAIDesigner] = useState(false);
@@ -3989,52 +4002,6 @@ export default function DesignerPage() {
           </DialogContent>
         </Dialog>
 
-        {/* Add Card Dialog */}
-        <Dialog open={showAddCardDialog} onOpenChange={setShowAddCardDialog}>
-          <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-sm z-70">
-            <DialogHeader>
-              <DialogTitle>Add New Card</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Card Title</label>
-                <Input
-                  placeholder="Enter card title"
-                  value={newCardTitle}
-                  onChange={(e) => setNewCardTitle(e.target.value)}
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Card Color</label>
-                <div className="flex items-center gap-3 mt-2">
-                  <input
-                    type="color"
-                    value={newCardColor}
-                    onChange={(e) => setNewCardColor(e.target.value)}
-                    className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
-                  />
-                  <Input
-                    value={newCardColor}
-                    onChange={(e) => setNewCardColor(e.target.value)}
-                    placeholder="#f3f4f6"
-                    className="font-mono text-sm"
-                  />
-                </div>
-                <p className="text-xs text-gray-500 mt-1">Choose a color for this collection card</p>
-              </div>
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setShowAddCardDialog(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={handleAddCard} disabled={!newCardTitle.trim()}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Card
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
 
         {/* Edit Card Dialog */}
         <Dialog open={showEditCardDialog} onOpenChange={setShowEditCardDialog}>

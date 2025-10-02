@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
 // Initialize OpenAI only if API key is available
-const openai = process.env.OPENAI_API_KEY ? new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const apiKey = process.env.OPENAI_API_KEY || process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+const openai = apiKey ? new OpenAI({
+  apiKey: apiKey,
 }) : null;
 
 export async function POST(request: NextRequest) {
@@ -17,7 +18,7 @@ export async function POST(request: NextRequest) {
     // If OpenAI is not available, return a fallback response
     if (!openai) {
       return NextResponse.json({
-        message: "I'm currently running in demo mode. To enable full AI capabilities, please add your OpenAI API key to the environment variables. For now, I can still help you with basic suggestions!",
+        message: "I'm currently running in demo mode. To enable full AI capabilities, please add your OpenAI API key as either OPENAI_API_KEY or NEXT_PUBLIC_OPENAI_API_KEY in the environment variables. For now, I can still help you with basic suggestions!",
         actions: []
       });
     }
