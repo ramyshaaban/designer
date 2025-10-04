@@ -58,6 +58,7 @@ type Space = {
   description: string;
   backgroundColor: string;
   borderColor: string;
+  textColor?: string; // Hex color for text (calculated for contrast)
   logo?: string;
   cards: SpaceCard[];
   currentCollection?: string;
@@ -233,7 +234,7 @@ export default function ProductionSpacePage() {
     return (
       <div className="h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-800 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading space...</p>
         </div>
       </div>
@@ -248,7 +249,7 @@ export default function ProductionSpacePage() {
           <p className="text-gray-600 mb-4">The space you're looking for doesn't exist or has been removed.</p>
           <a 
             href="/designer" 
-            className="inline-block bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors"
+            className="inline-block bg-gray-800 text-white px-6 py-2 rounded-lg hover:bg-gray-900 transition-colors"
           >
             Go to Designer
           </a>
@@ -405,7 +406,7 @@ export default function ProductionSpacePage() {
                               key={item.id} 
                               className={`rounded-lg p-2 transition-colors cursor-pointer ${
                                 item.type === 'collection' 
-                                  ? 'bg-gradient-to-br from-purple-50 to-blue-50' 
+                                  ? 'bg-gradient-to-br from-gray-50 to-gray-100' 
                                   : ''
                               }`}
                               onClick={() => {
@@ -452,10 +453,10 @@ export default function ProductionSpacePage() {
                                   {/* Item count inside container for collections */}
                                   {item.type === 'collection' && (
                                     <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex flex-col space-y-1">
-                                      <div className="bg-purple-100 text-purple-600 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                      <div className="bg-gray-100 text-gray-800 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
                                         <div className="truncate">{getCollectionCardCount(item)} cards</div>
                                       </div>
-                                      <div className="bg-purple-100 text-purple-600 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                      <div className="bg-gray-100 text-gray-800 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
                                         <div className="truncate">{getCollectionItemCount(item)} items</div>
                                       </div>
                                     </div>
@@ -560,7 +561,7 @@ export default function ProductionSpacePage() {
                                       key={item.id} 
                                       className={`relative group rounded-lg p-2 transition-colors cursor-pointer ${
                                         item.type === 'collection' 
-                                          ? 'bg-gradient-to-br from-purple-50 to-blue-50' 
+                                          ? 'bg-gradient-to-br from-gray-50 to-gray-100' 
                                           : ''
                                       }`}
                                       onClick={() => {

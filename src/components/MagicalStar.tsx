@@ -15,7 +15,7 @@ const MagicalStar: React.FC<MagicalStarProps> = ({
   targetId,
   duration = 3000,
   size = 24,
-  color = '#8B5CF6',
+  color = '#000000',
   onComplete
 }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -130,7 +130,7 @@ const MagicalStar: React.FC<MagicalStarProps> = ({
         {[...Array(8)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-purple-400 rounded-full animate-pulse"
+            className="absolute w-1 h-1 bg-gray-600 rounded-full animate-pulse"
             style={{
               left: `${20 + (i * 10)}%`,
               top: `${20 + (i * 10)}%`,
@@ -143,10 +143,10 @@ const MagicalStar: React.FC<MagicalStarProps> = ({
 
       {/* Glowing border effect */}
       <div
-        className="absolute inset-0 border-2 border-purple-400 rounded-lg animate-pulse"
+        className="absolute inset-0 border-2 border-gray-600 rounded-lg animate-pulse"
         style={{
           animationDuration: '1.5s',
-          boxShadow: '0 0 20px rgba(139, 92, 246, 0.4)',
+          boxShadow: '0 0 20px rgba(0, 0, 0, 0.4)',
         }}
       />
     </div>

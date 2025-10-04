@@ -1,0 +1,72 @@
+{
+  "total_space_cards": 6,
+  "total_content_items": 345,
+  "space_card_summary": [
+    {
+      "id": "critical-care-life-support",
+      "title": "\ud83d\udea8 Critical Care & Life Support",
+      "content_count": 34,
+      "priority": "highest",
+      "collections": 3
+    },
+    {
+      "id": "surgical-procedures",
+      "title": "\ud83d\udd2a Surgical Procedures",
+      "content_count": 44,
+      "priority": "high",
+      "collections": 3
+    },
+    {
+      "id": "neonatal-pediatric-care",
+      "title": "\ud83d\udc76 Neonatal & Pediatric Care",
+      "content_count": 32,
+      "priority": "high",
+      "collections": 3
+    },
+    {
+      "id": "specialty-surgery",
+      "title": "\ud83c\udfe5 Specialty Surgery",
+      "content_count": 40,
+      "priority": "medium",
+      "collections": 3
+    },
+    {
+      "id": "clinical-guidelines",
+      "title": "\ud83d\udccb Clinical Guidelines & Protocols",
+      "content_count": 163,
+      "priority": "high",
+      "collections": 3
+    },
+    {
+      "id": "education-training",
+      "title": "\ud83d\udcda Education & Training",
+      "content_count": 26,
+      "priority": "medium",
+      "collections": 3
+    }
+  ],
+  "medical_insights_summary": {
+    "procedures_identified": 10,
+    "specialties_identified": 6,
+    "complexity_levels": 3,
+    "top_procedures": {
+      "Laparoscopic surgery": 10,
+      "Gastrostomy tube placement": 8,
+      "Central line placement": 8,
+      "Appendectomy procedure": 6,
+      "Cholecystectomy procedure": 6,
+      "ECMO decannulation procedure": 6,
+      "ECMO cannulation procedure": 6,
+      "Thoracoscopic procedure": 6,
+      "Hernia repair surgery": 6,
+      "Tracheostomy procedure": 4
+    },
+    "top_specialties": {
+      "unknown": 189,
+      "surgery": 90,
+      "ecmo": 26,
+      "pediatric": 22,
+      "neonatal": 16
+    }
+  }
+}

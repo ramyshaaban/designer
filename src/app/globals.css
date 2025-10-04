@@ -151,4 +151,33 @@
       transform: none !important;
     }
   }
+
+  /* Force button text color for contrast - aggressive override */
+  .button-light-bg {
+    color: #000000 !important;
+    background-color: var(--button-bg-color) !important;
+    border-color: var(--button-border-color) !important;
+  }
+  
+  .button-light-bg * {
+    color: #000000 !important;
+  }
+  
+  .button-light-bg svg {
+    color: #000000 !important;
+  }
+  
+  .button-dark-bg {
+    color: #ffffff !important;
+    background-color: var(--button-bg-color) !important;
+    border-color: var(--button-border-color) !important;
+  }
+  
+  .button-dark-bg * {
+    color: #ffffff !important;
+  }
+  
+  .button-dark-bg svg {
+    color: #ffffff !important;
+  }
 }

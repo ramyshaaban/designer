@@ -171,8 +171,8 @@ const CollectionDesigner: React.FC<CollectionDesignerProps> = ({
           <DialogHeader className="flex-shrink-0">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <FolderOpen className="w-6 h-6 text-purple-600" />
+                <div className="p-2 bg-gray-100 rounded-lg">
+                  <FolderOpen className="w-6 h-6 text-gray-800" />
                 </div>
                 <div>
                   <DialogTitle className="text-xl font-semibold">Collection Designer</DialogTitle>
@@ -191,7 +191,7 @@ const CollectionDesigner: React.FC<CollectionDesignerProps> = ({
               onClick={() => setActiveTab('cards')}
               className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === 'cards'
-                  ? 'border-purple-500 text-purple-600'
+                  ? 'border-gray-800 text-gray-800'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -202,7 +202,7 @@ const CollectionDesigner: React.FC<CollectionDesignerProps> = ({
               onClick={() => setActiveTab('settings')}
               className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === 'settings'
-                  ? 'border-purple-500 text-purple-600'
+                  ? 'border-gray-800 text-gray-800'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
             >

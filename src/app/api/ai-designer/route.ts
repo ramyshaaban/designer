@@ -62,6 +62,8 @@ For collection card suggestions, return ONLY a JSON array:
 For SPACE MODIFICATION requests (name, description, color), return JSON:
 {"message": "I'll help you modify your space", "actions": [{"type": "modify_space", "data": {"field": "name|description|color", "value": "new_value"}}]}
 
+IMPORTANT: When suggesting colors, always ensure they provide good text contrast. Avoid colors that are too dark (#000000-#333333) or too light (#ffffff-#f0f0f0) as primary colors. Focus on colors that work well as backgrounds with readable text overlay.
+
 For other requests, return JSON:
 {"message": "Your response", "actions": []}
 
@@ -85,10 +87,11 @@ Always provide helpful suggestions even if the space lacks specific medical cont
 
     // Check if this is a description generation request
     if (message.includes('Generate a professional medical space description') && message.includes('Return only the description text, no JSON formatting')) {
-      // Return plain text for description generation
+      // Return plain text for description generation with special flag
       return NextResponse.json({
         message: response,
-        actions: []
+        actions: [],
+        isDescriptionGeneration: true
       });
     }
 

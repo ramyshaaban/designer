@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { useState, useRef, useEffect } from "react";
 import React from "react";
-import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle, ChevronUp, ChevronDown, Share, Heart, Search, HelpCircle, ArrowRight, ArrowLeft, FileVideo, Headphones, File, BarChart3, ClipboardList, Newspaper, Gamepad2, Menu, Stethoscope, Star, Bot } from "lucide-react";
+import { Plus, Edit, Trash2, Move, Eye, EyeOff, Save, X, Image as ImageIcon, Link, FileText, Video, Calendar, Users, Settings, Folder, FolderOpen, Palette, Layout, Upload, Play, Mic, FileImage, BookOpen, ExternalLink, ChevronRight, ChevronLeft, PlayCircle, ChevronUp, ChevronDown, Share, Heart, Search, HelpCircle, ArrowRight, ArrowLeft, FileVideo, Headphones, File, BarChart3, ClipboardList, Newspaper, Gamepad2, Menu, Stethoscope, Star, Bot } from "lucide-react";
 import AIDesigner from '@/components/AIDesigner';
 import CollectionDesigner from '@/components/CollectionDesigner';
 import MagicalStar from '@/components/MagicalStar';
@@ -78,6 +78,7 @@ type Space = {
   description: string;
   backgroundColor: string; // Hex color for background
   borderColor: string; // Hex color for borders
+  textColor?: string; // Hex color for text (calculated for contrast)
   logo?: string; // URL or base64 for space logo
   cards: SpaceCard[]; // Main space cards (no individual colors)
   currentCollection?: string; // For nested collections
@@ -141,6 +142,19 @@ export default function DesignerPage() {
     console.log('Space state changed:', space);
     console.log('Cards with isExpanded:', space.cards.map(card => ({ id: card.id, title: card.title, isExpanded: card.isExpanded })));
   }, [space]);
+
+  // Extract colors from logo when logo changes
+  useEffect(() => {
+    if (space.logo) {
+      console.log('🔍 Extracting colors from logo:', space.logo);
+      extractColorsFromLogo(space.logo).then((colors) => {
+        setLogoColors(colors);
+        console.log('✅ Logo colors extracted:', colors);
+      });
+    } else {
+      setLogoColors([]);
+    }
+  }, [space.logo]);
 
 
 
@@ -1239,6 +1253,7 @@ export default function DesignerPage() {
   const [showPlusMenu, setShowPlusMenu] = useState(false);
   const [showAIDesigner, setShowAIDesigner] = useState(false);
   const [showCardMenu, setShowCardMenu] = useState<string | null>(null);
+  const [logoColors, setLogoColors] = useState<string[]>([]);
   const [showCollectionMenu, setShowCollectionMenu] = useState(false);
 
   // Close menus when clicking outside (no longer needed with Dialog components)
@@ -1606,7 +1621,7 @@ export default function DesignerPage() {
           title: 'Clinical Decision Making',
           description: 'Evidence-based clinical decision making process',
           contentType: 'infographic',
-          icon: Image,
+          icon: ImageIcon,
           isPublic: true,
           order: 2
         }
@@ -1634,7 +1649,7 @@ export default function DesignerPage() {
           title: 'Lab Values',
           description: 'Normal lab value ranges',
           contentType: 'infographic',
-          icon: Image,
+          icon: ImageIcon,
           isPublic: true,
           order: 1
         },
@@ -1727,7 +1742,7 @@ export default function DesignerPage() {
         },
         {
           title: 'Test your Knowledge',
-          color: '#7c3aed', // Dark purple
+          color: '#000000', // Black
           items: [],
           order: 4,
           isExpanded: false
@@ -1785,7 +1800,7 @@ export default function DesignerPage() {
         },
         {
           title: 'Key Articles',
-          color: '#7c3aed', // Dark purple
+          color: '#000000', // Black
           items: [],
           order: 6,
           isExpanded: false
@@ -1829,7 +1844,7 @@ export default function DesignerPage() {
         },
         {
           title: 'CME',
-          color: '#7c3aed', // Dark purple
+          color: '#000000', // Black
           items: [],
           order: 4,
           isExpanded: false
@@ -2048,7 +2063,7 @@ export default function DesignerPage() {
   const getColorOptions = () => [
     { value: "border-blue-300", label: "Blue" },
     { value: "border-green-300", label: "Green" },
-    { value: "border-purple-300", label: "Purple" },
+    { value: "border-black", label: "Black" },
     { value: "border-orange-300", label: "Orange" },
     { value: "border-red-300", label: "Red" },
     { value: "border-gray-300", label: "Gray" }
@@ -2057,7 +2072,7 @@ export default function DesignerPage() {
   const getSpaceColorOptions = () => [
     { value: "bg-gradient-to-br from-slate-50 to-blue-50", label: "Ocean Blue", borderColor: "border-blue-300" },
     { value: "bg-gradient-to-br from-green-50 to-emerald-50", label: "Forest Green", borderColor: "border-green-300" },
-    { value: "bg-gradient-to-br from-purple-50 to-violet-50", label: "Royal Purple", borderColor: "border-purple-300" },
+    { value: "bg-gradient-to-br from-gray-50 to-gray-100", label: "Royal Black", borderColor: "border-black" },
     { value: "bg-gradient-to-br from-orange-50 to-amber-50", label: "Sunset Orange", borderColor: "border-orange-300" },
     { value: "bg-gradient-to-br from-red-50 to-rose-50", label: "Crimson Red", borderColor: "border-red-300" },
     { value: "bg-gradient-to-br from-gray-50 to-slate-50", label: "Classic Gray", borderColor: "border-gray-300" },
@@ -2072,7 +2087,18 @@ export default function DesignerPage() {
   // Helper function to determine text color based on background brightness
   const getTextColorForBackground = (backgroundColor: string) => {
     // Convert hex to RGB
-    const hex = backgroundColor.replace('#', '');
+    let hex = backgroundColor.replace('#', '');
+    
+    // Handle 8-character hex colors (with alpha) by taking only the first 6 characters
+    if (hex.length === 8) {
+      hex = hex.substr(0, 6);
+    }
+    
+    // Handle 3-character hex colors by expanding them
+    if (hex.length === 3) {
+      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    
     const r = parseInt(hex.substr(0, 2), 16);
     const g = parseInt(hex.substr(2, 2), 16);
     const b = parseInt(hex.substr(4, 2), 16);
@@ -2081,7 +2107,142 @@ export default function DesignerPage() {
     const brightness = (r * 299 + g * 587 + b * 114) / 1000;
     
     // Return dark text for light backgrounds, light text for dark backgrounds
-    return brightness > 128 ? 'text-gray-900' : 'text-white';
+    const textColor = brightness > 128 ? '#000000' : '#ffffff';
+    console.log(`Background: ${backgroundColor}, Brightness: ${brightness}, Text Color: ${textColor}`);
+    return textColor;
+  };
+
+  // Helper function to determine if background is light or dark
+  const isLightBackground = (backgroundColor: string) => {
+    let hex = backgroundColor.replace('#', '');
+    
+    // Handle 8-character hex colors (with alpha) by taking only the first 6 characters
+    if (hex.length === 8) {
+      hex = hex.substr(0, 6);
+    }
+    
+    // Handle 3-character hex colors by expanding them
+    if (hex.length === 3) {
+      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    const isLight = brightness > 128;
+    console.log(`🔍 Background Analysis: ${backgroundColor}`);
+    console.log(`   Cleaned hex: #${hex}`);
+    console.log(`   RGB: (${r}, ${g}, ${b})`);
+    console.log(`   Brightness: ${brightness}`);
+    console.log(`   Is Light: ${isLight} (threshold: 128)`);
+    console.log(`   Should use: ${isLight ? 'BLACK text' : 'WHITE text'}`);
+    return isLight;
+  };
+
+  // Helper function to process and enhance logo colors
+  const processLogoColors = (extractedColors: string[]): string[] => {
+    const processedColors: string[] = [];
+    
+    // Get the most prominent color (usually the main brand color)
+    const primaryColor = extractedColors[0];
+    if (primaryColor) {
+      processedColors.push(primaryColor);
+      
+      // Convert hex to RGB for calculations
+      const hex = primaryColor.replace('#', '');
+      const r = parseInt(hex.substr(0, 2), 16);
+      const g = parseInt(hex.substr(2, 2), 16);
+      const b = parseInt(hex.substr(4, 2), 16);
+      
+      // Create lighter variations for better usability
+      const createLighterShade = (factor: number) => {
+        const newR = Math.min(255, Math.round(r + (255 - r) * factor));
+        const newG = Math.min(255, Math.round(g + (255 - g) * factor));
+        const newB = Math.min(255, Math.round(b + (255 - b) * factor));
+        return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+      };
+      
+      // Add lighter variations
+      processedColors.push(createLighterShade(0.7)); // Very light
+      processedColors.push(createLighterShade(0.5)); // Medium light
+      processedColors.push(createLighterShade(0.3)); // Light
+      
+      // Add white for contrast (if not already very light)
+      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+      if (brightness < 200) {
+        processedColors.push('#ffffff');
+      }
+      
+      // Add a complementary neutral gray
+      processedColors.push('#f8fafc');
+    }
+    
+    // Remove duplicates and ensure we have exactly 6 colors
+    const uniqueColors = [...new Set(processedColors)];
+    return uniqueColors.slice(0, 6);
+  };
+
+  // Helper function to extract colors from logo image
+  const extractColorsFromLogo = (logoUrl: string): Promise<string[]> => {
+    return new Promise((resolve) => {
+      const img = new window.Image();
+      img.crossOrigin = 'anonymous';
+      
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        if (!ctx) {
+          resolve([]);
+          return;
+        }
+        
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+        const colorMap = new Map<string, number>();
+        
+        // Sample every 4th pixel to improve performance
+        for (let i = 0; i < data.length; i += 16) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          const a = data[i + 3];
+          
+          // Skip transparent pixels
+          if (a < 128) continue;
+          
+          // Skip very light colors (near white)
+          if (r > 240 && g > 240 && b > 240) continue;
+          
+          const hex = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+          colorMap.set(hex, (colorMap.get(hex) || 0) + 1);
+        }
+        
+        // Sort colors by frequency
+        const sortedColors = Array.from(colorMap.entries())
+          .sort((a, b) => b[1] - a[1])
+          .map(([color]) => color);
+        
+        // Group similar colors and create variations
+        const processedColors = processLogoColors(sortedColors);
+        
+        console.log('🎨 Extracted logo colors:', sortedColors);
+        console.log('✨ Processed logo colors:', processedColors);
+        resolve(processedColors);
+      };
+      
+      img.onerror = () => {
+        console.error('Failed to load logo for color extraction');
+        resolve([]);
+      };
+      
+      img.src = logoUrl;
+    });
   };
 
   // Helper function to generate a lighter border color from background
@@ -3152,12 +3313,13 @@ export default function DesignerPage() {
               <Button
                 variant={isDesignMode ? "default" : "outline"}
                 onClick={() => setIsDesignMode(true)}
-                className={`rounded-r-none border ${isDesignMode ? '' : ''}`}
+                className={`rounded-r-none border ${isDesignMode ? (isLightBackground(space.backgroundColor) ? 'button-light-bg' : 'button-dark-bg') : ''}`}
                 style={isDesignMode ? { 
-                  backgroundColor: space.backgroundColor,
-                  borderColor: space.borderColor,
-                  color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
-                } : {}}
+                  '--button-bg-color': space.backgroundColor,
+                  '--button-border-color': space.borderColor
+                } as React.CSSProperties : {}}
+                data-debug-bg={isDesignMode ? space.backgroundColor : ''}
+                data-debug-is-light={isDesignMode ? isLightBackground(space.backgroundColor) : ''}
               >
                 <Palette className="w-4 h-4 mr-2" />
                 Design Mode
@@ -3165,12 +3327,13 @@ export default function DesignerPage() {
               <Button
                 variant={!isDesignMode ? "default" : "outline"}
                 onClick={() => setIsDesignMode(false)}
-                className={`rounded-l-none border ${!isDesignMode ? '' : ''}`}
+                className={`rounded-l-none border ${!isDesignMode ? (isLightBackground(space.backgroundColor) ? 'button-light-bg' : 'button-dark-bg') : ''}`}
                 style={!isDesignMode ? { 
-                  backgroundColor: space.backgroundColor,
-                  borderColor: space.borderColor,
-                  color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
-                } : {}}
+                  '--button-bg-color': space.backgroundColor,
+                  '--button-border-color': space.borderColor
+                } as React.CSSProperties : {}}
+                data-debug-bg={!isDesignMode ? space.backgroundColor : ''}
+                data-debug-is-light={!isDesignMode ? isLightBackground(space.backgroundColor) : ''}
               >
                 <Eye className="w-4 h-4 mr-2" />
                 Production Mode
@@ -3184,7 +3347,7 @@ export default function DesignerPage() {
               variant="outline"
               size="sm"
                 onClick={() => setShowAIDesigner(!showAIDesigner)}
-              className="bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 border border-purple-500 text-white shadow-lg shadow-purple-500/50 hover:shadow-purple-500/70 hover:text-purple-200 hover:drop-shadow-[0_0_8px_rgba(196,181,253,0.8)] transition-all duration-300"
+              className="bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-900 border border-gray-700 text-white shadow-lg shadow-gray-800/50 hover:shadow-gray-800/70 hover:text-gray-200 hover:drop-shadow-[0_0_8px_rgba(0,0,0,0.8)] transition-all duration-300"
                 title="AI Designer"
             >
                 <Bot className="w-4 h-4" />
@@ -3226,7 +3389,7 @@ export default function DesignerPage() {
                     className="w-10 h-10 rounded object-cover"
                   />
                 ) : (
-                  <Image className="w-6 h-6 text-gray-400" />
+                  <ImageIcon className="w-6 h-6 text-gray-400" />
                 )}
               </div>
               
@@ -3537,7 +3700,7 @@ export default function DesignerPage() {
                                 style={{ 
                                   backgroundColor: space.backgroundColor,
                                   borderColor: space.borderColor,
-                                  color: getTextColorForBackground(space.backgroundColor) === 'text-gray-900' ? '#1f2937' : '#ffffff'
+                                  color: space.textColor || getTextColorForBackground(space.backgroundColor)
                                 }}
                               >
                                 <Plus className="w-4 h-4" />
@@ -3626,10 +3789,10 @@ export default function DesignerPage() {
                                           {/* Item count inside container for collections */}
                                           {item.type === 'collection' && (
                                             <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex flex-col space-y-1" data-onboarding="collection-count">
-                                              <div className="bg-purple-100 text-purple-600 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                              <div className="bg-gray-100 text-gray-800 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
                                                 <div className="truncate">{getCollectionCardCount(item)} cards</div>
                                               </div>
-                                              <div className="bg-purple-100 text-purple-600 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                              <div className="bg-gray-100 text-gray-800 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
                                                 <div className="truncate">{getCollectionItemCount(item)} items</div>
                                               </div>
                                           </div>
@@ -3758,7 +3921,7 @@ export default function DesignerPage() {
                                 key={item.id} 
                                 className={`rounded-lg p-2 transition-colors cursor-pointer ${
                                   item.type === 'collection' 
-                                    ? 'bg-gradient-to-br from-purple-50 to-blue-50' 
+                                    ? 'bg-gradient-to-br from-gray-50 to-gray-100' 
                                     : ''
                                 }`}
                                 onClick={() => item.type === 'collection' && (setCurrentCollection(item), setCollectionPath([...collectionPath, item.id]), setShowCollectionDialog(true))}
@@ -3788,10 +3951,10 @@ export default function DesignerPage() {
                                     {/* Item count inside container for collections */}
                                     {item.type === 'collection' && (
                                       <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex flex-col space-y-1">
-                                        <div className="bg-purple-100 text-purple-600 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                        <div className="bg-gray-100 text-gray-800 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
                                           <div className="truncate">{getCollectionCardCount(item)} cards</div>
                                         </div>
-                                        <div className="bg-purple-100 text-purple-600 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                        <div className="bg-gray-100 text-gray-800 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
                                           <div className="truncate">{getCollectionItemCount(item)} items</div>
                                         </div>
                                       </div>
@@ -3959,8 +4122,8 @@ export default function DesignerPage() {
                 >
                   <div className="flex items-start gap-3">
                     <div className="flex-shrink-0">
-                      <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                        <template.icon className="w-5 h-5 text-purple-600" />
+                      <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                        <template.icon className="w-5 h-5 text-gray-800" />
                       </div>
                     </div>
                     <div className="flex-1 min-w-0">
@@ -3978,12 +4141,12 @@ export default function DesignerPage() {
                         <p className="text-xs text-gray-500">Includes:</p>
                         <div className="flex flex-wrap gap-1 mt-1">
                           {template.cards.slice(0, 3).map((card, index) => (
-                            <span key={index} className="text-xs bg-purple-100 px-2 py-1 rounded text-purple-700">
+                            <span key={index} className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-800">
                               {card.title}
                             </span>
                           ))}
                           {template.cards.length > 3 && (
-                            <span className="text-xs bg-purple-100 px-2 py-1 rounded text-purple-700">
+                            <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-800">
                               +{template.cards.length - 3} more
                             </span>
                           )}
@@ -4397,7 +4560,7 @@ export default function DesignerPage() {
               <div className="p-6 pb-0">
                 {isDesignMode ? (
                   <h2 className="text-lg font-semibold flex items-center gap-2">
-                    <FolderOpen className="w-6 h-6 text-purple-600" />
+                    <FolderOpen className="w-6 h-6 text-gray-800" />
                     {currentCollection.title}
                   </h2>
                 ) : (
@@ -4613,7 +4776,7 @@ export default function DesignerPage() {
                                         key={item.id} 
                                         className={`relative group rounded-lg p-2 transition-colors cursor-pointer ${
                                           item.type === 'collection' 
-                                            ? 'bg-gradient-to-br from-purple-50 to-blue-50' 
+                                            ? 'bg-gradient-to-br from-gray-50 to-gray-100' 
                                             : ''
                                         }`}
                                         onClick={() => {
@@ -4686,10 +4849,10 @@ export default function DesignerPage() {
                                         {/* Item count inside container for collections */}
                                         {item.type === 'collection' && (
                                           <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex flex-col space-y-1">
-                                            <div className="bg-purple-100 text-purple-600 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                            <div className="bg-gray-100 text-gray-800 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
                                               <div className="truncate">{getCollectionCardCount(item)} cards</div>
                                             </div>
-                                            <div className="bg-purple-100 text-purple-600 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                            <div className="bg-gray-100 text-gray-800 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
                                               <div className="truncate">{getCollectionItemCount(item)} items</div>
                                             </div>
                                         </div>
@@ -4955,6 +5118,7 @@ export default function DesignerPage() {
         <AIDesigner 
           ref={(ref) => { if (ref) (window as any).aiDesignerRef = ref; }}
           space={space}
+          logoColors={logoColors}
           onAddCard={(cardData) => {
             const newCard: SpaceCard = {
               id: `card-${Date.now()}`,

@@ -15,6 +15,7 @@ interface Message {
 
 interface AIDesignerProps {
   space: any;
+  logoColors?: string[];
   onSuggestion?: (suggestion: string) => void;
   onAddCard?: (cardData: any) => void;
   onDeleteCard?: (cardId: string) => void;
@@ -33,6 +34,7 @@ interface AIDesignerProps {
 
 const AIDesigner = forwardRef<any, AIDesignerProps>(({ 
   space, 
+  logoColors = [],
   onSuggestion,
   onAddCard,
   onDeleteCard,
@@ -48,6 +50,22 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
   onApplyTemplate,
   onOpenCollectionDesigner
 }, ref) => {
+  
+  // Helper function to determine text color based on background brightness
+  const getTextColorForBackground = (backgroundColor: string) => {
+    // Convert hex to RGB
+    const hex = backgroundColor.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    // Calculate brightness using luminance formula
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    
+    // Return dark text for light backgrounds, light text for dark backgrounds
+    return brightness > 128 ? '#1f2937' : '#ffffff';
+  };
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -378,7 +396,13 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
         timestamp: new Date()
       };
       setMessages(prev => [...prev, aiMessage]);
-      setPendingActions([]);
+      
+      // Show what to do next
+      setPendingActions([{
+        type: 'back_to_main_options',
+        data: {},
+        message: 'What would you like to do next?'
+      }]);
       setIsTyping(false);
       return;
     }
@@ -398,7 +422,13 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
         timestamp: new Date()
       };
       setMessages(prev => [...prev, aiMessage]);
-      setPendingActions([]);
+      
+      // Show what to do next
+      setPendingActions([{
+        type: 'back_to_main_options',
+        data: {},
+        message: 'What would you like to do next?'
+      }]);
       setIsTyping(false);
       return;
     }
@@ -425,9 +455,7 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
       console.log('AI Actions:', aiResponse.actions);
       
       // Check if this is an AI description generation response
-      if (pendingActions.length > 0 && pendingActions[0].type === 'ai_description') {
-        console.log('AI description generation response received');
-        
+      if ((pendingActions.length > 0 && pendingActions[0].type === 'ai_description') || aiResponse.isDescriptionGeneration) {
         // Add AI response message with the generated description
         const aiMessage: Message = {
           id: (Date.now() + 1).toString(),
@@ -791,14 +819,66 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
               data: contentSuggestions,
               message: `Perfect! I've added the "${data.title}" card. Now let's add some content to this card. Choose content types to add:`
             }]);
+          } else {
+            // Not in a workflow, show completion message
+            const successMessage: Message = {
+              id: (Date.now() + 1).toString(),
+              type: 'ai',
+              content: `Great! I've successfully added the "${data.title}" card to your space.`,
+              timestamp: new Date()
+            };
+            setMessages(prev => [...prev, successMessage]);
+            
+            // Show what to do next
+            setPendingActions([{
+              type: 'back_to_main_options',
+              data: {},
+              message: 'What would you like to do next?'
+            }]);
           }
         }
         break;
       case 'delete_card':
-        if (onDeleteCard) onDeleteCard(data.id);
+        if (onDeleteCard) {
+          onDeleteCard(data.id);
+          
+          // Show completion message
+          const successMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            type: 'ai',
+            content: `Successfully removed the card from your space.`,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, successMessage]);
+          
+          // Show what to do next
+          setPendingActions([{
+            type: 'back_to_main_options',
+            data: {},
+            message: 'What would you like to do next?'
+          }]);
+        }
         break;
       case 'modify_card':
-        if (onModifyCard) onModifyCard(data.id, data);
+        if (onModifyCard) {
+          onModifyCard(data.id, data);
+          
+          // Show completion message
+          const successMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            type: 'ai',
+            content: `Successfully updated the card.`,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, successMessage]);
+          
+          // Show what to do next
+          setPendingActions([{
+            type: 'back_to_main_options',
+            data: {},
+            message: 'What would you like to do next?'
+          }]);
+        }
         break;
       case 'add_collection':
         // First, ask which card to add the collection to
@@ -819,10 +899,46 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
         }
         break;
       case 'delete_collection':
-        if (onDeleteCollection) onDeleteCollection(data.id);
+        if (onDeleteCollection) {
+          onDeleteCollection(data.id);
+          
+          // Show completion message
+          const successMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            type: 'ai',
+            content: `Successfully removed the collection from your space.`,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, successMessage]);
+          
+          // Show what to do next
+          setPendingActions([{
+            type: 'back_to_main_options',
+            data: {},
+            message: 'What would you like to do next?'
+          }]);
+        }
         break;
       case 'modify_collection':
-        if (onModifyCollection) onModifyCollection(data.id, data);
+        if (onModifyCollection) {
+          onModifyCollection(data.id, data);
+          
+          // Show completion message
+          const successMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            type: 'ai',
+            content: `Successfully updated the collection.`,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, successMessage]);
+          
+          // Show what to do next
+          setPendingActions([{
+            type: 'back_to_main_options',
+            data: {},
+            message: 'What would you like to do next?'
+          }]);
+        }
         break;
       case 'add_content':
         if (onAddContent) {
@@ -862,20 +978,108 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
                 message: 'Excellent! Your collection is now fully set up with cards and content. You can continue adding more content or start a new collection.'
               }]);
             }
+          } else {
+            // Not in a workflow, show completion message
+            const successMessage: Message = {
+              id: (Date.now() + 1).toString(),
+              type: 'ai',
+              content: `Perfect! I've added the "${data.title}" content to your card.`,
+              timestamp: new Date()
+            };
+            setMessages(prev => [...prev, successMessage]);
+            
+            // Show what to do next
+            setPendingActions([{
+              type: 'back_to_main_options',
+              data: {},
+              message: 'What would you like to do next?'
+            }]);
           }
         }
         break;
       case 'delete_content':
-        if (onDeleteContent) onDeleteContent(data.cardId, data.contentId);
+        if (onDeleteContent) {
+          onDeleteContent(data.cardId, data.contentId);
+          
+          // Show completion message
+          const successMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            type: 'ai',
+            content: `Successfully removed the content from your card.`,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, successMessage]);
+          
+          // Show what to do next
+          setPendingActions([{
+            type: 'back_to_main_options',
+            data: {},
+            message: 'What would you like to do next?'
+          }]);
+        }
         break;
       case 'modify_content':
-        if (onModifyContent) onModifyContent(data.cardId, data.contentId, data);
+        if (onModifyContent) {
+          onModifyContent(data.cardId, data.contentId, data);
+          
+          // Show completion message
+          const successMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            type: 'ai',
+            content: `Successfully updated the content.`,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, successMessage]);
+          
+          // Show what to do next
+          setPendingActions([{
+            type: 'back_to_main_options',
+            data: {},
+            message: 'What would you like to do next?'
+          }]);
+        }
         break;
       case 'modify_space':
-        if (onModifySpace) onModifySpace(data);
+        if (onModifySpace) {
+          onModifySpace(data);
+          
+          // Show completion message
+          const successMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            type: 'ai',
+            content: `Great! I've successfully updated your space.`,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, successMessage]);
+          
+          // Show what to do next
+          setPendingActions([{
+            type: 'back_to_main_options',
+            data: {},
+            message: 'What would you like to do next?'
+          }]);
+        }
         break;
       case 'apply_template':
-        if (onApplyTemplate) onApplyTemplate(data.templateType, data.targetId);
+        if (onApplyTemplate) {
+          onApplyTemplate(data.templateType, data.targetId);
+          
+          // Show completion message
+          const successMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            type: 'ai',
+            content: `Perfect! I've applied the ${data.templateType} template to your space.`,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, successMessage]);
+          
+          // Show what to do next
+          setPendingActions([{
+            type: 'back_to_main_options',
+            data: {},
+            message: 'What would you like to do next?'
+          }]);
+        }
         break;
       case 'select_card_for_collection':
         // Add collection to the selected card
@@ -1063,13 +1267,26 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
         }]);
         break;
       case 'ai_description':
-        // Generate AI description
+        // Generate AI description with web search
         setPendingActions([{
           type: 'ai_description',
           data: {},
-          message: 'Generating AI description...'
+          message: 'Generating AI description with web research...'
         }]);
-        const descriptionPrompt = `Generate a professional medical space description for: "${space.name}". Consider the medical specialty and context. Return only the description text, no JSON formatting.`;
+        const descriptionPrompt = `Generate a professional medical space description for: "${space.name}". 
+
+First, search the web for current information about "${space.name}" and related medical topics to understand the latest context, specialties, and relevant medical information.
+
+Then create a comprehensive, professional description that includes:
+- Current medical specialties and focus areas
+- Latest developments or innovations in this field
+- Professional tone suitable for medical professionals
+- Relevant medical terminology and context
+
+Space context: ${space.description || 'No existing description'}
+Existing content: ${space.cards?.length || 0} cards with medical content
+
+Return only the description text, no JSON formatting.`;
         handleSendMessage(descriptionPrompt, true);
         break;
       case 'custom_description':
@@ -1081,29 +1298,51 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
         }]);
         break;
       case 'ai_colors':
-        // Generate AI color suggestions based on logo if available
+        // Generate AI color suggestions based on logo colors if available
         let colorPrompt;
-        if (space.logo) {
-          colorPrompt = `The space "${space.name}" has a logo uploaded. Suggest 5-6 professional medical color schemes that would complement a medical logo. Consider colors that work well with typical medical branding (blues, greens, whites, grays). Return JSON format: {"message": "Here are color suggestions that complement your logo:", "actions": [{"type": "suggest_colors", "data": [{"name": "Color Name", "color": "#hexcode", "description": "Brief description"}]}]}`;
+        if (space.logo && logoColors.length > 0) {
+          const logoColorsString = logoColors.join(', ');
+          colorPrompt = `The space "${space.name}" has a logo with these extracted colors: ${logoColorsString}. Suggest color schemes using ONLY these colors from the logo. Create variations by using different shades, tints, or combinations of these exact colors. For each suggestion, use one of the extracted colors as the primary color. IMPORTANT: Ensure all suggested colors provide good text contrast. Return JSON format: {"message": "Here are color suggestions based on your logo colors:", "actions": [{"type": "suggest_colors", "data": [{"name": "Color Name", "color": "#hexcode", "description": "Brief description using logo color"}]}]}`;
+        } else if (space.logo) {
+          colorPrompt = `The space "${space.name}" has a logo uploaded. Suggest 5-6 professional medical color schemes that would complement a medical logo. Consider colors that work well with typical medical branding (blues, greens, whites, grays). IMPORTANT: Ensure all suggested colors provide good text contrast - avoid colors that are too dark or too light that would make text hard to read. Return JSON format: {"message": "Here are color suggestions that complement your logo:", "actions": [{"type": "suggest_colors", "data": [{"name": "Color Name", "color": "#hexcode", "description": "Brief description"}]}]}`;
         } else {
-          colorPrompt = `Suggest 5-6 professional medical color schemes for a space named "${space.name}". Return JSON format: {"message": "Here are color suggestions for your space:", "actions": [{"type": "suggest_colors", "data": [{"name": "Color Name", "color": "#hexcode", "description": "Brief description"}]}]}`;
+          colorPrompt = `Suggest 5-6 professional medical color schemes for a space named "${space.name}". IMPORTANT: Ensure all suggested colors provide good text contrast - avoid colors that are too dark or too light that would make text hard to read. Focus on colors that work well for backgrounds with readable text. Return JSON format: {"message": "Here are color suggestions for your space:", "actions": [{"type": "suggest_colors", "data": [{"name": "Color Name", "color": "#hexcode", "description": "Brief description"}]}]}`;
         }
         handleSendMessage(colorPrompt, true);
         break;
       case 'manual_colors':
-        // Show manual color picker
-        const manualColors = [
-          { name: 'Medical Blue', color: '#3b82f6', description: 'Professional medical blue' },
-          { name: 'Clinical Green', color: '#10b981', description: 'Calming clinical green' },
-          { name: 'Emergency Red', color: '#ef4444', description: 'High-visibility emergency red' },
-          { name: 'Research Purple', color: '#8b5cf6', description: 'Academic research purple' },
-          { name: 'Neutral Gray', color: '#6b7280', description: 'Professional neutral gray' },
-          { name: 'Surgical Teal', color: '#14b8a6', description: 'Modern surgical teal' }
-        ];
+        // Show manual color picker - use logo colors if available
+        let manualColors;
+        if (space.logo && logoColors.length > 0) {
+          const colorNames = [
+            'Primary Brand Color',
+            'Light Brand Shade',
+            'Medium Brand Shade', 
+            'Subtle Brand Shade',
+            'Contrast White',
+            'Neutral Light'
+          ];
+          manualColors = logoColors.map((color, index) => ({
+            name: colorNames[index] || `Logo Color ${index + 1}`,
+            color: color,
+            description: index === 0 ? 'Main color from your logo' : 
+                        index < 4 ? 'Lighter variation of your brand color' :
+                        'Complementary color for contrast'
+          }));
+        } else {
+          manualColors = [
+            { name: 'Medical Blue', color: '#3b82f6', description: 'Professional medical blue with good contrast' },
+            { name: 'Clinical Green', color: '#10b981', description: 'Calming clinical green with readable text' },
+            { name: 'Emergency Red', color: '#dc2626', description: 'High-visibility emergency red with contrast' },
+            { name: 'Professional Gray', color: '#4b5563', description: 'Professional gray with excellent readability' },
+            { name: 'Neutral Light', color: '#f3f4f6', description: 'Light neutral with dark text contrast' },
+            { name: 'Surgical Teal', color: '#0d9488', description: 'Modern surgical teal with good contrast' }
+          ];
+        }
         setPendingActions([{
           type: 'suggest_colors',
           data: manualColors,
-          message: 'Choose a color for your space:'
+          message: logoColors.length > 0 ? 'Choose a color from your logo:' : 'Choose a color for your space:'
         }]);
         break;
       case 'modify_space':
@@ -1120,6 +1359,28 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
             id: (Date.now() + 1).toString(),
             type: 'ai',
             content: `Perfect! I've updated your space ${data.field} to "${data.value}".`,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, aiMessage]);
+          
+          // Show back to main options button
+          setPendingActions([{
+            type: 'back_to_main_options',
+            data: {},
+            message: 'What would you like to do next?'
+          }]);
+        } else if (data.backgroundColor || data.borderColor || data.textColor) {
+          // Handle multiple field updates (like color changes with text contrast)
+          console.log('Updating space with multiple fields:', data);
+          if (onModifySpace) {
+            onModifySpace(data);
+          }
+          
+          // Add AI response message
+          const aiMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            type: 'ai',
+            content: `Perfect! I've updated your space colors with proper text contrast.`,
             timestamp: new Date()
           };
           setMessages(prev => [...prev, aiMessage]);
@@ -1157,13 +1418,27 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
         }
         break;
       case 'regenerate_ai_description':
-        // Regenerate the AI description
+        // Regenerate the AI description with web search
         setPendingActions([{
           type: 'ai_description',
           data: {},
-          message: 'Generating a new AI description...'
+          message: 'Generating a new AI description with fresh web research...'
         }]);
-        const newDescriptionPrompt = `Generate a different professional medical space description for: "${space.name}". Make it unique and different from the previous one. Consider the medical specialty and context. Return only the description text, no JSON formatting.`;
+        const newDescriptionPrompt = `Generate a different professional medical space description for: "${space.name}". 
+
+First, search the web for the most current information about "${space.name}" and related medical topics, focusing on different aspects than before.
+
+Create a unique, comprehensive description that:
+- Takes a different angle or focus than previous descriptions
+- Incorporates the latest medical developments and innovations
+- Uses professional medical terminology
+- Highlights different specialties or aspects of this medical field
+- Maintains a professional tone for medical professionals
+
+Space context: ${space.description || 'No existing description'}
+Existing content: ${space.cards?.length || 0} cards with medical content
+
+Make this description unique and different from any previous versions. Return only the description text, no JSON formatting.`;
         handleSendMessage(newDescriptionPrompt, true);
         break;
       case 'back_to_main_options':
@@ -1180,22 +1455,22 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
   return (
     <div className="h-screen flex flex-col relative overflow-hidden">
       {/* Animated Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900">
-        <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/20 via-transparent to-indigo-600/20 animate-pulse"></div>
-        <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-purple-700/10 to-transparent animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute inset-0 bg-gradient-to-tl from-indigo-600/10 via-transparent to-purple-600/10 animate-pulse" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-gray-800">
+        <div className="absolute inset-0 bg-gradient-to-tr from-gray-800/20 via-transparent to-gray-700/20 animate-pulse"></div>
+        <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-gray-900/10 to-transparent animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute inset-0 bg-gradient-to-tl from-gray-700/10 via-transparent to-gray-800/10 animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
       
       {/* Header */}
-        <div className="relative z-10 p-4 border-b border-purple-700/30 bg-purple-900/80 backdrop-blur-sm flex-shrink-0">
+        <div className="relative z-10 p-4 border-b border-gray-700/30 bg-black/80 backdrop-blur-sm flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="p-2 bg-purple-600/20 rounded-lg border border-purple-500/30">
-                <Sparkles className="w-5 h-5 text-purple-300" />
+              <div className="p-2 bg-gray-800/20 rounded-lg border border-gray-600/30">
+                <Sparkles className="w-5 h-5 text-gray-300" />
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-white">StayCurrentMD Designer</h2>
-                <p className="text-sm text-purple-200">Your intelligent design assistant</p>
+                <p className="text-sm text-gray-300">Your intelligent design assistant</p>
               </div>
             </div>
           </div>
@@ -1212,16 +1487,16 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
             className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div className={`flex gap-2 max-w-[80%] ${message.type === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-              <div className={`p-2 rounded-full ${message.type === 'user' ? 'bg-blue-500/20 border border-blue-400/30' : 'bg-purple-500/20 border border-purple-400/30'}`}>
+              <div className={`p-2 rounded-full ${message.type === 'user' ? 'bg-blue-500/20 border border-blue-400/30' : 'bg-gray-700/20 border border-gray-600/30'}`}>
                 {message.type === 'user' ? (
                   <User className="w-4 h-4 text-blue-300" />
                 ) : (
-                  <Bot className="w-4 h-4 text-purple-300" />
+                  <Bot className="w-4 h-4 text-gray-300" />
                 )}
               </div>
-              <Card className={`p-3 backdrop-blur-sm ${message.type === 'user' ? 'bg-blue-500/10 border-blue-400/30' : 'bg-white/10 border-purple-400/30'}`}>
+              <Card className={`p-3 backdrop-blur-sm ${message.type === 'user' ? 'bg-blue-500/10 border-blue-400/30' : 'bg-white/10 border-gray-600/30'}`}>
                 <p className="text-sm text-white">{message.content}</p>
-                <p className="text-xs text-purple-200 mt-1">
+                <p className="text-xs text-gray-300 mt-1">
                   {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </p>
               </Card>
@@ -1240,7 +1515,7 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
                   onClick={handleBackToMainOptions}
                   variant="outline"
                   size="sm"
-                  className="text-purple-300 border-purple-400/50 hover:bg-purple-500/20 bg-purple-600/10"
+                  className="text-gray-300 border-gray-600/50 hover:bg-gray-700/20 bg-gray-800/10"
                 >
                   <ArrowLeft className="w-4 h-4 mr-1" />
                   Main Options
@@ -1309,7 +1584,7 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
                         disabled={isAdded}
                       >
                         <div className="flex items-center gap-3">
-                          <FolderOpen className="w-4 h-4 text-purple-600" />
+                          <FolderOpen className="w-4 h-4 text-gray-700" />
                           <div className="flex-1 min-w-0">
                             <div className="font-medium text-gray-900 break-words">{collection.title}</div>
                             <div className="text-sm text-gray-500 break-words whitespace-normal overflow-wrap-anywhere">{collection.description}</div>
@@ -1380,10 +1655,20 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
                     return (
                       <Button
                         key={colorIndex}
-                        onClick={() => executeAction('modify_space', {
-                          borderColor: color.color,
-                          backgroundColor: color.color + '20'
-                        }, elementId)}
+                        onClick={() => {
+                          // Create a lighter background but calculate text color from original
+                          const backgroundColor = color.color + '30'; // Slightly more opacity than before
+                          const textColor = getTextColorForBackground(backgroundColor); // Calculate from actual background
+                          console.log(`🎨 AI Color Applied: ${color.name}`);
+                          console.log(`   Original Color: ${color.color}`);
+                          console.log(`   Background Used: ${backgroundColor}`);
+                          console.log(`   Text Color: ${textColor}`);
+                          executeAction('modify_space', {
+                            borderColor: color.color,
+                            backgroundColor: backgroundColor,
+                            textColor: textColor
+                          }, elementId);
+                        }}
                         className={`w-full justify-start text-left h-auto p-3 border transition-all duration-200 ${
                           isAdded 
                             ? 'bg-green-50 border-green-200 hover:bg-green-100' 
@@ -1491,11 +1776,11 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
                       className="w-full justify-start text-left h-auto p-4 border transition-all duration-200 bg-white border-gray-200 hover:bg-gray-50"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="p-2 bg-purple-100 rounded-lg">
-                          {option.action === 'suggest_cards' && <FileText className="w-4 h-4 text-purple-600" />}
-                          {option.action === 'suggest_collections' && <FolderOpen className="w-4 h-4 text-purple-600" />}
-                          {option.action === 'suggest_content' && <FileText className="w-4 h-4 text-purple-600" />}
-                          {option.action === 'modify_space' && <Settings className="w-4 h-4 text-purple-600" />}
+                        <div className="p-2 bg-gray-100 rounded-lg">
+                          {option.action === 'suggest_cards' && <FileText className="w-4 h-4 text-gray-700" />}
+                          {option.action === 'suggest_collections' && <FolderOpen className="w-4 h-4 text-gray-700" />}
+                          {option.action === 'suggest_content' && <FileText className="w-4 h-4 text-gray-700" />}
+                          {option.action === 'modify_space' && <Settings className="w-4 h-4 text-gray-700" />}
                         </div>
                         <div className="flex-1">
                           <div className="font-medium text-gray-900">{option.title}</div>
@@ -1604,9 +1889,9 @@ const AIDesigner = forwardRef<any, AIDesignerProps>(({
                       className="w-full justify-start text-left h-auto p-4 border transition-all duration-200 bg-white border-gray-200 hover:bg-gray-50"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="p-2 bg-purple-100 rounded-lg">
-                          {option.action === 'ai_collections' && <FolderOpen className="w-4 h-4 text-purple-600" />}
-                          {option.action === 'custom_topic' && <FileText className="w-4 h-4 text-purple-600" />}
+                        <div className="p-2 bg-gray-100 rounded-lg">
+                          {option.action === 'ai_collections' && <FolderOpen className="w-4 h-4 text-gray-700" />}
+                          {option.action === 'custom_topic' && <FileText className="w-4 h-4 text-gray-700" />}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="font-medium text-gray-900 break-words">{option.title}</div>
@@ -1758,7 +2043,7 @@ Return JSON array:
                       className="w-full justify-start text-left h-auto p-3 border transition-all duration-200 bg-white border-gray-200 hover:bg-gray-50"
                     >
                       <div className="flex items-center gap-3">
-                        <FolderOpen className="w-4 h-4 text-purple-600" />
+                        <FolderOpen className="w-4 h-4 text-gray-700" />
                         <div className="flex-1 min-w-0">
                           <div className="font-medium text-gray-900 break-words">{collection.title}</div>
                           <div className="text-sm text-gray-500 break-words whitespace-normal overflow-wrap-anywhere">
@@ -1904,8 +2189,8 @@ Return JSON array:
                       className="w-full justify-start text-left h-auto p-4 border transition-all duration-200 bg-white border-gray-200 hover:bg-gray-50"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="p-2 bg-purple-100 rounded-lg">
-                          <Settings className="w-4 h-4 text-purple-600" />
+                        <div className="p-2 bg-gray-100 rounded-lg">
+                          <Settings className="w-4 h-4 text-gray-700" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="font-medium text-gray-900 break-words">{option.title}</div>
@@ -2062,14 +2347,14 @@ Return JSON array:
         {isTyping && (
           <div className="flex justify-start">
             <div className="flex gap-2 max-w-[80%]">
-              <div className="p-2 rounded-full bg-purple-500/20 border border-purple-400/30">
-                <Bot className="w-4 h-4 text-purple-300" />
+              <div className="p-2 rounded-full bg-gray-700/20 border border-gray-600/30">
+                <Bot className="w-4 h-4 text-gray-300" />
               </div>
-              <Card className="p-3 bg-white/10 border-purple-400/30 backdrop-blur-sm">
+              <Card className="p-3 bg-white/10 border-gray-600/30 backdrop-blur-sm">
                 <div className="flex gap-1">
-                  <div className="w-2 h-2 bg-purple-300 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-purple-300 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-purple-300 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 </div>
               </Card>
             </div>
@@ -2078,20 +2363,20 @@ Return JSON array:
       </div>
 
       {/* Input */}
-      <div className="relative z-10 p-4 border-t border-purple-700/30 bg-purple-900/80 backdrop-blur-sm flex-shrink-0">
+      <div className="relative z-10 p-4 border-t border-gray-700/30 bg-black/80 backdrop-blur-sm flex-shrink-0">
         <div className="flex gap-2">
           <Input
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Ask me anything about your medical space design..."
-            className="flex-1 bg-white/10 border-purple-400/30 text-white placeholder-purple-200"
+            className="flex-1 bg-white/10 border-gray-600/30 text-white placeholder-gray-300"
             disabled={isTyping}
           />
           <Button
             onClick={() => handleSendMessage()}
             disabled={!inputMessage.trim() || isTyping}
-            className="bg-purple-600 hover:bg-purple-700 border-purple-500"
+            className="bg-gray-800 hover:bg-gray-900 border-gray-700"
           >
             <Send className="w-4 h-4" />
           </Button>
