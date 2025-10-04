@@ -4,122 +4,86 @@
       "id": "critical-care-life-support",
       "title": "\ud83d\udea8 Critical Care & Life Support",
       "color": "#dc2626",
-      "description": "Life-saving procedures and critical care protocols",
+      "description": "Life-saving procedures and critical care management",
       "priority": "highest",
-      "content_count": 34,
+      "content_count": 18,
       "collections": [
         {
           "id": "ecmo-management",
           "title": "ECMO Management",
-          "description": "ECMO cannulation, decannulation, and management protocols",
+          "description": "ECMO cannulation, decannulation, and management",
           "items": [
             {
               "id": "6024_file_7444_2022-10-20_18-12-35.mp4",
               "title": "ECMO Decannulation - 10/20/2022",
               "type": "video",
-              "specialty": "ecmo",
-              "complexity": "complex",
-              "procedure": "ECMO decannulation",
-              "fileUrl": "spaces/4/content/6024/file_7444_2022-10-20_18-12-35.mp4"
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "6024_file_7444_2022-10-20_18-12-35.mp4"
             },
             {
-              "id": "7443_file_7443_2022-10-20_18-12-35.mp4",
-              "title": "ECMO Cannulation - 10/20/2022",
-              "type": "video",
-              "specialty": "ecmo",
-              "complexity": "complex",
-              "procedure": "ECMO cannulation",
-              "fileUrl": "spaces/4/content/7443/file_7443_2022-10-20_18-12-35.mp4"
+              "id": "8854_4-guideline-CDH-ECMO-Protocol-073124.pdf",
+              "title": "CDH ECMO Protocol 073124",
+              "type": "guideline",
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "8854_4-guideline-CDH-ECMO-Protocol-073124.pdf"
             },
             {
-              "id": "7183_file_7183_2022-08-23_00-00-07.mp4",
-              "title": "ECMO Cannulation - 8/23/2022",
-              "type": "video",
-              "specialty": "ecmo",
-              "complexity": "complex",
-              "procedure": "ECMO cannulation",
-              "fileUrl": "spaces/4/content/7183/file_7183_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "7164_file_7164_2022-08-23_00-00-06.mp4",
-              "title": "ECMO Decannulation - 8/23/2022",
-              "type": "video",
-              "specialty": "ecmo",
-              "complexity": "complex",
-              "procedure": "ECMO decannulation",
-              "fileUrl": "spaces/4/content/7164/file_7164_2022-08-23_00-00-06.mp4"
-            },
-            {
-              "id": "5765_file_7183_2022-08-23_00-00-07.mp4",
-              "title": "ECMO Cannulation - 8/23/2022",
-              "type": "video",
-              "specialty": "ecmo",
-              "complexity": "complex",
-              "procedure": "ECMO cannulation",
-              "fileUrl": "spaces/4/content/5765/file_7183_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "7184_file_7184_2022-08-23_00-00-07.mp4",
-              "title": "ECMO Decannulation - 8/23/2022",
-              "type": "video",
-              "specialty": "ecmo",
-              "complexity": "complex",
-              "procedure": "ECMO decannulation",
-              "fileUrl": "spaces/4/content/7184/file_7184_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "6023_file_7443_2022-10-20_18-12-35.mp4",
-              "title": "ECMO Cannulation - 10/20/2022",
-              "type": "video",
-              "specialty": "ecmo",
-              "complexity": "complex",
-              "procedure": "ECMO cannulation",
-              "fileUrl": "spaces/4/content/6023/file_7443_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "7444_file_7444_2022-10-20_18-12-35.mp4",
-              "title": "ECMO Decannulation - 10/20/2022",
-              "type": "video",
-              "specialty": "ecmo",
-              "complexity": "complex",
-              "procedure": "ECMO decannulation",
-              "fileUrl": "spaces/4/content/7444/file_7444_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "5745_file_7163_2022-08-23_00-00-05.mp4",
-              "title": "ECMO Cannulation - 8/23/2022",
-              "type": "video",
-              "specialty": "ecmo",
-              "complexity": "complex",
-              "procedure": "ECMO cannulation",
-              "fileUrl": "spaces/4/content/5745/file_7163_2022-08-23_00-00-05.mp4"
-            },
-            {
-              "id": "5746_file_7164_2022-08-23_00-00-06.mp4",
-              "title": "ECMO Decannulation - 8/23/2022",
-              "type": "video",
-              "specialty": "ecmo",
-              "complexity": "complex",
-              "procedure": "ECMO decannulation",
-              "fileUrl": "spaces/4/content/5746/file_7164_2022-08-23_00-00-06.mp4"
+              "id": "10571_4-guideline-gas-and-flow-initiation-ECMO-protocol.pdf",
+              "title": "Gas and Flow Initiation ECMO Protocol",
+              "type": "guideline",
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "10571_4-guideline-gas-and-flow-initiation-ECMO-protocol.pdf"
             },
             {
               "id": "5766_file_7184_2022-08-23_00-00-07.mp4",
               "title": "ECMO Decannulation - 8/23/2022",
               "type": "video",
-              "specialty": "ecmo",
-              "complexity": "complex",
-              "procedure": "ECMO decannulation",
-              "fileUrl": "spaces/4/content/5766/file_7184_2022-08-23_00-00-07.mp4"
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "5766_file_7184_2022-08-23_00-00-07.mp4"
             },
             {
               "id": "7163_file_7163_2022-08-23_00-00-05.mp4",
               "title": "ECMO Cannulation - 8/23/2022",
               "type": "video",
-              "specialty": "ecmo",
-              "complexity": "complex",
-              "procedure": "ECMO cannulation",
-              "fileUrl": "spaces/4/content/7163/file_7163_2022-08-23_00-00-05.mp4"
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "7163_file_7163_2022-08-23_00-00-05.mp4"
+            },
+            {
+              "id": "5731_4-guideline-Checklists-for-ECMO-Clamping-Trial.pdf",
+              "title": "Checklists for ECMO Clamping Trial",
+              "type": "guideline",
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "5731_4-guideline-Checklists-for-ECMO-Clamping-Trial.pdf"
+            },
+            {
+              "id": "6608_4-guideline-ECMO-PR-035---Leaving-cannulas-in-place-post-removal-from-ECMO.PDF",
+              "title": "Leaving Cannulas in Place Post Removal From ECMO",
+              "type": "document",
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "6608_4-guideline-ECMO-PR-035---Leaving-cannulas-in-place-post-removal-from-ECMO.PDF"
+            },
+            {
+              "id": "6023_file_7443_2022-10-20_18-12-35.mp4",
+              "title": "ECMO Cannulation - 10/20/2022",
+              "type": "video",
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "6023_file_7443_2022-10-20_18-12-35.mp4"
+            },
+            {
+              "id": "8854_4-guideline-CDH-ECMO-Protocol-4.3.25.pdf",
+              "title": "CDH ECMO Protocol 4",
+              "type": "guideline",
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "8854_4-guideline-CDH-ECMO-Protocol-4.3.25.pdf"
             }
           ]
         },
@@ -129,209 +93,83 @@
           "description": "Emergency trauma surgery and life-saving procedures",
           "items": [
             {
-              "id": "7152_file_7152_2022-08-23_00-00-04.mp4",
+              "id": "5774_file_7192_2022-08-23_00-00-08.mp4",
               "title": "Emergency Trauma Surgery - 8/23/2022",
               "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Emergency trauma surgery",
-              "fileUrl": "spaces/4/content/7152/file_7152_2022-08-23_00-00-04.mp4"
-            },
-            {
-              "id": "7172_file_7172_2022-08-23_00-00-06.mp4",
-              "title": "Emergency Trauma Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Emergency trauma surgery",
-              "fileUrl": "spaces/4/content/7172/file_7172_2022-08-23_00-00-06.mp4"
-            },
-            {
-              "id": "5734_file_7152_2022-08-23_00-00-04.mp4",
-              "title": "Emergency Trauma Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Emergency trauma surgery",
-              "fileUrl": "spaces/4/content/5734/file_7152_2022-08-23_00-00-04.mp4"
+              "specialty": "surgical",
+              "urgency": "routine",
+              "fileUrl": "5774_file_7192_2022-08-23_00-00-08.mp4"
             },
             {
               "id": "7432_file_7432_2022-10-20_18-12-34.mp4",
               "title": "Emergency Trauma Surgery - 10/20/2022",
               "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Emergency trauma surgery",
-              "fileUrl": "spaces/4/content/7432/file_7432_2022-10-20_18-12-34.mp4"
+              "specialty": "surgical",
+              "urgency": "routine",
+              "fileUrl": "7432_file_7432_2022-10-20_18-12-34.mp4"
             },
             {
-              "id": "5754_file_7172_2022-08-23_00-00-06.mp4",
-              "title": "Emergency Trauma Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Emergency trauma surgery",
-              "fileUrl": "spaces/4/content/5754/file_7172_2022-08-23_00-00-06.mp4"
-            },
-            {
-              "id": "6012_file_7432_2022-10-20_18-12-34.mp4",
-              "title": "Emergency Trauma Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Emergency trauma surgery",
-              "fileUrl": "spaces/4/content/6012/file_7432_2022-10-20_18-12-34.mp4"
-            },
-            {
-              "id": "6032_file_7452_2022-10-20_18-12-36.mp4",
-              "title": "Emergency Trauma Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Emergency trauma surgery",
-              "fileUrl": "spaces/4/content/6032/file_7452_2022-10-20_18-12-36.mp4"
-            },
-            {
-              "id": "7192_file_7192_2022-08-23_00-00-08.mp4",
-              "title": "Emergency Trauma Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Emergency trauma surgery",
-              "fileUrl": "spaces/4/content/7192/file_7192_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "5774_file_7192_2022-08-23_00-00-08.mp4",
-              "title": "Emergency Trauma Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Emergency trauma surgery",
-              "fileUrl": "spaces/4/content/5774/file_7192_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "7452_file_7452_2022-10-20_18-12-36.mp4",
-              "title": "Emergency Trauma Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Emergency trauma surgery",
-              "fileUrl": "spaces/4/content/7452/file_7452_2022-10-20_18-12-36.mp4"
+              "id": "10204_4-guideline-E-CPR-for-OHCA_August-2022.pdf",
+              "title": "E CPR for Ohca August 2022",
+              "type": "guideline",
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "10204_4-guideline-E-CPR-for-OHCA_August-2022.pdf"
             }
           ]
         },
         {
-          "id": "critical-access",
-          "title": "Critical Access",
-          "description": "Central line placement and tracheostomy procedures",
+          "id": "vascular-access",
+          "title": "Vascular Access",
+          "description": "Central line placement and vascular procedures",
           "items": [
             {
-              "id": "7166_file_7166_2022-08-23_00-00-06.mp4",
-              "title": "Tracheostomy Procedure - 8/23/2022",
+              "id": "6024_file_7444_2022-10-20_18-12-35.mp4",
+              "title": "ECMO Decannulation - 10/20/2022",
               "type": "video",
-              "specialty": "unknown",
-              "complexity": "complex",
-              "procedure": "Tracheostomy procedure",
-              "fileUrl": "spaces/4/content/7166/file_7166_2022-08-23_00-00-06.mp4"
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "6024_file_7444_2022-10-20_18-12-35.mp4"
             },
             {
-              "id": "5945_file_5945_2021-11-30_16-00-08.mp4",
-              "title": "Central Line Placement - 11/30/2021",
+              "id": "5766_file_7184_2022-08-23_00-00-07.mp4",
+              "title": "ECMO Decannulation - 8/23/2022",
               "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Central line placement",
-              "fileUrl": "spaces/4/content/5945/file_5945_2021-11-30_16-00-08.mp4"
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "5766_file_7184_2022-08-23_00-00-07.mp4"
             },
             {
-              "id": "7165_file_7165_2022-08-23_00-00-06.mp4",
-              "title": "Central Line Placement - 8/23/2022",
+              "id": "7163_file_7163_2022-08-23_00-00-05.mp4",
+              "title": "ECMO Cannulation - 8/23/2022",
               "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Central line placement",
-              "fileUrl": "spaces/4/content/7165/file_7165_2022-08-23_00-00-06.mp4"
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "7163_file_7163_2022-08-23_00-00-05.mp4"
             },
             {
-              "id": "4708_file_5945_2021-11-30_16-00-08.mp4",
-              "title": "Central Line Placement - 11/30/2021",
+              "id": "7191_file_7191_2022-08-23_00-00-08.mp4",
+              "title": "Vascular Access Surgery - 8/23/2022",
               "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Central line placement",
-              "fileUrl": "spaces/4/content/4708/file_5945_2021-11-30_16-00-08.mp4"
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "7191_file_7191_2022-08-23_00-00-08.mp4"
             },
             {
-              "id": "6025_file_7445_2022-10-20_18-12-35.mp4",
-              "title": "Central Line Placement - 10/20/2022",
+              "id": "6011_file_7431_2022-10-20_18-12-34.mp4",
+              "title": "Vascular Access Surgery - 10/20/2022",
               "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Central line placement",
-              "fileUrl": "spaces/4/content/6025/file_7445_2022-10-20_18-12-35.mp4"
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "6011_file_7431_2022-10-20_18-12-34.mp4"
             },
             {
-              "id": "5768_file_7186_2022-08-23_00-00-08.mp4",
-              "title": "Tracheostomy Procedure - 8/23/2022",
+              "id": "6023_file_7443_2022-10-20_18-12-35.mp4",
+              "title": "ECMO Cannulation - 10/20/2022",
               "type": "video",
-              "specialty": "unknown",
-              "complexity": "complex",
-              "procedure": "Tracheostomy procedure",
-              "fileUrl": "spaces/4/content/5768/file_7186_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "7445_file_7445_2022-10-20_18-12-35.mp4",
-              "title": "Central Line Placement - 10/20/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Central line placement",
-              "fileUrl": "spaces/4/content/7445/file_7445_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "7185_file_7185_2022-08-23_00-00-07.mp4",
-              "title": "Central Line Placement - 8/23/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Central line placement",
-              "fileUrl": "spaces/4/content/7185/file_7185_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "7186_file_7186_2022-08-23_00-00-08.mp4",
-              "title": "Tracheostomy Procedure - 8/23/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "complex",
-              "procedure": "Tracheostomy procedure",
-              "fileUrl": "spaces/4/content/7186/file_7186_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "5747_file_7165_2022-08-23_00-00-06.mp4",
-              "title": "Central Line Placement - 8/23/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Central line placement",
-              "fileUrl": "spaces/4/content/5747/file_7165_2022-08-23_00-00-06.mp4"
-            },
-            {
-              "id": "5767_file_7185_2022-08-23_00-00-07.mp4",
-              "title": "Central Line Placement - 8/23/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Central line placement",
-              "fileUrl": "spaces/4/content/5767/file_7185_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "5748_file_7166_2022-08-23_00-00-06.mp4",
-              "title": "Tracheostomy Procedure - 8/23/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "complex",
-              "procedure": "Tracheostomy procedure",
-              "fileUrl": "spaces/4/content/5748/file_7166_2022-08-23_00-00-06.mp4"
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "6023_file_7443_2022-10-20_18-12-35.mp4"
             }
           ]
         }
@@ -343,7 +181,7 @@
       "color": "#7c3aed",
       "description": "General and specialized surgical procedures",
       "priority": "high",
-      "content_count": 44,
+      "content_count": 40,
       "collections": [
         {
           "id": "general-surgery",
@@ -351,166 +189,60 @@
           "description": "Appendectomy, cholecystectomy, hernia repair",
           "items": [
             {
-              "id": "7440_file_7440_2022-10-20_18-12-35.mp4",
-              "title": "Appendectomy Procedure - 10/20/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Appendectomy procedure",
-              "fileUrl": "spaces/4/content/7440/file_7440_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "7180_file_7180_2022-08-23_00-00-07.mp4",
-              "title": "Appendectomy Procedure - 8/23/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Appendectomy procedure",
-              "fileUrl": "spaces/4/content/7180/file_7180_2022-08-23_00-00-07.mp4"
-            },
-            {
               "id": "7181_file_7181_2022-08-23_00-00-07.mp4",
               "title": "Cholecystectomy Surgery - 8/23/2022",
               "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Cholecystectomy surgery",
-              "fileUrl": "spaces/4/content/7181/file_7181_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "7441_file_7441_2022-10-20_18-12-35.mp4",
-              "title": "Cholecystectomy Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Cholecystectomy surgery",
-              "fileUrl": "spaces/4/content/7441/file_7441_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "7182_file_7182_2022-08-23_00-00-07.mp4",
-              "title": "Hernia Repair Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Hernia repair surgery",
-              "fileUrl": "spaces/4/content/7182/file_7182_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "7442_file_7442_2022-10-20_18-12-35.mp4",
-              "title": "Hernia Repair Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Hernia repair surgery",
-              "fileUrl": "spaces/4/content/7442/file_7442_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "5764_file_7182_2022-08-23_00-00-07.mp4",
-              "title": "Hernia Repair Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Hernia repair surgery",
-              "fileUrl": "spaces/4/content/5764/file_7182_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "6020_file_7440_2022-10-20_18-12-35.mp4",
-              "title": "Appendectomy Procedure - 10/20/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Appendectomy procedure",
-              "fileUrl": "spaces/4/content/6020/file_7440_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "6021_file_7441_2022-10-20_18-12-35.mp4",
-              "title": "Cholecystectomy Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Cholecystectomy surgery",
-              "fileUrl": "spaces/4/content/6021/file_7441_2022-10-20_18-12-35.mp4"
+              "specialty": "gastrointestinal",
+              "urgency": "routine",
+              "fileUrl": "7181_file_7181_2022-08-23_00-00-07.mp4"
             },
             {
               "id": "5742_file_7160_2022-08-23_00-00-05.mp4",
               "title": "Appendectomy Procedure - 8/23/2022",
               "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Appendectomy procedure",
-              "fileUrl": "spaces/4/content/5742/file_7160_2022-08-23_00-00-05.mp4"
-            },
-            {
-              "id": "5743_file_7161_2022-08-23_00-00-05.mp4",
-              "title": "Cholecystectomy Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Cholecystectomy surgery",
-              "fileUrl": "spaces/4/content/5743/file_7161_2022-08-23_00-00-05.mp4"
-            },
-            {
-              "id": "6022_file_7442_2022-10-20_18-12-35.mp4",
-              "title": "Hernia Repair Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Hernia repair surgery",
-              "fileUrl": "spaces/4/content/6022/file_7442_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "5744_file_7162_2022-08-23_00-00-05.mp4",
-              "title": "Hernia Repair Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Hernia repair surgery",
-              "fileUrl": "spaces/4/content/5744/file_7162_2022-08-23_00-00-05.mp4"
-            },
-            {
-              "id": "5762_file_7180_2022-08-23_00-00-07.mp4",
-              "title": "Appendectomy Procedure - 8/23/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Appendectomy procedure",
-              "fileUrl": "spaces/4/content/5762/file_7180_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "5763_file_7181_2022-08-23_00-00-07.mp4",
-              "title": "Cholecystectomy Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Cholecystectomy surgery",
-              "fileUrl": "spaces/4/content/5763/file_7181_2022-08-23_00-00-07.mp4"
+              "specialty": "gastrointestinal",
+              "urgency": "routine",
+              "fileUrl": "5742_file_7160_2022-08-23_00-00-05.mp4"
             },
             {
               "id": "7162_file_7162_2022-08-23_00-00-05.mp4",
               "title": "Hernia Repair Surgery - 8/23/2022",
               "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Hernia repair surgery",
-              "fileUrl": "spaces/4/content/7162/file_7162_2022-08-23_00-00-05.mp4"
+              "specialty": "surgical",
+              "urgency": "routine",
+              "fileUrl": "7162_file_7162_2022-08-23_00-00-05.mp4"
             },
             {
-              "id": "7161_file_7161_2022-08-23_00-00-05.mp4",
-              "title": "Cholecystectomy Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Cholecystectomy surgery",
-              "fileUrl": "spaces/4/content/7161/file_7161_2022-08-23_00-00-05.mp4"
+              "id": "11199_4-guideline-Early-Discharge-Appendectomy--EDAP-.pdf",
+              "title": "Early Discharge Appendectomy EDAP",
+              "type": "guideline",
+              "specialty": "gastrointestinal",
+              "urgency": "routine",
+              "fileUrl": "11199_4-guideline-Early-Discharge-Appendectomy--EDAP-.pdf"
             },
             {
-              "id": "7160_file_7160_2022-08-23_00-00-05.mp4",
-              "title": "Appendectomy Procedure - 8/23/2022",
+              "id": "6020_file_7440_2022-10-20_18-12-35.mp4",
+              "title": "Appendectomy Procedure - 10/20/2022",
               "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Appendectomy procedure",
-              "fileUrl": "spaces/4/content/7160/file_7160_2022-08-23_00-00-05.mp4"
+              "specialty": "gastrointestinal",
+              "urgency": "routine",
+              "fileUrl": "6020_file_7440_2022-10-20_18-12-35.mp4"
+            },
+            {
+              "id": "6021_file_7441_2022-10-20_18-12-35.mp4",
+              "title": "Cholecystectomy Surgery - 10/20/2022",
+              "type": "video",
+              "specialty": "gastrointestinal",
+              "urgency": "routine",
+              "fileUrl": "6021_file_7441_2022-10-20_18-12-35.mp4"
+            },
+            {
+              "id": "7442_file_7442_2022-10-20_18-12-35.mp4",
+              "title": "Hernia Repair Surgery - 10/20/2022",
+              "type": "video",
+              "specialty": "surgical",
+              "urgency": "routine",
+              "fileUrl": "7442_file_7442_2022-10-20_18-12-35.mp4"
             }
           ]
         },
@@ -520,245 +252,275 @@
           "description": "Laparoscopic and thoracoscopic procedures",
           "items": [
             {
-              "id": "7189_file_7189_2022-08-23_00-00-08.mp4",
-              "title": "Laparoscopic Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "complex",
-              "procedure": "Laparoscopic surgery",
-              "fileUrl": "spaces/4/content/7189/file_7189_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "5772_file_7190_2022-08-23_00-00-08.mp4",
-              "title": "Thoracoscopic Procedure - 8/23/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Thoracoscopic procedure",
-              "fileUrl": "spaces/4/content/5772/file_7190_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "6029_file_7449_2022-10-20_18-12-36.mp4",
+              "id": "7429_file_7429_2022-10-20_18-12-34.mp4",
               "title": "Laparoscopic Surgery - 10/20/2022",
               "type": "video",
-              "specialty": "surgery",
-              "complexity": "complex",
-              "procedure": "Laparoscopic surgery",
-              "fileUrl": "spaces/4/content/6029/file_7449_2022-10-20_18-12-36.mp4"
-            },
-            {
-              "id": "6010_file_7430_2022-10-20_18-12-34.mp4",
-              "title": "Thoracoscopic Procedure - 10/20/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Thoracoscopic procedure",
-              "fileUrl": "spaces/4/content/6010/file_7430_2022-10-20_18-12-34.mp4"
-            },
-            {
-              "id": "5751_file_7169_2022-08-23_00-00-06.mp4",
-              "title": "Laparoscopic Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "complex",
-              "procedure": "Laparoscopic surgery",
-              "fileUrl": "spaces/4/content/5751/file_7169_2022-08-23_00-00-06.mp4"
+              "specialty": "surgical",
+              "urgency": "routine",
+              "fileUrl": "7429_file_7429_2022-10-20_18-12-34.mp4"
             },
             {
               "id": "6509_file_6509_2022-03-24_16-00-08.mp4",
               "title": "Laparoscopic Surgery - 3/24/2022",
               "type": "video",
-              "specialty": "surgery",
-              "complexity": "complex",
-              "procedure": "Laparoscopic surgery",
-              "fileUrl": "spaces/4/content/6509/file_6509_2022-03-24_16-00-08.mp4"
-            },
-            {
-              "id": "5262_file_6509_2022-03-24_16-00-08.mp4",
-              "title": "Laparoscopic Surgery - 3/24/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "complex",
-              "procedure": "Laparoscopic surgery",
-              "fileUrl": "spaces/4/content/5262/file_6509_2022-03-24_16-00-08.mp4"
-            },
-            {
-              "id": "7430_file_7430_2022-10-20_18-12-34.mp4",
-              "title": "Thoracoscopic Procedure - 10/20/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Thoracoscopic procedure",
-              "fileUrl": "spaces/4/content/7430/file_7430_2022-10-20_18-12-34.mp4"
-            },
-            {
-              "id": "7449_file_7449_2022-10-20_18-12-36.mp4",
-              "title": "Laparoscopic Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "complex",
-              "procedure": "Laparoscopic surgery",
-              "fileUrl": "spaces/4/content/7449/file_7449_2022-10-20_18-12-36.mp4"
+              "specialty": "surgical",
+              "urgency": "routine",
+              "fileUrl": "6509_file_6509_2022-03-24_16-00-08.mp4"
             },
             {
               "id": "7169_file_7169_2022-08-23_00-00-06.mp4",
               "title": "Laparoscopic Surgery - 8/23/2022",
               "type": "video",
-              "specialty": "surgery",
-              "complexity": "complex",
-              "procedure": "Laparoscopic surgery",
-              "fileUrl": "spaces/4/content/7169/file_7169_2022-08-23_00-00-06.mp4"
+              "specialty": "surgical",
+              "urgency": "routine",
+              "fileUrl": "7169_file_7169_2022-08-23_00-00-06.mp4"
             },
             {
               "id": "7190_file_7190_2022-08-23_00-00-08.mp4",
               "title": "Thoracoscopic Procedure - 8/23/2022",
               "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Thoracoscopic procedure",
-              "fileUrl": "spaces/4/content/7190/file_7190_2022-08-23_00-00-08.mp4"
+              "specialty": "surgical",
+              "urgency": "routine",
+              "fileUrl": "7190_file_7190_2022-08-23_00-00-08.mp4"
             },
             {
               "id": "6030_file_7450_2022-10-20_18-12-36.mp4",
               "title": "Thoracoscopic Procedure - 10/20/2022",
               "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Thoracoscopic procedure",
-              "fileUrl": "spaces/4/content/6030/file_7450_2022-10-20_18-12-36.mp4"
-            },
-            {
-              "id": "6009_file_7429_2022-10-20_18-12-34.mp4",
-              "title": "Laparoscopic Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "complex",
-              "procedure": "Laparoscopic surgery",
-              "fileUrl": "spaces/4/content/6009/file_7429_2022-10-20_18-12-34.mp4"
-            },
-            {
-              "id": "5771_file_7189_2022-08-23_00-00-08.mp4",
-              "title": "Laparoscopic Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "complex",
-              "procedure": "Laparoscopic surgery",
-              "fileUrl": "spaces/4/content/5771/file_7189_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "7429_file_7429_2022-10-20_18-12-34.mp4",
-              "title": "Laparoscopic Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "complex",
-              "procedure": "Laparoscopic surgery",
-              "fileUrl": "spaces/4/content/7429/file_7429_2022-10-20_18-12-34.mp4"
-            },
-            {
-              "id": "7450_file_7450_2022-10-20_18-12-36.mp4",
-              "title": "Thoracoscopic Procedure - 10/20/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Thoracoscopic procedure",
-              "fileUrl": "spaces/4/content/7450/file_7450_2022-10-20_18-12-36.mp4"
+              "specialty": "surgical",
+              "urgency": "routine",
+              "fileUrl": "6030_file_7450_2022-10-20_18-12-36.mp4"
             }
           ]
         },
         {
           "id": "specialized-surgery",
           "title": "Specialized Surgery",
-          "description": "Intestinal resection and complex procedures",
+          "description": "Complex surgical procedures",
           "items": [
             {
-              "id": "7188_file_7188_2022-08-23_00-00-08.mp4",
-              "title": "Intestinal Resection - 8/23/2022",
+              "id": "6013_file_7433_2022-10-20_18-12-34.mp4",
+              "title": "Pediatric Surgery - 10/20/2022",
               "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Intestinal resection",
-              "fileUrl": "spaces/4/content/7188/file_7188_2022-08-23_00-00-08.mp4"
+              "specialty": "pediatric",
+              "urgency": "routine",
+              "fileUrl": "6013_file_7433_2022-10-20_18-12-34.mp4"
             },
             {
-              "id": "6028_file_7448_2022-10-20_18-12-36.mp4",
-              "title": "Intestinal Resection - 10/20/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Intestinal resection",
-              "fileUrl": "spaces/4/content/6028/file_7448_2022-10-20_18-12-36.mp4"
+              "id": "5429_4-document-Pediatric-Surgery-Case-Requirements.pdf",
+              "title": "Pediatric Surgery Case Requirements",
+              "type": "document",
+              "specialty": "pediatric",
+              "urgency": "routine",
+              "fileUrl": "5429_4-document-Pediatric-Surgery-Case-Requirements.pdf"
             },
             {
-              "id": "5750_file_7168_2022-08-23_00-00-06.mp4",
-              "title": "Intestinal Resection - 8/23/2022",
+              "id": "5758_file_7176_2022-08-23_00-00-07.mp4",
+              "title": "Pulmonary Surgery - 8/23/2022",
               "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Intestinal resection",
-              "fileUrl": "spaces/4/content/5750/file_7168_2022-08-23_00-00-06.mp4"
+              "specialty": "respiratory",
+              "urgency": "routine",
+              "fileUrl": "5758_file_7176_2022-08-23_00-00-07.mp4"
             },
             {
-              "id": "7448_file_7448_2022-10-20_18-12-36.mp4",
-              "title": "Intestinal Resection - 10/20/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Intestinal resection",
-              "fileUrl": "spaces/4/content/7448/file_7448_2022-10-20_18-12-36.mp4"
+              "id": "8025_4-guideline-titre_eligibility_checklist_15feb2023.pdf",
+              "title": "Titre Eligibility Checklist 15feb2023",
+              "type": "guideline",
+              "specialty": "gastrointestinal",
+              "urgency": "routine",
+              "fileUrl": "8025_4-guideline-titre_eligibility_checklist_15feb2023.pdf"
             },
             {
-              "id": "7168_file_7168_2022-08-23_00-00-06.mp4",
-              "title": "Intestinal Resection - 8/23/2022",
+              "id": "6019_file_7439_2022-10-20_18-12-35.mp4",
+              "title": "Orthopedic Surgery - 10/20/2022",
               "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Intestinal resection",
-              "fileUrl": "spaces/4/content/7168/file_7168_2022-08-23_00-00-06.mp4"
+              "specialty": "orthopedic",
+              "urgency": "routine",
+              "fileUrl": "6019_file_7439_2022-10-20_18-12-35.mp4"
             },
             {
-              "id": "4671_file_5908_2021-11-23_16-00-13.mp4",
-              "title": "Intestinal Resection - 11/23/2021",
+              "id": "7173_file_7173_2022-08-23_00-00-07.mp4",
+              "title": "Pediatric Surgery - 8/23/2022",
               "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Intestinal resection",
-              "fileUrl": "spaces/4/content/4671/file_5908_2021-11-23_16-00-13.mp4"
+              "specialty": "pediatric",
+              "urgency": "routine",
+              "fileUrl": "7173_file_7173_2022-08-23_00-00-07.mp4"
             },
             {
-              "id": "6008_file_7428_2022-10-20_18-12-34.mp4",
-              "title": "Intestinal Resection - 10/20/2022",
+              "id": "7437_file_7437_2022-10-20_18-12-35.mp4",
+              "title": "Gastrointestinal Surgery - 10/20/2022",
               "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Intestinal resection",
-              "fileUrl": "spaces/4/content/6008/file_7428_2022-10-20_18-12-34.mp4"
+              "specialty": "gastrointestinal",
+              "urgency": "routine",
+              "fileUrl": "7437_file_7437_2022-10-20_18-12-35.mp4"
             },
             {
-              "id": "7428_file_7428_2022-10-20_18-12-34.mp4",
-              "title": "Intestinal Resection - 10/20/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Intestinal resection",
-              "fileUrl": "spaces/4/content/7428/file_7428_2022-10-20_18-12-34.mp4"
+              "id": "4220_4-guideline-1-Colorectal-Surgery-SSI-Protocol.pdf",
+              "title": "Colorectal Surgery Ssi Protocol",
+              "type": "guideline",
+              "specialty": "surgical",
+              "urgency": "routine",
+              "fileUrl": "4220_4-guideline-1-Colorectal-Surgery-SSI-Protocol.pdf"
             },
             {
-              "id": "5770_file_7188_2022-08-23_00-00-08.mp4",
-              "title": "Intestinal Resection - 8/23/2022",
+              "id": "7199_file_7199_2022-08-23_00-00-08.mp4",
+              "title": "Orthopedic Surgery - 8/23/2022",
               "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Intestinal resection",
-              "fileUrl": "spaces/4/content/5770/file_7188_2022-08-23_00-00-08.mp4"
+              "specialty": "orthopedic",
+              "urgency": "routine",
+              "fileUrl": "7199_file_7199_2022-08-23_00-00-08.mp4"
             },
             {
-              "id": "5908_file_5908_2021-11-23_16-00-13.mp4",
-              "title": "Intestinal Resection - 11/23/2021",
+              "id": "7512_4-guideline-Surgical-Watcher-8x10-(3-\u00d7-4.5-in).pdf",
+              "title": "Surgical Watcher 8x10 (3 \u00d7 4",
+              "type": "guideline",
+              "specialty": "gastrointestinal",
+              "urgency": "routine",
+              "fileUrl": "7512_4-guideline-Surgical-Watcher-8x10-(3-\u00d7-4.5-in).pdf"
+            },
+            {
+              "id": "6034_file_7454_2022-10-20_18-12-36.mp4",
+              "title": "Neonatal Surgery - 10/20/2022",
               "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Intestinal resection",
-              "fileUrl": "spaces/4/content/5908/file_5908_2021-11-23_16-00-13.mp4"
+              "specialty": "neonatal",
+              "urgency": "routine",
+              "fileUrl": "6034_file_7454_2022-10-20_18-12-36.mp4"
+            },
+            {
+              "id": "5430_4-document-Pediatric_Surgery_Mapping.pdf",
+              "title": "Pediatric Surgery Mapping",
+              "type": "document",
+              "specialty": "pediatric",
+              "urgency": "routine",
+              "fileUrl": "5430_4-document-Pediatric_Surgery_Mapping.pdf"
+            },
+            {
+              "id": "7154_file_7154_2022-08-23_00-00-04.mp4",
+              "title": "Neonatal Surgery - 8/23/2022",
+              "type": "video",
+              "specialty": "neonatal",
+              "urgency": "routine",
+              "fileUrl": "7154_file_7154_2022-08-23_00-00-04.mp4"
+            },
+            {
+              "id": "5760_file_7178_2022-08-23_00-00-07.mp4",
+              "title": "Urological Surgery - 8/23/2022",
+              "type": "video",
+              "specialty": "gastrointestinal",
+              "urgency": "routine",
+              "fileUrl": "5760_file_7178_2022-08-23_00-00-07.mp4"
+            },
+            {
+              "id": "5734_file_7152_2022-08-23_00-00-04.mp4",
+              "title": "Emergency Trauma Surgery - 8/23/2022",
+              "type": "video",
+              "specialty": "surgical",
+              "urgency": "routine",
+              "fileUrl": "5734_file_7152_2022-08-23_00-00-04.mp4"
+            },
+            {
+              "id": "5768_file_7186_2022-08-23_00-00-08.mp4",
+              "title": "Tracheostomy Procedure - 8/23/2022",
+              "type": "video",
+              "specialty": "surgical",
+              "urgency": "routine",
+              "fileUrl": "5768_file_7186_2022-08-23_00-00-08.mp4"
+            },
+            {
+              "id": "6012_file_7432_2022-10-20_18-12-34.mp4",
+              "title": "Emergency Trauma Surgery - 10/20/2022",
+              "type": "video",
+              "specialty": "surgical",
+              "urgency": "routine",
+              "fileUrl": "6012_file_7432_2022-10-20_18-12-34.mp4"
+            },
+            {
+              "id": "5777_file_7195_2022-08-23_00-00-08.mp4",
+              "title": "Cardiac Surgery - 8/23/2022",
+              "type": "video",
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "5777_file_7195_2022-08-23_00-00-08.mp4"
+            },
+            {
+              "id": "7431_file_7431_2022-10-20_18-12-34.mp4",
+              "title": "Vascular Access Surgery - 10/20/2022",
+              "type": "video",
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "7431_file_7431_2022-10-20_18-12-34.mp4"
+            },
+            {
+              "id": "5452_4-guideline-20-TPIAT-and-Pancreatic-Surgery-Vaccination-Guideline---May-2021.pdf",
+              "title": "Tpiat and Pancreatic Surgery Vaccination Guideline May 2021",
+              "type": "guideline",
+              "specialty": "surgical",
+              "urgency": "routine",
+              "fileUrl": "5452_4-guideline-20-TPIAT-and-Pancreatic-Surgery-Vaccination-Guideline---May-2021.pdf"
+            },
+            {
+              "id": "5759_file_7177_2022-08-23_00-00-07.mp4",
+              "title": "Gastrointestinal Surgery - 8/23/2022",
+              "type": "video",
+              "specialty": "gastrointestinal",
+              "urgency": "routine",
+              "fileUrl": "5759_file_7177_2022-08-23_00-00-07.mp4"
+            },
+            {
+              "id": "5431_4-document-Pediatric_Surgery_Tracked-Codes.pdf",
+              "title": "Pediatric Surgery Tracked Codes",
+              "type": "document",
+              "specialty": "pediatric",
+              "urgency": "routine",
+              "fileUrl": "5431_4-document-Pediatric_Surgery_Tracked-Codes.pdf"
+            },
+            {
+              "id": "7436_file_7436_2022-10-20_18-12-35.mp4",
+              "title": "Pulmonary Surgery - 10/20/2022",
+              "type": "video",
+              "specialty": "respiratory",
+              "urgency": "routine",
+              "fileUrl": "7436_file_7436_2022-10-20_18-12-35.mp4"
+            },
+            {
+              "id": "6015_file_7435_2022-10-20_18-12-35.mp4",
+              "title": "Cardiac Surgery - 10/20/2022",
+              "type": "video",
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "6015_file_7435_2022-10-20_18-12-35.mp4"
+            },
+            {
+              "id": "7191_file_7191_2022-08-23_00-00-08.mp4",
+              "title": "Vascular Access Surgery - 8/23/2022",
+              "type": "video",
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "7191_file_7191_2022-08-23_00-00-08.mp4"
+            },
+            {
+              "id": "5456_4-guideline-2-Colorectal-Surgery-SSI-Protocol-Checklist.pdf",
+              "title": "Colorectal Surgery Ssi Protocol Checklist",
+              "type": "guideline",
+              "specialty": "surgical",
+              "urgency": "routine",
+              "fileUrl": "5456_4-guideline-2-Colorectal-Surgery-SSI-Protocol-Checklist.pdf"
+            },
+            {
+              "id": "7458_file_7458_2022-10-20_18-12-36.mp4",
+              "title": "Urological Surgery - 10/20/2022",
+              "type": "video",
+              "specialty": "gastrointestinal",
+              "urgency": "routine",
+              "fileUrl": "7458_file_7458_2022-10-20_18-12-36.mp4"
+            },
+            {
+              "id": "8645_4-guideline-6-Antibiotic-Stewardship-and-Surgical-Abx-Prophylaxis.pdf",
+              "title": "Antibiotic Stewardship and Surgical Abx Prophylaxis",
+              "type": "guideline",
+              "specialty": "gastrointestinal",
+              "urgency": "routine",
+              "fileUrl": "8645_4-guideline-6-Antibiotic-Stewardship-and-Surgical-Abx-Prophylaxis.pdf"
             }
           ]
         }
@@ -770,7 +532,7 @@
       "color": "#059669",
       "description": "Specialized care for newborns and children",
       "priority": "high",
-      "content_count": 32,
+      "content_count": 10,
       "collections": [
         {
           "id": "neonatal-surgery",
@@ -778,76 +540,28 @@
           "description": "Surgical procedures for newborns",
           "items": [
             {
-              "id": "5776_file_7194_2022-08-23_00-00-08.mp4",
-              "title": "Neonatal Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "neonatal",
-              "complexity": "moderate",
-              "procedure": "Neonatal surgery",
-              "fileUrl": "spaces/4/content/5776/file_7194_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "7154_file_7154_2022-08-23_00-00-04.mp4",
-              "title": "Neonatal Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "neonatal",
-              "complexity": "moderate",
-              "procedure": "Neonatal surgery",
-              "fileUrl": "spaces/4/content/7154/file_7154_2022-08-23_00-00-04.mp4"
-            },
-            {
-              "id": "7174_file_7174_2022-08-23_00-00-07.mp4",
-              "title": "Neonatal Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "neonatal",
-              "complexity": "moderate",
-              "procedure": "Neonatal surgery",
-              "fileUrl": "spaces/4/content/7174/file_7174_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "7454_file_7454_2022-10-20_18-12-36.mp4",
-              "title": "Neonatal Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "neonatal",
-              "complexity": "moderate",
-              "procedure": "Neonatal surgery",
-              "fileUrl": "spaces/4/content/7454/file_7454_2022-10-20_18-12-36.mp4"
-            },
-            {
               "id": "5736_file_7154_2022-08-23_00-00-04.mp4",
               "title": "Neonatal Surgery - 8/23/2022",
               "type": "video",
               "specialty": "neonatal",
-              "complexity": "moderate",
-              "procedure": "Neonatal surgery",
-              "fileUrl": "spaces/4/content/5736/file_7154_2022-08-23_00-00-04.mp4"
+              "urgency": "routine",
+              "fileUrl": "5736_file_7154_2022-08-23_00-00-04.mp4"
             },
             {
               "id": "6034_file_7454_2022-10-20_18-12-36.mp4",
               "title": "Neonatal Surgery - 10/20/2022",
               "type": "video",
               "specialty": "neonatal",
-              "complexity": "moderate",
-              "procedure": "Neonatal surgery",
-              "fileUrl": "spaces/4/content/6034/file_7454_2022-10-20_18-12-36.mp4"
+              "urgency": "routine",
+              "fileUrl": "6034_file_7454_2022-10-20_18-12-36.mp4"
             },
             {
-              "id": "7194_file_7194_2022-08-23_00-00-08.mp4",
-              "title": "Neonatal Surgery - 8/23/2022",
-              "type": "video",
+              "id": "5397_4-guideline-8-Neonatal-Bilious-Emesis-Guideline.pdf",
+              "title": "Neonatal Bilious Emesis Guideline",
+              "type": "guideline",
               "specialty": "neonatal",
-              "complexity": "moderate",
-              "procedure": "Neonatal surgery",
-              "fileUrl": "spaces/4/content/7194/file_7194_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "5756_file_7174_2022-08-23_00-00-07.mp4",
-              "title": "Neonatal Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "neonatal",
-              "complexity": "moderate",
-              "procedure": "Neonatal surgery",
-              "fileUrl": "spaces/4/content/5756/file_7174_2022-08-23_00-00-07.mp4"
+              "urgency": "routine",
+              "fileUrl": "5397_4-guideline-8-Neonatal-Bilious-Emesis-Guideline.pdf"
             }
           ]
         },
@@ -857,630 +571,78 @@
           "description": "Surgical procedures for children",
           "items": [
             {
-              "id": "7153_file_7153_2022-08-23_00-00-04.mp4",
-              "title": "Pediatric Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "pediatric",
-              "complexity": "moderate",
-              "procedure": "Pediatric surgery",
-              "fileUrl": "spaces/4/content/7153/file_7153_2022-08-23_00-00-04.mp4"
-            },
-            {
-              "id": "5735_file_7153_2022-08-23_00-00-04.mp4",
-              "title": "Pediatric Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "pediatric",
-              "complexity": "moderate",
-              "procedure": "Pediatric surgery",
-              "fileUrl": "spaces/4/content/5735/file_7153_2022-08-23_00-00-04.mp4"
-            },
-            {
-              "id": "7173_file_7173_2022-08-23_00-00-07.mp4",
-              "title": "Pediatric Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "pediatric",
-              "complexity": "moderate",
-              "procedure": "Pediatric surgery",
-              "fileUrl": "spaces/4/content/7173/file_7173_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "7433_file_7433_2022-10-20_18-12-34.mp4",
-              "title": "Pediatric Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "pediatric",
-              "complexity": "moderate",
-              "procedure": "Pediatric surgery",
-              "fileUrl": "spaces/4/content/7433/file_7433_2022-10-20_18-12-34.mp4"
-            },
-            {
               "id": "6013_file_7433_2022-10-20_18-12-34.mp4",
               "title": "Pediatric Surgery - 10/20/2022",
               "type": "video",
               "specialty": "pediatric",
-              "complexity": "moderate",
-              "procedure": "Pediatric surgery",
-              "fileUrl": "spaces/4/content/6013/file_7433_2022-10-20_18-12-34.mp4"
-            },
-            {
-              "id": "5755_file_7173_2022-08-23_00-00-07.mp4",
-              "title": "Pediatric Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "pediatric",
-              "complexity": "moderate",
-              "procedure": "Pediatric surgery",
-              "fileUrl": "spaces/4/content/5755/file_7173_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "6033_file_7453_2022-10-20_18-12-36.mp4",
-              "title": "Pediatric Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "pediatric",
-              "complexity": "moderate",
-              "procedure": "Pediatric surgery",
-              "fileUrl": "spaces/4/content/6033/file_7453_2022-10-20_18-12-36.mp4"
-            },
-            {
-              "id": "7193_file_7193_2022-08-23_00-00-08.mp4",
-              "title": "Pediatric Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "pediatric",
-              "complexity": "moderate",
-              "procedure": "Pediatric surgery",
-              "fileUrl": "spaces/4/content/7193/file_7193_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "7453_file_7453_2022-10-20_18-12-36.mp4",
-              "title": "Pediatric Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "pediatric",
-              "complexity": "moderate",
-              "procedure": "Pediatric surgery",
-              "fileUrl": "spaces/4/content/7453/file_7453_2022-10-20_18-12-36.mp4"
-            },
-            {
-              "id": "5775_file_7193_2022-08-23_00-00-08.mp4",
-              "title": "Pediatric Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "pediatric",
-              "complexity": "moderate",
-              "procedure": "Pediatric surgery",
-              "fileUrl": "spaces/4/content/5775/file_7193_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "5431_4-document-Pediatric_Surgery_Tracked-Codes.pdf",
-              "title": "Pediatric Surgery Tracked Codes",
-              "type": "document",
-              "specialty": "pediatric",
-              "complexity": "unknown",
-              "procedure": "Pediatric surgery",
-              "fileUrl": "spaces/4/content/5431/4-document-Pediatric_Surgery_Tracked-Codes.pdf"
-            },
-            {
-              "id": "5430_4-document-Pediatric_Surgery_Mapping.pdf",
-              "title": "Pediatric Surgery Mapping",
-              "type": "document",
-              "specialty": "pediatric",
-              "complexity": "unknown",
-              "procedure": "Pediatric surgery",
-              "fileUrl": "spaces/4/content/5430/4-document-Pediatric_Surgery_Mapping.pdf"
-            },
-            {
-              "id": "4195_4-document-Pediatric-Surgery-Case-Requirements.pdf",
-              "title": "Pediatric Surgery Case Requirements",
-              "type": "document",
-              "specialty": "pediatric",
-              "complexity": "unknown",
-              "procedure": "Pediatric surgery",
-              "fileUrl": "spaces/4/content/4195/4-document-Pediatric-Surgery-Case-Requirements.pdf"
-            },
-            {
-              "id": "4196_4-document-Pediatric_Surgery_Mapping.pdf",
-              "title": "Pediatric Surgery Mapping",
-              "type": "document",
-              "specialty": "pediatric",
-              "complexity": "unknown",
-              "procedure": "Pediatric surgery",
-              "fileUrl": "spaces/4/content/4196/4-document-Pediatric_Surgery_Mapping.pdf"
-            },
-            {
-              "id": "4197_4-document-Pediatric_Surgery_Tracked-Codes.pdf",
-              "title": "Pediatric Surgery Tracked Codes",
-              "type": "document",
-              "specialty": "pediatric",
-              "complexity": "unknown",
-              "procedure": "Pediatric surgery",
-              "fileUrl": "spaces/4/content/4197/4-document-Pediatric_Surgery_Tracked-Codes.pdf"
+              "urgency": "routine",
+              "fileUrl": "6013_file_7433_2022-10-20_18-12-34.mp4"
             },
             {
               "id": "5429_4-document-Pediatric-Surgery-Case-Requirements.pdf",
               "title": "Pediatric Surgery Case Requirements",
               "type": "document",
               "specialty": "pediatric",
-              "complexity": "unknown",
-              "procedure": "Pediatric surgery",
-              "fileUrl": "spaces/4/content/5429/4-document-Pediatric-Surgery-Case-Requirements.pdf"
+              "urgency": "routine",
+              "fileUrl": "5429_4-document-Pediatric-Surgery-Case-Requirements.pdf"
+            },
+            {
+              "id": "5431_4-document-Pediatric_Surgery_Tracked-Codes.pdf",
+              "title": "Pediatric Surgery Tracked Codes",
+              "type": "document",
+              "specialty": "pediatric",
+              "urgency": "routine",
+              "fileUrl": "5431_4-document-Pediatric_Surgery_Tracked-Codes.pdf"
+            },
+            {
+              "id": "7193_file_7193_2022-08-23_00-00-08.mp4",
+              "title": "Pediatric Surgery - 8/23/2022",
+              "type": "video",
+              "specialty": "pediatric",
+              "urgency": "routine",
+              "fileUrl": "7193_file_7193_2022-08-23_00-00-08.mp4"
+            },
+            {
+              "id": "7323_4-guideline-1688-Pediatric-Dosing-Guide.pdf",
+              "title": "Pediatric Dosing Guide",
+              "type": "guideline",
+              "specialty": "pediatric",
+              "urgency": "routine",
+              "fileUrl": "7323_4-guideline-1688-Pediatric-Dosing-Guide.pdf"
+            },
+            {
+              "id": "5430_4-document-Pediatric_Surgery_Mapping.pdf",
+              "title": "Pediatric Surgery Mapping",
+              "type": "document",
+              "specialty": "pediatric",
+              "urgency": "routine",
+              "fileUrl": "5430_4-document-Pediatric_Surgery_Mapping.pdf"
+            },
+            {
+              "id": "4203_4-guideline-2-ERAS-Pediatric-Oncology-Protocol.pdf",
+              "title": "Eras Pediatric Oncology Protocol",
+              "type": "guideline",
+              "specialty": "pediatric",
+              "urgency": "routine",
+              "fileUrl": "4203_4-guideline-2-ERAS-Pediatric-Oncology-Protocol.pdf"
             }
           ]
         },
         {
-          "id": "pediatric-procedures",
-          "title": "Pediatric Procedures",
-          "description": "Gastrostomy tube placement and other procedures",
-          "items": [
-            {
-              "id": "7167_file_7167_2022-08-23_00-00-06.mp4",
-              "title": "Gastrostomy Tube Placement - 8/23/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Gastrostomy tube placement",
-              "fileUrl": "spaces/4/content/7167/file_7167_2022-08-23_00-00-06.mp4"
-            },
-            {
-              "id": "6027_file_7447_2022-10-20_18-12-35.mp4",
-              "title": "Gastrostomy Tube Placement - 10/20/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Gastrostomy tube placement",
-              "fileUrl": "spaces/4/content/6027/file_7447_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "5769_file_7187_2022-08-23_00-00-08.mp4",
-              "title": "Gastrostomy Tube Placement - 8/23/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Gastrostomy tube placement",
-              "fileUrl": "spaces/4/content/5769/file_7187_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "7447_file_7447_2022-10-20_18-12-35.mp4",
-              "title": "Gastrostomy Tube Placement - 10/20/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Gastrostomy tube placement",
-              "fileUrl": "spaces/4/content/7447/file_7447_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "6007_file_7427_2022-10-20_18-12-34.mp4",
-              "title": "Gastrostomy Tube Placement - 10/20/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Gastrostomy tube placement",
-              "fileUrl": "spaces/4/content/6007/file_7427_2022-10-20_18-12-34.mp4"
-            },
-            {
-              "id": "7427_file_7427_2022-10-20_18-12-34.mp4",
-              "title": "Gastrostomy Tube Placement - 10/20/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Gastrostomy tube placement",
-              "fileUrl": "spaces/4/content/7427/file_7427_2022-10-20_18-12-34.mp4"
-            },
-            {
-              "id": "7187_file_7187_2022-08-23_00-00-08.mp4",
-              "title": "Gastrostomy Tube Placement - 8/23/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Gastrostomy tube placement",
-              "fileUrl": "spaces/4/content/7187/file_7187_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "5749_file_7167_2022-08-23_00-00-06.mp4",
-              "title": "Gastrostomy Tube Placement - 8/23/2022",
-              "type": "video",
-              "specialty": "unknown",
-              "complexity": "moderate",
-              "procedure": "Gastrostomy tube placement",
-              "fileUrl": "spaces/4/content/5749/file_7167_2022-08-23_00-00-06.mp4"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "specialty-surgery",
-      "title": "\ud83c\udfe5 Specialty Surgery",
-      "color": "#0891b2",
-      "description": "Specialized surgical procedures by organ system",
-      "priority": "medium",
-      "content_count": 40,
-      "collections": [
-        {
-          "id": "cardiothoracic",
-          "title": "Cardiothoracic Surgery",
-          "description": "Cardiac and pulmonary surgical procedures",
-          "items": [
-            {
-              "id": "7435_file_7435_2022-10-20_18-12-35.mp4",
-              "title": "Cardiac Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Cardiac surgery",
-              "fileUrl": "spaces/4/content/7435/file_7435_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "6016_file_7436_2022-10-20_18-12-35.mp4",
-              "title": "Pulmonary Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Pulmonary surgery",
-              "fileUrl": "spaces/4/content/6016/file_7436_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "5778_file_7196_2022-08-23_00-00-08.mp4",
-              "title": "Pulmonary Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Pulmonary surgery",
-              "fileUrl": "spaces/4/content/5778/file_7196_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "7436_file_7436_2022-10-20_18-12-35.mp4",
-              "title": "Pulmonary Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Pulmonary surgery",
-              "fileUrl": "spaces/4/content/7436/file_7436_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "6015_file_7435_2022-10-20_18-12-35.mp4",
-              "title": "Cardiac Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Cardiac surgery",
-              "fileUrl": "spaces/4/content/6015/file_7435_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "7155_file_7155_2022-08-23_00-00-05.mp4",
-              "title": "Cardiac Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Cardiac surgery",
-              "fileUrl": "spaces/4/content/7155/file_7155_2022-08-23_00-00-05.mp4"
-            },
-            {
-              "id": "7176_file_7176_2022-08-23_00-00-07.mp4",
-              "title": "Pulmonary Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Pulmonary surgery",
-              "fileUrl": "spaces/4/content/7176/file_7176_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "5777_file_7195_2022-08-23_00-00-08.mp4",
-              "title": "Cardiac Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Cardiac surgery",
-              "fileUrl": "spaces/4/content/5777/file_7195_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "7156_file_7156_2022-08-23_00-00-05.mp4",
-              "title": "Pulmonary Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Pulmonary surgery",
-              "fileUrl": "spaces/4/content/7156/file_7156_2022-08-23_00-00-05.mp4"
-            },
-            {
-              "id": "7455_file_7455_2022-10-20_18-12-36.mp4",
-              "title": "Cardiac Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Cardiac surgery",
-              "fileUrl": "spaces/4/content/7455/file_7455_2022-10-20_18-12-36.mp4"
-            },
-            {
-              "id": "5737_file_7155_2022-08-23_00-00-05.mp4",
-              "title": "Cardiac Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Cardiac surgery",
-              "fileUrl": "spaces/4/content/5737/file_7155_2022-08-23_00-00-05.mp4"
-            },
-            {
-              "id": "7456_file_7456_2022-10-20_18-12-36.mp4",
-              "title": "Pulmonary Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Pulmonary surgery",
-              "fileUrl": "spaces/4/content/7456/file_7456_2022-10-20_18-12-36.mp4"
-            },
-            {
-              "id": "5758_file_7176_2022-08-23_00-00-07.mp4",
-              "title": "Pulmonary Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Pulmonary surgery",
-              "fileUrl": "spaces/4/content/5758/file_7176_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "6035_file_7455_2022-10-20_18-12-36.mp4",
-              "title": "Cardiac Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Cardiac surgery",
-              "fileUrl": "spaces/4/content/6035/file_7455_2022-10-20_18-12-36.mp4"
-            },
-            {
-              "id": "7196_file_7196_2022-08-23_00-00-08.mp4",
-              "title": "Pulmonary Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Pulmonary surgery",
-              "fileUrl": "spaces/4/content/7196/file_7196_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "6036_file_7456_2022-10-20_18-12-36.mp4",
-              "title": "Pulmonary Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Pulmonary surgery",
-              "fileUrl": "spaces/4/content/6036/file_7456_2022-10-20_18-12-36.mp4"
-            },
-            {
-              "id": "5738_file_7156_2022-08-23_00-00-05.mp4",
-              "title": "Pulmonary Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Pulmonary surgery",
-              "fileUrl": "spaces/4/content/5738/file_7156_2022-08-23_00-00-05.mp4"
-            },
-            {
-              "id": "7195_file_7195_2022-08-23_00-00-08.mp4",
-              "title": "Cardiac Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Cardiac surgery",
-              "fileUrl": "spaces/4/content/7195/file_7195_2022-08-23_00-00-08.mp4"
-            }
-          ]
-        },
-        {
-          "id": "gastrointestinal",
-          "title": "Gastrointestinal Surgery",
-          "description": "GI surgical procedures",
-          "items": [
-            {
-              "id": "6017_file_7437_2022-10-20_18-12-35.mp4",
-              "title": "Gastrointestinal Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Gastrointestinal surgery",
-              "fileUrl": "spaces/4/content/6017/file_7437_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "7437_file_7437_2022-10-20_18-12-35.mp4",
-              "title": "Gastrointestinal Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Gastrointestinal surgery",
-              "fileUrl": "spaces/4/content/7437/file_7437_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "7177_file_7177_2022-08-23_00-00-07.mp4",
-              "title": "Gastrointestinal Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Gastrointestinal surgery",
-              "fileUrl": "spaces/4/content/7177/file_7177_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "5759_file_7177_2022-08-23_00-00-07.mp4",
-              "title": "Gastrointestinal Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Gastrointestinal surgery",
-              "fileUrl": "spaces/4/content/5759/file_7177_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "7457_file_7457_2022-10-20_18-12-36.mp4",
-              "title": "Gastrointestinal Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Gastrointestinal surgery",
-              "fileUrl": "spaces/4/content/7457/file_7457_2022-10-20_18-12-36.mp4"
-            },
-            {
-              "id": "6037_file_7457_2022-10-20_18-12-36.mp4",
-              "title": "Gastrointestinal Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Gastrointestinal surgery",
-              "fileUrl": "spaces/4/content/6037/file_7457_2022-10-20_18-12-36.mp4"
-            }
-          ]
-        },
-        {
-          "id": "urological-orthopedic",
-          "title": "Urological & Orthopedic",
-          "description": "Urological and orthopedic surgical procedures",
-          "items": [
-            {
-              "id": "5740_file_7158_2022-08-23_00-00-05.mp4",
-              "title": "Urological Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Urological surgery",
-              "fileUrl": "spaces/4/content/5740/file_7158_2022-08-23_00-00-05.mp4"
-            },
-            {
-              "id": "5741_file_7159_2022-08-23_00-00-05.mp4",
-              "title": "Orthopedic Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Orthopedic surgery",
-              "fileUrl": "spaces/4/content/5741/file_7159_2022-08-23_00-00-05.mp4"
-            },
-            {
-              "id": "5761_file_7179_2022-08-23_00-00-07.mp4",
-              "title": "Orthopedic Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Orthopedic surgery",
-              "fileUrl": "spaces/4/content/5761/file_7179_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "7458_file_7458_2022-10-20_18-12-36.mp4",
-              "title": "Urological Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Urological surgery",
-              "fileUrl": "spaces/4/content/7458/file_7458_2022-10-20_18-12-36.mp4"
-            },
-            {
-              "id": "5760_file_7178_2022-08-23_00-00-07.mp4",
-              "title": "Urological Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Urological surgery",
-              "fileUrl": "spaces/4/content/5760/file_7178_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "7199_file_7199_2022-08-23_00-00-08.mp4",
-              "title": "Orthopedic Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Orthopedic surgery",
-              "fileUrl": "spaces/4/content/7199/file_7199_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "7198_file_7198_2022-08-23_00-00-08.mp4",
-              "title": "Urological Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Urological surgery",
-              "fileUrl": "spaces/4/content/7198/file_7198_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "6038_file_7458_2022-10-20_18-12-36.mp4",
-              "title": "Urological Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Urological surgery",
-              "fileUrl": "spaces/4/content/6038/file_7458_2022-10-20_18-12-36.mp4"
-            },
-            {
-              "id": "6019_file_7439_2022-10-20_18-12-35.mp4",
-              "title": "Orthopedic Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Orthopedic surgery",
-              "fileUrl": "spaces/4/content/6019/file_7439_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "5781_file_7199_2022-08-23_00-00-08.mp4",
-              "title": "Orthopedic Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Orthopedic surgery",
-              "fileUrl": "spaces/4/content/5781/file_7199_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "7439_file_7439_2022-10-20_18-12-35.mp4",
-              "title": "Orthopedic Surgery - 10/20/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Orthopedic surgery",
-              "fileUrl": "spaces/4/content/7439/file_7439_2022-10-20_18-12-35.mp4"
-            },
-            {
-              "id": "5780_file_7198_2022-08-23_00-00-08.mp4",
-              "title": "Urological Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Urological surgery",
-              "fileUrl": "spaces/4/content/5780/file_7198_2022-08-23_00-00-08.mp4"
-            },
-            {
-              "id": "7179_file_7179_2022-08-23_00-00-07.mp4",
-              "title": "Orthopedic Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Orthopedic surgery",
-              "fileUrl": "spaces/4/content/7179/file_7179_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "7178_file_7178_2022-08-23_00-00-07.mp4",
-              "title": "Urological Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Urological surgery",
-              "fileUrl": "spaces/4/content/7178/file_7178_2022-08-23_00-00-07.mp4"
-            },
-            {
-              "id": "7158_file_7158_2022-08-23_00-00-05.mp4",
-              "title": "Urological Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Urological surgery",
-              "fileUrl": "spaces/4/content/7158/file_7158_2022-08-23_00-00-05.mp4"
-            },
-            {
-              "id": "7159_file_7159_2022-08-23_00-00-05.mp4",
-              "title": "Orthopedic Surgery - 8/23/2022",
-              "type": "video",
-              "specialty": "surgery",
-              "complexity": "moderate",
-              "procedure": "Orthopedic surgery",
-              "fileUrl": "spaces/4/content/7159/file_7159_2022-08-23_00-00-05.mp4"
-            }
-          ]
+          "id": "feeding-nutrition",
+          "title": "Feeding & Nutrition",
+          "description": "Gastrostomy and feeding procedures",
+          "items": []
         }
       ]
     },
     {
       "id": "clinical-guidelines",
       "title": "\ud83d\udccb Clinical Guidelines & Protocols",
-      "color": "#6b7280",
-      "description": "Clinical guidelines, protocols, and best practices",
+      "color": "#0891b2",
+      "description": "Clinical protocols and evidence-based guidelines",
       "priority": "high",
-      "content_count": 163,
+      "content_count": 85,
       "collections": [
         {
           "id": "critical-care-guidelines",
@@ -1491,81 +653,49 @@
               "id": "8661_4-guideline-E-CPR-for-OHCA_August-2022.pdf",
               "title": "E CPR for Ohca August 2022",
               "type": "guideline",
-              "specialty": "unknown",
+              "specialty": "cardiovascular",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/8661/4-guideline-E-CPR-for-OHCA_August-2022.pdf"
+              "fileUrl": "8661_4-guideline-E-CPR-for-OHCA_August-2022.pdf"
             },
             {
               "id": "5731_4-guideline-Checklists-for-ECMO-Clamping-Trial.pdf",
               "title": "Checklists for ECMO Clamping Trial",
               "type": "guideline",
-              "specialty": "ecmo",
+              "specialty": "cardiovascular",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/5731/4-guideline-Checklists-for-ECMO-Clamping-Trial.pdf"
-            },
-            {
-              "id": "10204_4-guideline-E-CPR-for-OHCA_August-2022.pdf",
-              "title": "E CPR for Ohca August 2022",
-              "type": "guideline",
-              "specialty": "unknown",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/10204/4-guideline-E-CPR-for-OHCA_August-2022.pdf"
+              "fileUrl": "5731_4-guideline-Checklists-for-ECMO-Clamping-Trial.pdf"
             },
             {
               "id": "8854_4-guideline-CDH-ECMO-Protocol-073124.pdf",
               "title": "CDH ECMO Protocol 073124",
               "type": "guideline",
-              "specialty": "ecmo",
+              "specialty": "cardiovascular",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/8854/4-guideline-CDH-ECMO-Protocol-073124.pdf"
-            },
-            {
-              "id": "10405_4-guideline-CDH-ECMO-Protocol-073124.pdf",
-              "title": "CDH ECMO Protocol 073124",
-              "type": "guideline",
-              "specialty": "ecmo",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/10405/4-guideline-CDH-ECMO-Protocol-073124.pdf"
-            },
-            {
-              "id": "7149_4-guideline-Checklists-for-ECMO-Clamping-Trial.pdf",
-              "title": "Checklists for ECMO Clamping Trial",
-              "type": "guideline",
-              "specialty": "ecmo",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/7149/4-guideline-Checklists-for-ECMO-Clamping-Trial.pdf"
+              "fileUrl": "8854_4-guideline-CDH-ECMO-Protocol-073124.pdf"
             },
             {
               "id": "8854_4-guideline-CDH-ECMO-Protocol-4.3.25.pdf",
               "title": "CDH ECMO Protocol 4",
               "type": "guideline",
-              "specialty": "ecmo",
+              "specialty": "cardiovascular",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/8854/4-guideline-CDH-ECMO-Protocol-4.3.25.pdf"
+              "fileUrl": "8854_4-guideline-CDH-ECMO-Protocol-4.3.25.pdf"
             },
             {
               "id": "8227_4-guideline-CCHMC_SepsisAlgorithm.pdf",
               "title": "Cchmc Sepsisalgorithm",
               "type": "guideline",
-              "specialty": "unknown",
+              "specialty": "infectious_disease",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/8227/4-guideline-CCHMC_SepsisAlgorithm.pdf"
+              "fileUrl": "8227_4-guideline-CCHMC_SepsisAlgorithm.pdf"
             },
             {
               "id": "10571_4-guideline-gas-and-flow-initiation-ECMO-protocol.pdf",
               "title": "Gas and Flow Initiation ECMO Protocol",
               "type": "guideline",
-              "specialty": "ecmo",
+              "specialty": "cardiovascular",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/10571/4-guideline-gas-and-flow-initiation-ECMO-protocol.pdf"
-            },
-            {
-              "id": "6776_4-guideline-CCHMC_SepsisAlgorithm.pdf",
-              "title": "Cchmc Sepsisalgorithm",
-              "type": "guideline",
-              "specialty": "unknown",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/6776/4-guideline-CCHMC_SepsisAlgorithm.pdf"
+              "fileUrl": "10571_4-guideline-gas-and-flow-initiation-ECMO-protocol.pdf"
             }
           ]
         },
@@ -1578,113 +708,57 @@
               "id": "9639_4-guideline-Early-Discharge-Appendectomy--EDAP-.pdf",
               "title": "Early Discharge Appendectomy EDAP",
               "type": "guideline",
-              "specialty": "unknown",
+              "specialty": "gastrointestinal",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/9639/4-guideline-Early-Discharge-Appendectomy--EDAP-.pdf"
+              "fileUrl": "9639_4-guideline-Early-Discharge-Appendectomy--EDAP-.pdf"
             },
             {
               "id": "10188_4-guideline-6-Antibiotic-Stewardship-and-Surgical-Abx-Prophylaxis.pdf",
               "title": "Antibiotic Stewardship and Surgical Abx Prophylaxis",
               "type": "guideline",
-              "specialty": "surgery",
+              "specialty": "gastrointestinal",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/10188/4-guideline-6-Antibiotic-Stewardship-and-Surgical-Abx-Prophylaxis.pdf"
+              "fileUrl": "10188_4-guideline-6-Antibiotic-Stewardship-and-Surgical-Abx-Prophylaxis.pdf"
             },
             {
               "id": "4220_4-guideline-1-Colorectal-Surgery-SSI-Protocol.pdf",
               "title": "Colorectal Surgery Ssi Protocol",
               "type": "guideline",
-              "specialty": "surgery",
+              "specialty": "surgical",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/4220/4-guideline-1-Colorectal-Surgery-SSI-Protocol.pdf"
+              "fileUrl": "4220_4-guideline-1-Colorectal-Surgery-SSI-Protocol.pdf"
             },
             {
               "id": "5414_4-guideline-3-Dosing-for-Operative-Antibiotic-Prophylaxis.pdf",
               "title": "Dosing for Operative Antibiotic Prophylaxis",
               "type": "guideline",
-              "specialty": "unknown",
+              "specialty": "infectious_disease",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/5414/4-guideline-3-Dosing-for-Operative-Antibiotic-Prophylaxis.pdf"
+              "fileUrl": "5414_4-guideline-3-Dosing-for-Operative-Antibiotic-Prophylaxis.pdf"
             },
             {
               "id": "5456_4-guideline-2-Colorectal-Surgery-SSI-Protocol-Checklist.pdf",
               "title": "Colorectal Surgery Ssi Protocol Checklist",
               "type": "guideline",
-              "specialty": "surgery",
+              "specialty": "surgical",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/5456/4-guideline-2-Colorectal-Surgery-SSI-Protocol-Checklist.pdf"
-            },
-            {
-              "id": "8645_4-guideline-6-Antibiotic-Stewardship-and-Surgical-Abx-Prophylaxis.pdf",
-              "title": "Antibiotic Stewardship and Surgical Abx Prophylaxis",
-              "type": "guideline",
-              "specialty": "surgery",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/8645/4-guideline-6-Antibiotic-Stewardship-and-Surgical-Abx-Prophylaxis.pdf"
+              "fileUrl": "5456_4-guideline-2-Colorectal-Surgery-SSI-Protocol-Checklist.pdf"
             },
             {
               "id": "5452_4-guideline-20-TPIAT-and-Pancreatic-Surgery-Vaccination-Guideline---May-2021.pdf",
               "title": "Tpiat and Pancreatic Surgery Vaccination Guideline May 2021",
               "type": "guideline",
-              "specialty": "surgery",
+              "specialty": "surgical",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/5452/4-guideline-20-TPIAT-and-Pancreatic-Surgery-Vaccination-Guideline---May-2021.pdf"
-            },
-            {
-              "id": "5455_4-guideline-1-Colorectal-Surgery-SSI-Protocol.pdf",
-              "title": "Colorectal Surgery Ssi Protocol",
-              "type": "guideline",
-              "specialty": "surgery",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/5455/4-guideline-1-Colorectal-Surgery-SSI-Protocol.pdf"
+              "fileUrl": "5452_4-guideline-20-TPIAT-and-Pancreatic-Surgery-Vaccination-Guideline---May-2021.pdf"
             },
             {
               "id": "7512_4-guideline-Surgical-Watcher-8x10-(3-\u00d7-4.5-in).pdf",
               "title": "Surgical Watcher 8x10 (3 \u00d7 4",
               "type": "guideline",
-              "specialty": "surgery",
+              "specialty": "gastrointestinal",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/7512/4-guideline-Surgical-Watcher-8x10-(3-\u00d7-4.5-in).pdf"
-            },
-            {
-              "id": "11199_4-guideline-Early-Discharge-Appendectomy--EDAP-.pdf",
-              "title": "Early Discharge Appendectomy EDAP",
-              "type": "guideline",
-              "specialty": "unknown",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/11199/4-guideline-Early-Discharge-Appendectomy--EDAP-.pdf"
-            },
-            {
-              "id": "4221_4-guideline-2-Colorectal-Surgery-SSI-Protocol-Checklist.pdf",
-              "title": "Colorectal Surgery Ssi Protocol Checklist",
-              "type": "guideline",
-              "specialty": "surgery",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/4221/4-guideline-2-Colorectal-Surgery-SSI-Protocol-Checklist.pdf"
-            },
-            {
-              "id": "6092_4-guideline-Surgical-Watcher-8x10-(3-\u00d7-4.5-in).pdf",
-              "title": "Surgical Watcher 8x10 (3 \u00d7 4",
-              "type": "guideline",
-              "specialty": "surgery",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/6092/4-guideline-Surgical-Watcher-8x10-(3-\u00d7-4.5-in).pdf"
-            },
-            {
-              "id": "4217_4-guideline-20-TPIAT-and-Pancreatic-Surgery-Vaccination-Guideline---May-2021.pdf",
-              "title": "Tpiat and Pancreatic Surgery Vaccination Guideline May 2021",
-              "type": "guideline",
-              "specialty": "surgery",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/4217/4-guideline-20-TPIAT-and-Pancreatic-Surgery-Vaccination-Guideline---May-2021.pdf"
-            },
-            {
-              "id": "4182_4-guideline-3-Dosing-for-Operative-Antibiotic-Prophylaxis.pdf",
-              "title": "Dosing for Operative Antibiotic Prophylaxis",
-              "type": "guideline",
-              "specialty": "unknown",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/4182/4-guideline-3-Dosing-for-Operative-Antibiotic-Prophylaxis.pdf"
+              "fileUrl": "7512_4-guideline-Surgical-Watcher-8x10-(3-\u00d7-4.5-in).pdf"
             }
           ]
         },
@@ -1697,17 +771,25 @@
               "id": "10502_4-guideline-NICU-Dosing-Guide---122021.pdf",
               "title": "Dosing Guide 122021",
               "type": "guideline",
-              "specialty": "neonatal",
+              "specialty": "general",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/10502/4-guideline-NICU-Dosing-Guide---122021.pdf"
+              "fileUrl": "10502_4-guideline-NICU-Dosing-Guide---122021.pdf"
             },
             {
               "id": "6607_4-guideline-Bivalirudin-Dosing-and-Monitoring-Guideline-Final-June-2022--4-.pdf",
               "title": "Bivalirudin Dosing and Monitoring Guideline Final June 2022 4",
               "type": "guideline",
-              "specialty": "unknown",
+              "specialty": "general",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/6607/4-guideline-Bivalirudin-Dosing-and-Monitoring-Guideline-Final-June-2022--4-.pdf"
+              "fileUrl": "6607_4-guideline-Bivalirudin-Dosing-and-Monitoring-Guideline-Final-June-2022--4-.pdf"
+            },
+            {
+              "id": "5414_4-guideline-3-Dosing-for-Operative-Antibiotic-Prophylaxis.pdf",
+              "title": "Dosing for Operative Antibiotic Prophylaxis",
+              "type": "guideline",
+              "specialty": "infectious_disease",
+              "urgency": "routine",
+              "fileUrl": "5414_4-guideline-3-Dosing-for-Operative-Antibiotic-Prophylaxis.pdf"
             },
             {
               "id": "4165_4-guideline-8-Neonatal-Bilious-Emesis-Guideline.pdf",
@@ -1715,15 +797,7 @@
               "type": "guideline",
               "specialty": "neonatal",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/4165/4-guideline-8-Neonatal-Bilious-Emesis-Guideline.pdf"
-            },
-            {
-              "id": "8950_4-guideline-NICU-Dosing-Guide---122021.pdf",
-              "title": "Dosing Guide 122021",
-              "type": "guideline",
-              "specialty": "neonatal",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/8950/4-guideline-NICU-Dosing-Guide---122021.pdf"
+              "fileUrl": "4165_4-guideline-8-Neonatal-Bilious-Emesis-Guideline.pdf"
             },
             {
               "id": "7323_4-guideline-1688-Pediatric-Dosing-Guide.pdf",
@@ -1731,31 +805,7 @@
               "type": "guideline",
               "specialty": "pediatric",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/7323/4-guideline-1688-Pediatric-Dosing-Guide.pdf"
-            },
-            {
-              "id": "8033_4-guideline-Bivalirudin-Dosing-and-Monitoring-Guideline-Final-June-2022--4-.pdf",
-              "title": "Bivalirudin Dosing and Monitoring Guideline Final June 2022 4",
-              "type": "guideline",
-              "specialty": "unknown",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/8033/4-guideline-Bivalirudin-Dosing-and-Monitoring-Guideline-Final-June-2022--4-.pdf"
-            },
-            {
-              "id": "5904_4-guideline-1688-Pediatric-Dosing-Guide.pdf",
-              "title": "Pediatric Dosing Guide",
-              "type": "guideline",
-              "specialty": "pediatric",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/5904/4-guideline-1688-Pediatric-Dosing-Guide.pdf"
-            },
-            {
-              "id": "5397_4-guideline-8-Neonatal-Bilious-Emesis-Guideline.pdf",
-              "title": "Neonatal Bilious Emesis Guideline",
-              "type": "guideline",
-              "specialty": "neonatal",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/5397/4-guideline-8-Neonatal-Bilious-Emesis-Guideline.pdf"
+              "fileUrl": "7323_4-guideline-1688-Pediatric-Dosing-Guide.pdf"
             },
             {
               "id": "4203_4-guideline-2-ERAS-Pediatric-Oncology-Protocol.pdf",
@@ -1763,15 +813,542 @@
               "type": "guideline",
               "specialty": "pediatric",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/4203/4-guideline-2-ERAS-Pediatric-Oncology-Protocol.pdf"
+              "fileUrl": "4203_4-guideline-2-ERAS-Pediatric-Oncology-Protocol.pdf"
+            }
+          ]
+        },
+        {
+          "id": "general-guidelines",
+          "title": "General Guidelines",
+          "description": "Other clinical guidelines and protocols",
+          "items": [
+            {
+              "id": "4214_4-guideline-17-Pyloric-Stenosis-Post-Op.pdf",
+              "title": "Pyloric Stenosis Post Op",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4214_4-guideline-17-Pyloric-Stenosis-Post-Op.pdf"
             },
             {
-              "id": "5437_4-guideline-2-ERAS-Pediatric-Oncology-Protocol.pdf",
-              "title": "Eras Pediatric Oncology Protocol",
+              "id": "8949_4-guideline-NICU-DRIP-CHART---122021.pdf",
+              "title": "Drip Chart 122021",
               "type": "guideline",
-              "specialty": "pediatric",
+              "specialty": "general",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/5437/4-guideline-2-ERAS-Pediatric-Oncology-Protocol.pdf"
+              "fileUrl": "8949_4-guideline-NICU-DRIP-CHART---122021.pdf"
+            },
+            {
+              "id": "4181_4-guideline-2-CCHMC-SSI-Protocol.pdf",
+              "title": "Ssi Protocol",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4181_4-guideline-2-CCHMC-SSI-Protocol.pdf"
+            },
+            {
+              "id": "5396_4-guideline-MucousFistulaRefeeding_CCHMC-protocol-revised-v4-March-2022.pdf",
+              "title": "Mucousfistularefeeding Cchmc Protocol Revised V4 March 2022",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5396_4-guideline-MucousFistulaRefeeding_CCHMC-protocol-revised-v4-March-2022.pdf"
+            },
+            {
+              "id": "7324_4-guideline-CCHMC1688Button-Mapping.pdf",
+              "title": "Cchmc1688button Mapping",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "7324_4-guideline-CCHMC1688Button-Mapping.pdf"
+            },
+            {
+              "id": "4157_4-guideline-2-CVC-Removal-Guideline.pdf",
+              "title": "Cvc Removal Guideline",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4157_4-guideline-2-CVC-Removal-Guideline.pdf"
+            },
+            {
+              "id": "11201_4-guideline-EDAP-Process-Map.pdf",
+              "title": "EDAP Process Map",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "11201_4-guideline-EDAP-Process-Map.pdf"
+            },
+            {
+              "id": "5395_4-guideline-3-Gastroschisis-Feeding-Protocol-4.21.21-PDF.pdf",
+              "title": "Gastroschisis Feeding Protocol 4",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5395_4-guideline-3-Gastroschisis-Feeding-Protocol-4.21.21-PDF.pdf"
+            },
+            {
+              "id": "4730_4-guideline-Renal-Protection-for-Safe-Prescribing-of-Toradol-in-Appendectomies.pdf",
+              "title": "Renal Protection for Safe Prescribing of Toradol in Appendectomies",
+              "type": "guideline",
+              "specialty": "urological",
+              "urgency": "routine",
+              "fileUrl": "4730_4-guideline-Renal-Protection-for-Safe-Prescribing-of-Toradol-in-Appendectomies.pdf"
+            },
+            {
+              "id": "8032_4-guideline-ECMO-G-004-Anticoagulation-Guidelines_05122021_Final.pdf",
+              "title": "Anticoagulation Guidelines 05122021 Final",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "8032_4-guideline-ECMO-G-004-Anticoagulation-Guidelines_05122021_Final.pdf"
+            },
+            {
+              "id": "4187_4-guideline-8-Wound-Class.pdf",
+              "title": "Wound Class",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4187_4-guideline-8-Wound-Class.pdf"
+            },
+            {
+              "id": "4204_4-guideline-33-Gastrograffin-Protocol-v5.pdf",
+              "title": "Gastrograffin Protocol V5",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4204_4-guideline-33-Gastrograffin-Protocol-v5.pdf"
+            },
+            {
+              "id": "5394_4-guideline-2-G-Tube-Post-Op-Management.pdf",
+              "title": "Tube Post Op Management",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5394_4-guideline-2-G-Tube-Post-Op-Management.pdf"
+            },
+            {
+              "id": "5440_4-guideline-7-Inpatient-Post-TPIAT-Fever-Guideline.pdf",
+              "title": "Inpatient Post Tpiat Fever Guideline",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5440_4-guideline-7-Inpatient-Post-TPIAT-Fever-Guideline.pdf"
+            },
+            {
+              "id": "5419_4-guideline-7-VTE-guideline-v2.pdf",
+              "title": "Document 4-guideline-7-VTE-guideline-v2",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5419_4-guideline-7-VTE-guideline-v2.pdf"
+            },
+            {
+              "id": "8024_4-guideline-TITRE-one-pager.pdf",
+              "title": "Titre One Pager",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "8024_4-guideline-TITRE-one-pager.pdf"
+            },
+            {
+              "id": "4169_4-guideline-APSA-Germ-Cell-Tumors-Handbook.pdf",
+              "title": "APSA Germ Cell Tumors Handbook",
+              "type": "guideline",
+              "specialty": "oncology",
+              "urgency": "routine",
+              "fileUrl": "4169_4-guideline-APSA-Germ-Cell-Tumors-Handbook.pdf"
+            },
+            {
+              "id": "4213_4-guideline-16-Pre-TPIAT-staph-screen-guideline.pdf",
+              "title": "Pre Tpiat Staph Screen Guideline",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4213_4-guideline-16-Pre-TPIAT-staph-screen-guideline.pdf"
+            },
+            {
+              "id": "4175_4-guideline-COG-Liver-Tumor-Handbook.pdf",
+              "title": "COG Liver Tumor Handbook",
+              "type": "guideline",
+              "specialty": "oncology",
+              "urgency": "routine",
+              "fileUrl": "4175_4-guideline-COG-Liver-Tumor-Handbook.pdf"
+            },
+            {
+              "id": "10477_4-guideline-Spontaneous-Pneumothorax-v1-May-2025.pdf",
+              "title": "Spontaneous Pneumothorax V1 May 2025",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "10477_4-guideline-Spontaneous-Pneumothorax-v1-May-2025.pdf"
+            },
+            {
+              "id": "6599_4-guideline-titre_eligibility_checklist_15feb2023.pdf",
+              "title": "Titre Eligibility Checklist 15feb2023",
+              "type": "guideline",
+              "specialty": "gastrointestinal",
+              "urgency": "routine",
+              "fileUrl": "6599_4-guideline-titre_eligibility_checklist_15feb2023.pdf"
+            },
+            {
+              "id": "5390_4-guideline-3-Drug-Extravasation-Risk-and-Line-Guideline-for-Nephrology-Patients.pdf",
+              "title": "Drug Extravasation Risk and Line Guideline for Nephrology Patients",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5390_4-guideline-3-Drug-Extravasation-Risk-and-Line-Guideline-for-Nephrology-Patients.pdf"
+            },
+            {
+              "id": "6960_4-guideline-ECMO-Management-of-CDH-Patients.pdf",
+              "title": "Management of CDH Patients",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "6960_4-guideline-ECMO-Management-of-CDH-Patients.pdf"
+            },
+            {
+              "id": "4211_4-guideline-11-Perforated-Appendicitis-Guideline-v5.pdf",
+              "title": "Perforated Appendicitis Guideline V5",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4211_4-guideline-11-Perforated-Appendicitis-Guideline-v5.pdf"
+            },
+            {
+              "id": "4223_4-guideline-7-Rectal-Irrigations-Instructions.pdf",
+              "title": "Rectal Irrigations Instructions",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4223_4-guideline-7-Rectal-Irrigations-Instructions.pdf"
+            },
+            {
+              "id": "5402_4-guideline-APSA-Liver-Tumors-Handbook.pdf",
+              "title": "APSA Liver Tumors Handbook",
+              "type": "guideline",
+              "specialty": "oncology",
+              "urgency": "routine",
+              "fileUrl": "5402_4-guideline-APSA-Liver-Tumors-Handbook.pdf"
+            },
+            {
+              "id": "4161_4-guideline-1-Gtube-Evaluation-Guideline.pdf",
+              "title": "Gtube Evaluation Guideline",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4161_4-guideline-1-Gtube-Evaluation-Guideline.pdf"
+            },
+            {
+              "id": "5424_4-guideline-3-TPA-Administration-Guidelines.pdf",
+              "title": "Tpa Administration Guidelines",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5424_4-guideline-3-TPA-Administration-Guidelines.pdf"
+            },
+            {
+              "id": "5423_4-guideline-2-PectusExcavatumPathway-v2.pdf",
+              "title": "Pectusexcavatumpathway V2",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5423_4-guideline-2-PectusExcavatumPathway-v2.pdf"
+            },
+            {
+              "id": "4209_4-guideline-13-Outpatient-Post-TPIAT-Fever-Guideline.pdf",
+              "title": "Outpatient Post Tpiat Fever Guideline",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4209_4-guideline-13-Outpatient-Post-TPIAT-Fever-Guideline.pdf"
+            },
+            {
+              "id": "5457_4-guideline-3-Hirschprung's-Associated-Enterocolitis-(HAEC)-Treatment.pdf",
+              "title": "Hirschprung's Associated Enterocolitis (haec) Treatment",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5457_4-guideline-3-Hirschprung's-Associated-Enterocolitis-(HAEC)-Treatment.pdf"
+            },
+            {
+              "id": "5412_4-guideline-1-Blood-Conservation-and-Bloodless-Alternative-Guidelines-(for-Jehovah's-Witness-Patients).pdf",
+              "title": "Blood Conservation and Bloodless Alternative Guidelines (for Jehovah's Witness Patients)",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5412_4-guideline-1-Blood-Conservation-and-Bloodless-Alternative-Guidelines-(for-Jehovah's-Witness-Patients).pdf"
+            },
+            {
+              "id": "9362_4-guideline-PCPinsurance-PP-FInal-Draft-2.pdf",
+              "title": "Pcpinsurance Pp Final Draft 2",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "9362_4-guideline-PCPinsurance-PP-FInal-Draft-2.pdf"
+            },
+            {
+              "id": "5416_4-guideline-4-Infant-Anesthesia-Guidelines.pdf",
+              "title": "Infant Anesthesia Guidelines",
+              "type": "guideline",
+              "specialty": "neonatal",
+              "urgency": "routine",
+              "fileUrl": "5416_4-guideline-4-Infant-Anesthesia-Guidelines.pdf"
+            },
+            {
+              "id": "5411_4-guideline-COG-Rhabdomyosarcoma-Handbook.pdf",
+              "title": "COG Rhabdomyosarcoma Handbook",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5411_4-guideline-COG-Rhabdomyosarcoma-Handbook.pdf"
+            },
+            {
+              "id": "5730_4-guideline-ECMO-Clamping-Trial-Requirements.pdf",
+              "title": "Clamping Trial Requirements",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5730_4-guideline-ECMO-Clamping-Trial-Requirements.pdf"
+            },
+            {
+              "id": "6605_4-guideline-Unit-Cannulation-Prep-Job-Aid.pdf",
+              "title": "Unit Cannulation Prep Job Aid",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "6605_4-guideline-Unit-Cannulation-Prep-Job-Aid.pdf"
+            },
+            {
+              "id": "4205_4-guideline-10-Kasai-Post-Operative-Guideline.pdf",
+              "title": "Kasai Post Operative Guideline",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4205_4-guideline-10-Kasai-Post-Operative-Guideline.pdf"
+            },
+            {
+              "id": "4208_4-guideline-11-Non-Operative-Appendicitis-Management-v1.pdf",
+              "title": "Non Operative Appendicitis Management V1",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4208_4-guideline-11-Non-Operative-Appendicitis-Management-v1.pdf"
+            },
+            {
+              "id": "5445_4-guideline-10-Non-Perforated-Appendicitis-Guideline-v5.pdf",
+              "title": "Non Perforated Appendicitis Guideline V5",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5445_4-guideline-10-Non-Perforated-Appendicitis-Guideline-v5.pdf"
+            },
+            {
+              "id": "4178_4-guideline-COG-RenalTumorsHandbook.pdf",
+              "title": "COG Renaltumorshandbook",
+              "type": "guideline",
+              "specialty": "urological",
+              "urgency": "routine",
+              "fileUrl": "4178_4-guideline-COG-RenalTumorsHandbook.pdf"
+            },
+            {
+              "id": "4201_4-guideline-1-Asplenia-prophylaxis-v3.pdf",
+              "title": "Asplenia Prophylaxis V3",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4201_4-guideline-1-Asplenia-prophylaxis-v3.pdf"
+            },
+            {
+              "id": "4172_4-guideline-APSA-Renal-Tumors-Handbook.pdf",
+              "title": "APSA Renal Tumors Handbook",
+              "type": "guideline",
+              "specialty": "urological",
+              "urgency": "routine",
+              "fileUrl": "4172_4-guideline-APSA-Renal-Tumors-Handbook.pdf"
+            },
+            {
+              "id": "4168_4-guideline-1-MWPSC-Ovarian.pdf",
+              "title": "MWPSC Ovarian",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4168_4-guideline-1-MWPSC-Ovarian.pdf"
+            },
+            {
+              "id": "5300_4-guideline-Electronic-device-guideline.pdf",
+              "title": "Electronic Device Guideline",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5300_4-guideline-Electronic-device-guideline.pdf"
+            },
+            {
+              "id": "4166_4-guideline-9-NICU-Pre-Op-Stoma-Closure-Guideline-v5.pdf",
+              "title": "Pre Op Stoma Closure Guideline V5",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4166_4-guideline-9-NICU-Pre-Op-Stoma-Closure-Guideline-v5.pdf"
+            },
+            {
+              "id": "4177_4-guideline-COG-Osteosarcoma-Handbook.pdf",
+              "title": "COG Osteosarcoma Handbook",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4177_4-guideline-COG-Osteosarcoma-Handbook.pdf"
+            },
+            {
+              "id": "4219_4-guideline-FINAL-2024-TPIAT-Pathway.pdf",
+              "title": "Final 2024 Tpiat Pathway",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4219_4-guideline-FINAL-2024-TPIAT-Pathway.pdf"
+            },
+            {
+              "id": "5451_4-guideline-19-TPIAT-admission-job-aid.pdf",
+              "title": "Tpiat Admission Job Aid",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5451_4-guideline-19-TPIAT-admission-job-aid.pdf"
+            },
+            {
+              "id": "5453_4-guideline-21-TPIAT-JIT-sheet.pdf",
+              "title": "Tpiat Jit Sheet",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5453_4-guideline-21-TPIAT-JIT-sheet.pdf"
+            },
+            {
+              "id": "8037_4-guideline-ROTEM-Pocket-Guide_WW_060718.pdf",
+              "title": "Rotem Pocket Guide Ww 060718",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "8037_4-guideline-ROTEM-Pocket-Guide_WW_060718.pdf"
+            },
+            {
+              "id": "5447_4-guideline-15-Post-TPIAT-Hydrea-Guideline.pdf",
+              "title": "Post Tpiat Hydrea Guideline",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5447_4-guideline-15-Post-TPIAT-Hydrea-Guideline.pdf"
+            },
+            {
+              "id": "5406_4-guideline-COG-Germ-Cell-Tumor-handbook-Updated-2017.pdf",
+              "title": "COG Germ Cell Tumor Handbook Updated 2017",
+              "type": "guideline",
+              "specialty": "oncology",
+              "urgency": "routine",
+              "fileUrl": "5406_4-guideline-COG-Germ-Cell-Tumor-handbook-Updated-2017.pdf"
+            },
+            {
+              "id": "8056_4-guideline-ED-Clinical-Pathway----Pre-Sedation-Evaluation-2.28.24.pdf",
+              "title": "Ed Clinical Pathway Pre Sedation Evaluation 2",
+              "type": "guideline",
+              "specialty": "anesthesia",
+              "urgency": "routine",
+              "fileUrl": "8056_4-guideline-ED-Clinical-Pathway----Pre-Sedation-Evaluation-2.28.24.pdf"
+            },
+            {
+              "id": "10899_4-guideline-Consent-Process-for-CCHMC_Sept-2024.pdf",
+              "title": "Consent Process for Cchmc Sept 2024",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "10899_4-guideline-Consent-Process-for-CCHMC_Sept-2024.pdf"
+            },
+            {
+              "id": "5450_4-guideline-18-Pyloric-Stenosis-Pre-Op.pdf",
+              "title": "Pyloric Stenosis Pre Op",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5450_4-guideline-18-Pyloric-Stenosis-Pre-Op.pdf"
+            },
+            {
+              "id": "4188_4-guideline-1-Pleural-Effusion-and-Empyema-Management-Guideline-revision-v5.pdf",
+              "title": "Pleural Effusion and Empyema Management Guideline Revision V5",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4188_4-guideline-1-Pleural-Effusion-and-Empyema-Management-Guideline-revision-v5.pdf"
+            },
+            {
+              "id": "5441_4-guideline-8-Intussusception-Guideline.pdf",
+              "title": "Intussusception Guideline",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5441_4-guideline-8-Intussusception-Guideline.pdf"
+            },
+            {
+              "id": "4167_4-guideline-10-TEF-Guideline.pdf",
+              "title": "TEF Guideline",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4167_4-guideline-10-TEF-Guideline.pdf"
+            },
+            {
+              "id": "5417_4-guideline-5-OR-Blood-Workflow.pdf",
+              "title": "or Blood Workflow",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5417_4-guideline-5-OR-Blood-Workflow.pdf"
+            },
+            {
+              "id": "4173_4-guideline-APSA-Rhabdomyosarcoma-Handbook.pdf",
+              "title": "APSA Rhabdomyosarcoma Handbook",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4173_4-guideline-APSA-Rhabdomyosarcoma-Handbook.pdf"
+            },
+            {
+              "id": "5403_4-guideline-APSA-Neuroblastoma-Handbook.pdf",
+              "title": "APSA Neuroblastoma Handbook",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5403_4-guideline-APSA-Neuroblastoma-Handbook.pdf"
+            },
+            {
+              "id": "5436_4-guideline-5-Gastric-Sleeve-or-Bypass-Pathway-Jan2025.pdf",
+              "title": "Gastric Sleeve or Bypass Pathway Jan2025",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5436_4-guideline-5-Gastric-Sleeve-or-Bypass-Pathway-Jan2025.pdf"
+            },
+            {
+              "id": "10212_4-guideline-guideline_HAEC_Outpatient_V2.pdf",
+              "title": "Guideline Haec Outpatient V2",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "10212_4-guideline-guideline_HAEC_Outpatient_V2.pdf"
+            },
+            {
+              "id": "5538_4-guideline-4-enema-info-for-app.pdf",
+              "title": "Enema Info for App",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5538_4-guideline-4-enema-info-for-app.pdf"
+            },
+            {
+              "id": "5408_4-guideline-COG-Neuroblastoma-Handbook.pdf",
+              "title": "COG Neuroblastoma Handbook",
+              "type": "guideline",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5408_4-guideline-COG-Neuroblastoma-Handbook.pdf"
             }
           ]
         }
@@ -1783,7 +1360,7 @@
       "color": "#be185d",
       "description": "Educational materials and training resources",
       "priority": "medium",
-      "content_count": 26,
+      "content_count": 14,
       "collections": [
         {
           "id": "resident-training",
@@ -1796,47 +1373,23 @@
               "type": "document",
               "specialty": "critical_care",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/4200/4-document-International-Fellow-Curriculum-8.3.2020.pdf"
+              "fileUrl": "4200_4-document-International-Fellow-Curriculum-8.3.2020.pdf"
             },
             {
               "id": "5432_4-document-CCHMC_Jr-Resident.pdf",
               "title": "Cchmc Jr Resident",
               "type": "document",
-              "specialty": "unknown",
+              "specialty": "general",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/5432/4-document-CCHMC_Jr-Resident.pdf"
-            },
-            {
-              "id": "4198_4-document-CCHMC_Jr-Resident.pdf",
-              "title": "Cchmc Jr Resident",
-              "type": "document",
-              "specialty": "unknown",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/4198/4-document-CCHMC_Jr-Resident.pdf"
+              "fileUrl": "5432_4-document-CCHMC_Jr-Resident.pdf"
             },
             {
               "id": "4199_4-document-CCHMC_Sr-Resident.pdf",
               "title": "Cchmc Sr Resident",
               "type": "document",
-              "specialty": "unknown",
+              "specialty": "general",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/4199/4-document-CCHMC_Sr-Resident.pdf"
-            },
-            {
-              "id": "5433_4-document-CCHMC_Sr-Resident.pdf",
-              "title": "Cchmc Sr Resident",
-              "type": "document",
-              "specialty": "unknown",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/5433/4-document-CCHMC_Sr-Resident.pdf"
-            },
-            {
-              "id": "5434_4-document-International-Fellow-Curriculum-8.3.2020.pdf",
-              "title": "International Fellow Curriculum 8",
-              "type": "document",
-              "specialty": "critical_care",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/5434/4-document-International-Fellow-Curriculum-8.3.2020.pdf"
+              "fileUrl": "4199_4-document-CCHMC_Sr-Resident.pdf"
             }
           ]
         },
@@ -1844,7 +1397,24 @@
           "id": "fellowship-program",
           "title": "Fellowship Program",
           "description": "Fellowship training and case requirements",
-          "items": []
+          "items": [
+            {
+              "id": "4200_4-document-International-Fellow-Curriculum-8.3.2020.pdf",
+              "title": "International Fellow Curriculum 8",
+              "type": "document",
+              "specialty": "critical_care",
+              "urgency": "routine",
+              "fileUrl": "4200_4-document-International-Fellow-Curriculum-8.3.2020.pdf"
+            },
+            {
+              "id": "4195_4-document-Pediatric-Surgery-Case-Requirements.pdf",
+              "title": "Pediatric Surgery Case Requirements",
+              "type": "document",
+              "specialty": "pediatric",
+              "urgency": "routine",
+              "fileUrl": "4195_4-document-Pediatric-Surgery-Case-Requirements.pdf"
+            }
+          ]
         },
         {
           "id": "competency-assessment",
@@ -1852,1839 +1422,174 @@
           "description": "Goals, objectives, and competency tracking",
           "items": [
             {
+              "id": "5431_4-document-Pediatric_Surgery_Tracked-Codes.pdf",
+              "title": "Pediatric Surgery Tracked Codes",
+              "type": "document",
+              "specialty": "pediatric",
+              "urgency": "routine",
+              "fileUrl": "5431_4-document-Pediatric_Surgery_Tracked-Codes.pdf"
+            },
+            {
               "id": "4191_4-document-ENT-Goals-and-Objectives-5.5.20.pdf",
               "title": "Ent Goals and Objectives 5",
               "type": "document",
-              "specialty": "unknown",
+              "specialty": "general",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/4191/4-document-ENT-Goals-and-Objectives-5.5.20.pdf"
+              "fileUrl": "4191_4-document-ENT-Goals-and-Objectives-5.5.20.pdf"
             },
             {
               "id": "4193_4-document-PICU-Goals,-Objectives-and-Competencies-8.3.20.pdf",
               "title": "Goals, Objectives and Competencies 8",
               "type": "document",
-              "specialty": "pediatric",
+              "specialty": "general",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/4193/4-document-PICU-Goals,-Objectives-and-Competencies-8.3.20.pdf"
+              "fileUrl": "4193_4-document-PICU-Goals,-Objectives-and-Competencies-8.3.20.pdf"
             },
             {
               "id": "5426_4-document-Fetal-Goals-and-Objectives-5.5.20.pdf",
               "title": "Fetal Goals and Objectives 5",
               "type": "document",
-              "specialty": "unknown",
+              "specialty": "general",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/5426/4-document-Fetal-Goals-and-Objectives-5.5.20.pdf"
+              "fileUrl": "5426_4-document-Fetal-Goals-and-Objectives-5.5.20.pdf"
             },
             {
               "id": "5428_4-document-Urology-Service-Goals-and-Objectives-5.5.20.pdf",
               "title": "Urology Service Goals and Objectives 5",
               "type": "document",
-              "specialty": "unknown",
+              "specialty": "general",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/5428/4-document-Urology-Service-Goals-and-Objectives-5.5.20.pdf"
-            },
+              "fileUrl": "5428_4-document-Urology-Service-Goals-and-Objectives-5.5.20.pdf"
+            }
+          ]
+        },
+        {
+          "id": "general-education",
+          "title": "General Education",
+          "description": "Other educational materials and documents",
+          "items": [
             {
-              "id": "4192_4-document-Fetal-Goals-and-Objectives-5.5.20.pdf",
-              "title": "Fetal Goals and Objectives 5",
+              "id": "4159_4-guideline-4-Line-Selection-Guideline-for-Nephrology-Patients.pptx",
+              "title": "Line Selection Guideline for Nephrology Patients",
               "type": "document",
-              "specialty": "unknown",
+              "specialty": "general",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/4192/4-document-Fetal-Goals-and-Objectives-5.5.20.pdf"
+              "fileUrl": "4159_4-guideline-4-Line-Selection-Guideline-for-Nephrology-Patients.pptx"
             },
             {
-              "id": "4194_4-document-Urology-Service-Goals-and-Objectives-5.5.20.pdf",
-              "title": "Urology Service Goals and Objectives 5",
-              "type": "document",
-              "specialty": "unknown",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/4194/4-document-Urology-Service-Goals-and-Objectives-5.5.20.pdf"
-            },
-            {
-              "id": "5425_4-document-ENT-Goals-and-Objectives-5.5.20.pdf",
-              "title": "Ent Goals and Objectives 5",
-              "type": "document",
-              "specialty": "unknown",
-              "urgency": "routine",
-              "fileUrl": "spaces/4/content/5425/4-document-ENT-Goals-and-Objectives-5.5.20.pdf"
-            },
-            {
-              "id": "5427_4-document-PICU-Goals,-Objectives-and-Competencies-8.3.20.pdf",
-              "title": "Goals, Objectives and Competencies 8",
+              "id": "5430_4-document-Pediatric_Surgery_Mapping.pdf",
+              "title": "Pediatric Surgery Mapping",
               "type": "document",
               "specialty": "pediatric",
               "urgency": "routine",
-              "fileUrl": "spaces/4/content/5427/4-document-PICU-Goals,-Objectives-and-Competencies-8.3.20.pdf"
+              "fileUrl": "5430_4-document-Pediatric_Surgery_Mapping.pdf"
+            },
+            {
+              "id": "5388_4-guideline-1-CVC-Pre-Op-Evaluation-and-Line-Selection-Guideline.ppt",
+              "title": "Cvc Pre Op Evaluation and Line Selection Guideline",
+              "type": "document",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5388_4-guideline-1-CVC-Pre-Op-Evaluation-and-Line-Selection-Guideline.ppt"
+            },
+            {
+              "id": "8034_4-guideline-ECMO-PR-035---Leaving-cannulas-in-place-post-removal-from-ECMO.PDF",
+              "title": "Leaving Cannulas in Place Post Removal From ECMO",
+              "type": "document",
+              "specialty": "cardiovascular",
+              "urgency": "routine",
+              "fileUrl": "8034_4-guideline-ECMO-PR-035---Leaving-cannulas-in-place-post-removal-from-ECMO.PDF"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "additional-specialties",
+      "title": "\ud83c\udfe5 Additional Medical Specialties",
+      "color": "#6b7280",
+      "description": "Other medical specialties and procedures",
+      "priority": "medium",
+      "content_count": 8,
+      "collections": [
+        {
+          "id": "additional-procedures",
+          "title": "Additional Procedures",
+          "description": "Other medical procedures and specialties",
+          "items": [
+            {
+              "id": "7167_file_7167_2022-08-23_00-00-06.mp4",
+              "title": "Gastrostomy Tube Placement - 8/23/2022",
+              "type": "video",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "7167_file_7167_2022-08-23_00-00-06.mp4"
+            },
+            {
+              "id": "6027_file_7447_2022-10-20_18-12-35.mp4",
+              "title": "Gastrostomy Tube Placement - 10/20/2022",
+              "type": "video",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "6027_file_7447_2022-10-20_18-12-35.mp4"
+            },
+            {
+              "id": "7188_file_7188_2022-08-23_00-00-08.mp4",
+              "title": "Intestinal Resection - 8/23/2022",
+              "type": "video",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "7188_file_7188_2022-08-23_00-00-08.mp4"
+            },
+            {
+              "id": "6028_file_7448_2022-10-20_18-12-36.mp4",
+              "title": "Intestinal Resection - 10/20/2022",
+              "type": "video",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "6028_file_7448_2022-10-20_18-12-36.mp4"
+            },
+            {
+              "id": "5945_file_5945_2021-11-30_16-00-08.mp4",
+              "title": "Central Line Placement - 11/30/2021",
+              "type": "video",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "5945_file_5945_2021-11-30_16-00-08.mp4"
+            },
+            {
+              "id": "7165_file_7165_2022-08-23_00-00-06.mp4",
+              "title": "Central Line Placement - 8/23/2022",
+              "type": "video",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "7165_file_7165_2022-08-23_00-00-06.mp4"
+            },
+            {
+              "id": "6025_file_7445_2022-10-20_18-12-35.mp4",
+              "title": "Central Line Placement - 10/20/2022",
+              "type": "video",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "6025_file_7445_2022-10-20_18-12-35.mp4"
+            },
+            {
+              "id": "4671_file_5908_2021-11-23_16-00-13.mp4",
+              "title": "Intestinal Resection - 11/23/2021",
+              "type": "video",
+              "specialty": "general",
+              "urgency": "routine",
+              "fileUrl": "4671_file_5908_2021-11-23_16-00-13.mp4"
             }
           ]
         }
       ]
     }
   ],
-  "total_content": 198,
-  "medical_insights": {
-    "procedures": {
-      "Gastrostomy tube placement": 8,
-      "Appendectomy procedure": 6,
-      "Laparoscopic surgery": 10,
-      "Cholecystectomy procedure": 6,
-      "Tracheostomy procedure": 4,
-      "ECMO decannulation procedure": 6,
-      "ECMO cannulation procedure": 6,
-      "Thoracoscopic procedure": 6,
-      "Central line placement": 8,
-      "Hernia repair surgery": 6
-    },
-    "specialties": {
-      "unknown": 189,
-      "surgery": 90,
-      "pediatric": 22,
-      "ecmo": 26,
-      "neonatal": 16,
-      "critical_care": 2
-    },
-    "complexity_levels": {
-      "moderate": 130,
-      "complex": 26,
-      "unknown": 189
-    },
-    "medical_terms": {
-      "guideline": 169,
-      "surgery": 12,
-      "iv": 22,
-      "picu": 2,
-      "icu": 10,
-      "ecmo": 14,
-      "urology": 2,
-      "nicu": 6,
-      "protocol": 36,
-      "appendectomy": 2,
-      "fever": 4,
-      "checklist": 6,
-      "cdh": 5,
-      "monitor": 2,
-      "pathway": 7,
-      "tef": 2,
-      "oncology": 2,
-      "sepsis": 2,
-      "algorithm": 2
-    },
-    "content_types": {
-      "video": 152,
-      "document": 26,
-      "guideline": 163,
-      "image": 4
-    },
-    "urgency_levels": {
-      "routine": 345
-    },
-    "procedure_specialty_mapping": {
-      "Gastrostomy tube placement": [
-        "unknown",
-        "unknown",
-        "unknown",
-        "unknown",
-        "unknown",
-        "unknown",
-        "unknown",
-        "unknown"
-      ],
-      "Appendectomy procedure": [
-        "unknown",
-        "unknown",
-        "unknown",
-        "unknown",
-        "unknown",
-        "unknown"
-      ],
-      "Laparoscopic surgery": [
-        "surgery",
-        "surgery",
-        "surgery",
-        "surgery",
-        "surgery",
-        "surgery",
-        "surgery",
-        "surgery",
-        "surgery",
-        "surgery"
-      ],
-      "Cholecystectomy procedure": [
-        "surgery",
-        "surgery",
-        "surgery",
-        "surgery",
-        "surgery",
-        "surgery"
-      ],
-      "Tracheostomy procedure": [
-        "unknown",
-        "unknown",
-        "unknown",
-        "unknown"
-      ],
-      "ECMO decannulation procedure": [
-        "ecmo",
-        "ecmo",
-        "ecmo",
-        "ecmo",
-        "ecmo",
-        "ecmo"
-      ],
-      "ECMO cannulation procedure": [
-        "ecmo",
-        "ecmo",
-        "ecmo",
-        "ecmo",
-        "ecmo",
-        "ecmo"
-      ],
-      "Thoracoscopic procedure": [
-        "unknown",
-        "unknown",
-        "unknown",
-        "unknown",
-        "unknown",
-        "unknown"
-      ],
-      "Central line placement": [
-        "unknown",
-        "unknown",
-        "unknown",
-        "unknown",
-        "unknown",
-        "unknown",
-        "unknown",
-        "unknown"
-      ],
-      "Hernia repair surgery": [
-        "surgery",
-        "surgery",
-        "surgery",
-        "surgery",
-        "surgery",
-        "surgery"
-      ]
-    },
-    "complexity_procedure_mapping": {
-      "moderate": [
-        "Gastrostomy tube placement",
-        "Appendectomy procedure",
-        "Gastrostomy tube placement",
-        "Appendectomy procedure",
-        "Cholecystectomy procedure",
-        "Cholecystectomy procedure",
-        "Thoracoscopic procedure",
-        "Central line placement",
-        "Central line placement",
-        "Central line placement",
-        "Hernia repair surgery",
-        "Hernia repair surgery",
-        "Central line placement",
-        "Hernia repair surgery",
-        "Gastrostomy tube placement",
-        "Gastrostomy tube placement",
-        "Appendectomy procedure",
-        "Gastrostomy tube placement",
-        "Thoracoscopic procedure",
-        "Cholecystectomy procedure",
-        "Appendectomy procedure",
-        "Cholecystectomy procedure",
-        "Thoracoscopic procedure",
-        "Gastrostomy tube placement",
-        "Central line placement",
-        "Hernia repair surgery",
-        "Central line placement",
-        "Hernia repair surgery",
-        "Gastrostomy tube placement",
-        "Thoracoscopic procedure",
-        "Appendectomy procedure",
-        "Central line placement",
-        "Cholecystectomy procedure",
-        "Thoracoscopic procedure",
-        "Hernia repair surgery",
-        "Central line placement",
-        "Cholecystectomy procedure",
-        "Appendectomy procedure",
-        "Gastrostomy tube placement",
-        "Thoracoscopic procedure"
-      ],
-      "complex": [
-        "Laparoscopic surgery",
-        "Tracheostomy procedure",
-        "ECMO decannulation procedure",
-        "ECMO cannulation procedure",
-        "ECMO cannulation procedure",
-        "ECMO decannulation procedure",
-        "Laparoscopic surgery",
-        "Tracheostomy procedure",
-        "ECMO cannulation procedure",
-        "Laparoscopic surgery",
-        "ECMO decannulation procedure",
-        "ECMO cannulation procedure",
-        "Laparoscopic surgery",
-        "ECMO decannulation procedure",
-        "Laparoscopic surgery",
-        "Laparoscopic surgery",
-        "Laparoscopic surgery",
-        "Tracheostomy procedure",
-        "ECMO cannulation procedure",
-        "ECMO decannulation procedure",
-        "ECMO decannulation procedure",
-        "Laparoscopic surgery",
-        "ECMO cannulation procedure",
-        "Tracheostomy procedure",
-        "Laparoscopic surgery",
-        "Laparoscopic surgery"
-      ]
-    },
-    "video_procedures": [
-      {
-        "title": "Gastrostomy Tube Placement - 8/23/2022",
-        "procedure": "Gastrostomy tube placement",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Appendectomy Procedure - 10/20/2022",
-        "procedure": "Appendectomy procedure",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Gastrostomy Tube Placement - 10/20/2022",
-        "procedure": "Gastrostomy tube placement",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Laparoscopic Surgery - 8/23/2022",
-        "procedure": "Laparoscopic surgery",
-        "specialty": "surgery",
-        "complexity": "complex"
-      },
-      {
-        "title": "Appendectomy Procedure - 8/23/2022",
-        "procedure": "Appendectomy procedure",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Cholecystectomy Surgery - 8/23/2022",
-        "procedure": "Cholecystectomy procedure",
-        "specialty": "surgery",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Cholecystectomy Surgery - 10/20/2022",
-        "procedure": "Cholecystectomy procedure",
-        "specialty": "surgery",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Tracheostomy Procedure - 8/23/2022",
-        "procedure": "Tracheostomy procedure",
-        "specialty": "unknown",
-        "complexity": "complex"
-      },
-      {
-        "title": "ECMO Decannulation - 10/20/2022",
-        "procedure": "ECMO decannulation procedure",
-        "specialty": "ecmo",
-        "complexity": "complex"
-      },
-      {
-        "title": "ECMO Cannulation - 10/20/2022",
-        "procedure": "ECMO cannulation procedure",
-        "specialty": "ecmo",
-        "complexity": "complex"
-      },
-      {
-        "title": "ECMO Cannulation - 8/23/2022",
-        "procedure": "ECMO cannulation procedure",
-        "specialty": "ecmo",
-        "complexity": "complex"
-      },
-      {
-        "title": "Thoracoscopic Procedure - 8/23/2022",
-        "procedure": "Thoracoscopic procedure",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "ECMO Decannulation - 8/23/2022",
-        "procedure": "ECMO decannulation procedure",
-        "specialty": "ecmo",
-        "complexity": "complex"
-      },
-      {
-        "title": "Central Line Placement - 11/30/2021",
-        "procedure": "Central line placement",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Central Line Placement - 8/23/2022",
-        "procedure": "Central line placement",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Central Line Placement - 11/30/2021",
-        "procedure": "Central line placement",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Hernia Repair Surgery - 8/23/2022",
-        "procedure": "Hernia repair surgery",
-        "specialty": "surgery",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Laparoscopic Surgery - 10/20/2022",
-        "procedure": "Laparoscopic surgery",
-        "specialty": "surgery",
-        "complexity": "complex"
-      },
-      {
-        "title": "Hernia Repair Surgery - 10/20/2022",
-        "procedure": "Hernia repair surgery",
-        "specialty": "surgery",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Central Line Placement - 10/20/2022",
-        "procedure": "Central line placement",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Hernia Repair Surgery - 8/23/2022",
-        "procedure": "Hernia repair surgery",
-        "specialty": "surgery",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Gastrostomy Tube Placement - 8/23/2022",
-        "procedure": "Gastrostomy tube placement",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Gastrostomy Tube Placement - 10/20/2022",
-        "procedure": "Gastrostomy tube placement",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Appendectomy Procedure - 10/20/2022",
-        "procedure": "Appendectomy procedure",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Gastrostomy Tube Placement - 10/20/2022",
-        "procedure": "Gastrostomy tube placement",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Thoracoscopic Procedure - 10/20/2022",
-        "procedure": "Thoracoscopic procedure",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Cholecystectomy Surgery - 10/20/2022",
-        "procedure": "Cholecystectomy procedure",
-        "specialty": "surgery",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Tracheostomy Procedure - 8/23/2022",
-        "procedure": "Tracheostomy procedure",
-        "specialty": "unknown",
-        "complexity": "complex"
-      },
-      {
-        "title": "ECMO Cannulation - 8/23/2022",
-        "procedure": "ECMO cannulation procedure",
-        "specialty": "ecmo",
-        "complexity": "complex"
-      },
-      {
-        "title": "Laparoscopic Surgery - 8/23/2022",
-        "procedure": "Laparoscopic surgery",
-        "specialty": "surgery",
-        "complexity": "complex"
-      },
-      {
-        "title": "ECMO Decannulation - 8/23/2022",
-        "procedure": "ECMO decannulation procedure",
-        "specialty": "ecmo",
-        "complexity": "complex"
-      },
-      {
-        "title": "ECMO Cannulation - 10/20/2022",
-        "procedure": "ECMO cannulation procedure",
-        "specialty": "ecmo",
-        "complexity": "complex"
-      },
-      {
-        "title": "Laparoscopic Surgery - 3/24/2022",
-        "procedure": "Laparoscopic surgery",
-        "specialty": "surgery",
-        "complexity": "complex"
-      },
-      {
-        "title": "ECMO Decannulation - 10/20/2022",
-        "procedure": "ECMO decannulation procedure",
-        "specialty": "ecmo",
-        "complexity": "complex"
-      },
-      {
-        "title": "Appendectomy Procedure - 8/23/2022",
-        "procedure": "Appendectomy procedure",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Laparoscopic Surgery - 3/24/2022",
-        "procedure": "Laparoscopic surgery",
-        "specialty": "surgery",
-        "complexity": "complex"
-      },
-      {
-        "title": "Cholecystectomy Surgery - 8/23/2022",
-        "procedure": "Cholecystectomy procedure",
-        "specialty": "surgery",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Thoracoscopic Procedure - 10/20/2022",
-        "procedure": "Thoracoscopic procedure",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Gastrostomy Tube Placement - 10/20/2022",
-        "procedure": "Gastrostomy tube placement",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Central Line Placement - 10/20/2022",
-        "procedure": "Central line placement",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Hernia Repair Surgery - 10/20/2022",
-        "procedure": "Hernia repair surgery",
-        "specialty": "surgery",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Central Line Placement - 8/23/2022",
-        "procedure": "Central line placement",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Laparoscopic Surgery - 10/20/2022",
-        "procedure": "Laparoscopic surgery",
-        "specialty": "surgery",
-        "complexity": "complex"
-      },
-      {
-        "title": "Laparoscopic Surgery - 8/23/2022",
-        "procedure": "Laparoscopic surgery",
-        "specialty": "surgery",
-        "complexity": "complex"
-      },
-      {
-        "title": "Hernia Repair Surgery - 8/23/2022",
-        "procedure": "Hernia repair surgery",
-        "specialty": "surgery",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Gastrostomy Tube Placement - 8/23/2022",
-        "procedure": "Gastrostomy tube placement",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Thoracoscopic Procedure - 8/23/2022",
-        "procedure": "Thoracoscopic procedure",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Tracheostomy Procedure - 8/23/2022",
-        "procedure": "Tracheostomy procedure",
-        "specialty": "unknown",
-        "complexity": "complex"
-      },
-      {
-        "title": "ECMO Cannulation - 8/23/2022",
-        "procedure": "ECMO cannulation procedure",
-        "specialty": "ecmo",
-        "complexity": "complex"
-      },
-      {
-        "title": "Appendectomy Procedure - 8/23/2022",
-        "procedure": "Appendectomy procedure",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Central Line Placement - 8/23/2022",
-        "procedure": "Central line placement",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Cholecystectomy Surgery - 8/23/2022",
-        "procedure": "Cholecystectomy procedure",
-        "specialty": "surgery",
-        "complexity": "moderate"
-      },
-      {
-        "title": "ECMO Decannulation - 8/23/2022",
-        "procedure": "ECMO decannulation procedure",
-        "specialty": "ecmo",
-        "complexity": "complex"
-      },
-      {
-        "title": "Thoracoscopic Procedure - 10/20/2022",
-        "procedure": "Thoracoscopic procedure",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "ECMO Decannulation - 8/23/2022",
-        "procedure": "ECMO decannulation procedure",
-        "specialty": "ecmo",
-        "complexity": "complex"
-      },
-      {
-        "title": "Hernia Repair Surgery - 8/23/2022",
-        "procedure": "Hernia repair surgery",
-        "specialty": "surgery",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Laparoscopic Surgery - 10/20/2022",
-        "procedure": "Laparoscopic surgery",
-        "specialty": "surgery",
-        "complexity": "complex"
-      },
-      {
-        "title": "Central Line Placement - 8/23/2022",
-        "procedure": "Central line placement",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "ECMO Cannulation - 8/23/2022",
-        "procedure": "ECMO cannulation procedure",
-        "specialty": "ecmo",
-        "complexity": "complex"
-      },
-      {
-        "title": "Tracheostomy Procedure - 8/23/2022",
-        "procedure": "Tracheostomy procedure",
-        "specialty": "unknown",
-        "complexity": "complex"
-      },
-      {
-        "title": "Cholecystectomy Surgery - 8/23/2022",
-        "procedure": "Cholecystectomy procedure",
-        "specialty": "surgery",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Laparoscopic Surgery - 8/23/2022",
-        "procedure": "Laparoscopic surgery",
-        "specialty": "surgery",
-        "complexity": "complex"
-      },
-      {
-        "title": "Laparoscopic Surgery - 10/20/2022",
-        "procedure": "Laparoscopic surgery",
-        "specialty": "surgery",
-        "complexity": "complex"
-      },
-      {
-        "title": "Appendectomy Procedure - 8/23/2022",
-        "procedure": "Appendectomy procedure",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Gastrostomy Tube Placement - 8/23/2022",
-        "procedure": "Gastrostomy tube placement",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      },
-      {
-        "title": "Thoracoscopic Procedure - 10/20/2022",
-        "procedure": "Thoracoscopic procedure",
-        "specialty": "unknown",
-        "complexity": "moderate"
-      }
-    ],
-    "document_categories": [
-      {
-        "title": "Line Selection Guideline for Nephrology Patients",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Cvc Pre Op Evaluation and Line Selection Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Line Selection Guideline for Nephrology Patients",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Leaving Cannulas in Place Post Removal From ECMO",
-        "category": "guideline",
-        "specialty": "ecmo",
-        "urgency": "routine"
-      },
-      {
-        "title": "Leaving Cannulas in Place Post Removal From ECMO",
-        "category": "guideline",
-        "specialty": "ecmo",
-        "urgency": "routine"
-      },
-      {
-        "title": "Cvc Pre Op Evaluation and Line Selection Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Dosing Guide 122021",
-        "category": "guideline",
-        "specialty": "neonatal",
-        "urgency": "routine"
-      },
-      {
-        "title": "Pyloric Stenosis Post Op",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Drip Chart 122021",
-        "category": "guideline",
-        "specialty": "neonatal",
-        "urgency": "routine"
-      },
-      {
-        "title": "Drip Chart 122021",
-        "category": "guideline",
-        "specialty": "neonatal",
-        "urgency": "routine"
-      },
-      {
-        "title": "Ssi Protocol",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Mucousfistularefeeding Cchmc Protocol Revised V4 March 2022",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Cchmc1688button Mapping",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Cvc Removal Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Early Discharge Appendectomy EDAP",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Mucousfistularefeeding Cchmc Protocol Revised V4 March 2022",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "EDAP Process Map",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Gastroschisis Feeding Protocol 4",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Renal Protection for Safe Prescribing of Toradol in Appendectomies",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Anticoagulation Guidelines 05122021 Final",
-        "category": "guideline",
-        "specialty": "ecmo",
-        "urgency": "routine"
-      },
-      {
-        "title": "Wound Class",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "E CPR for Ohca August 2022",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Gastrograffin Protocol V5",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Tube Post Op Management",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Inpatient Post Tpiat Fever Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Document 4-guideline-7-VTE-guideline-v2",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Checklists for ECMO Clamping Trial",
-        "category": "guideline",
-        "specialty": "ecmo",
-        "urgency": "routine"
-      },
-      {
-        "title": "Titre One Pager",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Antibiotic Stewardship and Surgical Abx Prophylaxis",
-        "category": "guideline",
-        "specialty": "surgery",
-        "urgency": "routine"
-      },
-      {
-        "title": "E CPR for Ohca August 2022",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Inpatient Post Tpiat Fever Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "APSA Germ Cell Tumors Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Pre Tpiat Staph Screen Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "COG Liver Tumor Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Ssi Protocol",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Spontaneous Pneumothorax V1 May 2025",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "CDH ECMO Protocol 073124",
-        "category": "guideline",
-        "specialty": "ecmo",
-        "urgency": "routine"
-      },
-      {
-        "title": "Titre Eligibility Checklist 15feb2023",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Document 4-guideline-7-VTE-guideline-v2",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Drug Extravasation Risk and Line Guideline for Nephrology Patients",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Colorectal Surgery Ssi Protocol",
-        "category": "guideline",
-        "specialty": "surgery",
-        "urgency": "routine"
-      },
-      {
-        "title": "Bivalirudin Dosing and Monitoring Guideline Final June 2022 4",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Management of CDH Patients",
-        "category": "guideline",
-        "specialty": "ecmo",
-        "urgency": "routine"
-      },
-      {
-        "title": "Perforated Appendicitis Guideline V5",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Dosing for Operative Antibiotic Prophylaxis",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Rectal Irrigations Instructions",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "APSA Liver Tumors Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Gtube Evaluation Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "APSA Germ Cell Tumors Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Tpa Administration Guidelines",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Pectusexcavatumpathway V2",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Colorectal Surgery Ssi Protocol Checklist",
-        "category": "guideline",
-        "specialty": "surgery",
-        "urgency": "routine"
-      },
-      {
-        "title": "Outpatient Post Tpiat Fever Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Antibiotic Stewardship and Surgical Abx Prophylaxis",
-        "category": "guideline",
-        "specialty": "surgery",
-        "urgency": "routine"
-      },
-      {
-        "title": "Hirschprung's Associated Enterocolitis (haec) Treatment",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Gastroschisis Feeding Protocol 4",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Blood Conservation and Bloodless Alternative Guidelines (for Jehovah's Witness Patients)",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Pcpinsurance Pp Final Draft 2",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Tpiat and Pancreatic Surgery Vaccination Guideline May 2021",
-        "category": "guideline",
-        "specialty": "surgery",
-        "urgency": "routine"
-      },
-      {
-        "title": "Drug Extravasation Risk and Line Guideline for Nephrology Patients",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Infant Anesthesia Guidelines",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "COG Rhabdomyosarcoma Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Clamping Trial Requirements",
-        "category": "guideline",
-        "specialty": "ecmo",
-        "urgency": "routine"
-      },
-      {
-        "title": "Colorectal Surgery Ssi Protocol",
-        "category": "guideline",
-        "specialty": "surgery",
-        "urgency": "routine"
-      },
-      {
-        "title": "Unit Cannulation Prep Job Aid",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Outpatient Post Tpiat Fever Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Kasai Post Operative Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Non Operative Appendicitis Management V1",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "CDH ECMO Protocol 073124",
-        "category": "guideline",
-        "specialty": "ecmo",
-        "urgency": "routine"
-      },
-      {
-        "title": "Non Perforated Appendicitis Guideline V5",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Neonatal Bilious Emesis Guideline",
-        "category": "guideline",
-        "specialty": "neonatal",
-        "urgency": "routine"
-      },
-      {
-        "title": "COG Renaltumorshandbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Asplenia Prophylaxis V3",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Dosing Guide 122021",
-        "category": "guideline",
-        "specialty": "neonatal",
-        "urgency": "routine"
-      },
-      {
-        "title": "APSA Renal Tumors Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Pyloric Stenosis Post Op",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "MWPSC Ovarian",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Electronic Device Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Pre Op Stoma Closure Guideline V5",
-        "category": "guideline",
-        "specialty": "neonatal",
-        "urgency": "routine"
-      },
-      {
-        "title": "Surgical Watcher 8x10 (3 \u00d7 4",
-        "category": "guideline",
-        "specialty": "surgery",
-        "urgency": "routine"
-      },
-      {
-        "title": "COG Osteosarcoma Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Pediatric Dosing Guide",
-        "category": "guideline",
-        "specialty": "pediatric",
-        "urgency": "routine"
-      },
-      {
-        "title": "COG Renaltumorshandbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Perforated Appendicitis Guideline V5",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Final 2024 Tpiat Pathway",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Tpiat Admission Job Aid",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Gastrograffin Protocol V5",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Tpiat Jit Sheet",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Bivalirudin Dosing and Monitoring Guideline Final June 2022 4",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Non Perforated Appendicitis Guideline V5",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Rotem Pocket Guide Ww 060718",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "COG Liver Tumor Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Checklists for ECMO Clamping Trial",
-        "category": "guideline",
-        "specialty": "ecmo",
-        "urgency": "routine"
-      },
-      {
-        "title": "Tpiat Jit Sheet",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Post Tpiat Hydrea Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Management of CDH Patients",
-        "category": "guideline",
-        "specialty": "ecmo",
-        "urgency": "routine"
-      },
-      {
-        "title": "Pediatric Dosing Guide",
-        "category": "guideline",
-        "specialty": "pediatric",
-        "urgency": "routine"
-      },
-      {
-        "title": "CDH ECMO Protocol 4",
-        "category": "guideline",
-        "specialty": "ecmo",
-        "urgency": "routine"
-      },
-      {
-        "title": "COG Germ Cell Tumor Handbook Updated 2017",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Ed Clinical Pathway Pre Sedation Evaluation 2",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "COG Germ Cell Tumor Handbook Updated 2017",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Consent Process for Cchmc Sept 2024",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Early Discharge Appendectomy EDAP",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Ed Clinical Pathway Pre Sedation Evaluation 2",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Pyloric Stenosis Pre Op",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Infant Anesthesia Guidelines",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Tpiat Admission Job Aid",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Hirschprung's Associated Enterocolitis (haec) Treatment",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Pre Tpiat Staph Screen Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Pleural Effusion and Empyema Management Guideline Revision V5",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Intussusception Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Final 2024 Tpiat Pathway",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Colorectal Surgery Ssi Protocol Checklist",
-        "category": "guideline",
-        "specialty": "surgery",
-        "urgency": "routine"
-      },
-      {
-        "title": "Titre Eligibility Checklist 15feb2023",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Cchmc1688button Mapping",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Wound Class",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Neonatal Bilious Emesis Guideline",
-        "category": "guideline",
-        "specialty": "neonatal",
-        "urgency": "routine"
-      },
-      {
-        "title": "Rectal Irrigations Instructions",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Surgical Watcher 8x10 (3 \u00d7 4",
-        "category": "guideline",
-        "specialty": "surgery",
-        "urgency": "routine"
-      },
-      {
-        "title": "Rotem Pocket Guide Ww 060718",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Intussusception Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "TEF Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Eras Pediatric Oncology Protocol",
-        "category": "guideline",
-        "specialty": "pediatric",
-        "urgency": "routine"
-      },
-      {
-        "title": "or Blood Workflow",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Titre One Pager",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "TEF Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Unit Cannulation Prep Job Aid",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Gtube Evaluation Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "MWPSC Ovarian",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "EDAP Process Map",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Pyloric Stenosis Pre Op",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "APSA Rhabdomyosarcoma Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "COG Rhabdomyosarcoma Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Clamping Trial Requirements",
-        "category": "guideline",
-        "specialty": "ecmo",
-        "urgency": "routine"
-      },
-      {
-        "title": "Tube Post Op Management",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Non Operative Appendicitis Management V1",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "COG Osteosarcoma Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "APSA Neuroblastoma Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Kasai Post Operative Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Electronic Device Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Cchmc Sepsisalgorithm",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Gas and Flow Initiation ECMO Protocol",
-        "category": "guideline",
-        "specialty": "ecmo",
-        "urgency": "routine"
-      },
-      {
-        "title": "Tpa Administration Guidelines",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "APSA Renal Tumors Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Pleural Effusion and Empyema Management Guideline Revision V5",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Gastric Sleeve or Bypass Pathway Jan2025",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Asplenia Prophylaxis V3",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Eras Pediatric Oncology Protocol",
-        "category": "guideline",
-        "specialty": "pediatric",
-        "urgency": "routine"
-      },
-      {
-        "title": "APSA Liver Tumors Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Cvc Removal Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Cchmc Sepsisalgorithm",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "APSA Neuroblastoma Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Guideline Haec Outpatient V2",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Pre Op Stoma Closure Guideline V5",
-        "category": "guideline",
-        "specialty": "neonatal",
-        "urgency": "routine"
-      },
-      {
-        "title": "APSA Rhabdomyosarcoma Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Enema Info for App",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Consent Process for Cchmc Sept 2024",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Pectusexcavatumpathway V2",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Tpiat and Pancreatic Surgery Vaccination Guideline May 2021",
-        "category": "guideline",
-        "specialty": "surgery",
-        "urgency": "routine"
-      },
-      {
-        "title": "or Blood Workflow",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Blood Conservation and Bloodless Alternative Guidelines (for Jehovah's Witness Patients)",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Enema Info for App",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Anticoagulation Guidelines 05122021 Final",
-        "category": "guideline",
-        "specialty": "ecmo",
-        "urgency": "routine"
-      },
-      {
-        "title": "Dosing for Operative Antibiotic Prophylaxis",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Post Tpiat Hydrea Guideline",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Pcpinsurance Pp Final Draft 2",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "COG Neuroblastoma Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "COG Neuroblastoma Handbook",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      },
-      {
-        "title": "Renal Protection for Safe Prescribing of Toradol in Appendectomies",
-        "category": "guideline",
-        "specialty": "unknown",
-        "urgency": "routine"
-      }
-    ],
-    "guideline_categories": []
-  },
-  "patterns": {
-    "specialty_procedures": {
-      "unknown": [
-        "Gastrostomy tube placement",
-        "Appendectomy procedure",
-        "Tracheostomy procedure",
-        "Thoracoscopic procedure",
-        "Central line placement"
-      ],
-      "surgery": [
-        "Laparoscopic surgery",
-        "Cholecystectomy procedure",
-        "Hernia repair surgery"
-      ],
-      "ecmo": [
-        "ECMO decannulation procedure",
-        "ECMO cannulation procedure"
-      ]
-    },
-    "complexity_groups": {
-      "moderate": [
-        "Gastrostomy tube placement",
-        "Appendectomy procedure",
-        "Gastrostomy tube placement",
-        "Appendectomy procedure",
-        "Cholecystectomy procedure",
-        "Cholecystectomy procedure",
-        "Thoracoscopic procedure",
-        "Central line placement",
-        "Central line placement",
-        "Central line placement",
-        "Hernia repair surgery",
-        "Hernia repair surgery",
-        "Central line placement",
-        "Hernia repair surgery",
-        "Gastrostomy tube placement",
-        "Gastrostomy tube placement",
-        "Appendectomy procedure",
-        "Gastrostomy tube placement",
-        "Thoracoscopic procedure",
-        "Cholecystectomy procedure",
-        "Appendectomy procedure",
-        "Cholecystectomy procedure",
-        "Thoracoscopic procedure",
-        "Gastrostomy tube placement",
-        "Central line placement",
-        "Hernia repair surgery",
-        "Central line placement",
-        "Hernia repair surgery",
-        "Gastrostomy tube placement",
-        "Thoracoscopic procedure",
-        "Appendectomy procedure",
-        "Central line placement",
-        "Cholecystectomy procedure",
-        "Thoracoscopic procedure",
-        "Hernia repair surgery",
-        "Central line placement",
-        "Cholecystectomy procedure",
-        "Appendectomy procedure",
-        "Gastrostomy tube placement",
-        "Thoracoscopic procedure"
-      ],
-      "complex": [
-        "Laparoscopic surgery",
-        "Tracheostomy procedure",
-        "ECMO decannulation procedure",
-        "ECMO cannulation procedure",
-        "ECMO cannulation procedure",
-        "ECMO decannulation procedure",
-        "Laparoscopic surgery",
-        "Tracheostomy procedure",
-        "ECMO cannulation procedure",
-        "Laparoscopic surgery",
-        "ECMO decannulation procedure",
-        "ECMO cannulation procedure",
-        "Laparoscopic surgery",
-        "ECMO decannulation procedure",
-        "Laparoscopic surgery",
-        "Laparoscopic surgery",
-        "Laparoscopic surgery",
-        "Tracheostomy procedure",
-        "ECMO cannulation procedure",
-        "ECMO decannulation procedure",
-        "ECMO decannulation procedure",
-        "Laparoscopic surgery",
-        "ECMO cannulation procedure",
-        "Tracheostomy procedure",
-        "Laparoscopic surgery",
-        "Laparoscopic surgery"
-      ]
-    },
-    "high_priority_procedures": [
-      [
-        "Laparoscopic surgery",
-        10
-      ],
-      [
-        "Gastrostomy tube placement",
-        8
-      ],
-      [
-        "Central line placement",
-        8
-      ],
-      [
-        "Appendectomy procedure",
-        6
-      ],
-      [
-        "Cholecystectomy procedure",
-        6
-      ],
-      [
-        "ECMO decannulation procedure",
-        6
-      ],
-      [
-        "ECMO cannulation procedure",
-        6
-      ],
-      [
-        "Thoracoscopic procedure",
-        6
-      ],
-      [
-        "Hernia repair surgery",
-        6
-      ],
-      [
-        "Tracheostomy procedure",
-        4
-      ]
-    ]
+  "total_content": 175,
+  "analysis_summary": {
+    "total_items_analyzed": 341,
+    "duplicates_removed": 166,
+    "categories_created": 6
   }
 }

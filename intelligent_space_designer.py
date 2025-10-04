@@ -427,6 +427,47 @@ class IntelligentSpaceDesigner:
             ]
         })
         
+        # 7. Additional Content - Catch remaining content
+        remaining_content = []
+        used_content_ids = set()
+        
+        # Collect all used content IDs
+        for space_card in space_cards:
+            for collection in space_card['collections']:
+                for item in collection['items']:
+                    used_content_ids.add(item['id'])
+        
+        # Find remaining content
+        for item_id, item_data in self.transcription_data.items():
+            if item_id not in used_content_ids:
+                data = item_data['data']
+                remaining_content.append({
+                    'id': item_id,
+                    'title': data.get('title', ''),
+                    'type': item_data['type'],
+                    'specialty': data.get('specialty', 'unknown'),
+                    'urgency': data.get('urgency', 'routine'),
+                    'fileUrl': data.get('fileUrl', item_id)
+                })
+        
+        if remaining_content:
+            space_cards.append({
+                'id': 'additional-content',
+                'title': '📁 Additional Content',
+                'color': '#6b7280',
+                'description': 'Additional medical content and resources',
+                'priority': 'low',
+                'content_count': len(remaining_content),
+                'collections': [
+                    {
+                        'id': 'additional-items',
+                        'title': 'Additional Items',
+                        'description': 'Other medical content and resources',
+                        'items': remaining_content
+                    }
+                ]
+            })
+        
         self.new_structure = {
             'space_cards': space_cards,
             'total_content': len(self.transcription_data),
@@ -435,6 +476,29 @@ class IntelligentSpaceDesigner:
         }
         
         print("✅ Intelligent structure designed")
+        
+        # Recalculate content counts after deduplication
+        self.recalculate_content_counts()
+    
+    def recalculate_content_counts(self):
+        """Recalculate content counts after deduplication"""
+        print("🔢 Recalculating content counts...")
+        
+        total_content = 0
+        for space_card in self.new_structure['space_cards']:
+            space_card_total = 0
+            for collection in space_card['collections']:
+                collection_items = len(collection['items'])
+                space_card_total += collection_items
+            
+            # Update space card content count
+            space_card['content_count'] = space_card_total
+            total_content += space_card_total
+        
+        # Update total content
+        self.new_structure['total_content'] = total_content
+        
+        print(f"✅ Content counts recalculated: {total_content} total items")
     
     def _find_content_by_procedures(self, procedures: List[str]) -> List[Dict]:
         """Find content items that match specific procedures"""

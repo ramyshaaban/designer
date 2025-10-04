@@ -1,6 +1,6 @@
 {
-  "total_space_cards": 6,
-  "total_content_items": 345,
+  "total_space_cards": 7,
+  "total_content_items": 349,
   "space_card_summary": [
     {
       "id": "critical-care-life-support",
@@ -33,16 +33,23 @@
     {
       "id": "clinical-guidelines",
       "title": "\ud83d\udccb Clinical Guidelines & Protocols",
-      "content_count": 163,
+      "content_count": 36,
       "priority": "high",
       "collections": 3
     },
     {
       "id": "education-training",
       "title": "\ud83d\udcda Education & Training",
-      "content_count": 26,
+      "content_count": 20,
       "priority": "medium",
       "collections": 3
+    },
+    {
+      "id": "additional-content",
+      "title": "\ud83d\udcc1 Additional Content",
+      "content_count": 143,
+      "priority": "low",
+      "collections": 1
     }
   ],
   "medical_insights_summary": {
@@ -62,7 +69,7 @@
       "Tracheostomy procedure": 4
     },
     "top_specialties": {
-      "unknown": 189,
+      "unknown": 185,
       "surgery": 90,
       "ecmo": 26,
       "pediatric": 22,
