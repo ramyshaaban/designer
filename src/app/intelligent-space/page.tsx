@@ -77,6 +77,79 @@ export default function IntelligentCCHMCSpace() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fileUrls, setFileUrls] = useState<Map<string, string>>(new Map());
 
+  // Add custom styles for animation delays
+  React.useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      .animation-delay-200 {
+        animation-delay: 0.2s;
+      }
+      .animation-delay-300 {
+        animation-delay: 0.3s;
+      }
+      .animation-delay-400 {
+        animation-delay: 0.4s;
+      }
+      .animation-delay-500 {
+        animation-delay: 0.5s;
+      }
+      .animation-delay-600 {
+        animation-delay: 0.6s;
+      }
+      
+      @keyframes wave-flow {
+        0%, 100% { transform: translateX(-100%); opacity: 0; }
+        50% { transform: translateX(0%); opacity: 1; }
+      }
+      
+      @keyframes wave-ripple {
+        0% { transform: translateX(-100%) scaleY(0.5); opacity: 0; }
+        25% { transform: translateX(-50%) scaleY(1); opacity: 0.8; }
+        50% { transform: translateX(0%) scaleY(1.2); opacity: 1; }
+        75% { transform: translateX(50%) scaleY(1); opacity: 0.8; }
+        100% { transform: translateX(100%) scaleY(0.5); opacity: 0; }
+      }
+      
+      .wave-flow {
+        animation: wave-flow 3s ease-in-out infinite;
+      }
+      
+      .wave-ripple {
+        animation: wave-ripple 4s ease-in-out infinite;
+      }
+      
+      .wave-flow-delay-1 {
+        animation-delay: 0.5s;
+      }
+      
+      .wave-flow-delay-2 {
+        animation-delay: 1s;
+      }
+      
+      .wave-flow-delay-3 {
+        animation-delay: 1.5s;
+      }
+      
+      .wave-flow-delay-4 {
+        animation-delay: 2s;
+      }
+      
+      .wave-ripple-delay-1 {
+        animation-delay: 0.8s;
+      }
+      
+      .wave-ripple-delay-2 {
+        animation-delay: 1.6s;
+      }
+      
+      .wave-ripple-delay-3 {
+        animation-delay: 2.4s;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
+
   useEffect(() => {
     fetchIntelligentSpaceData();
   }, []);
@@ -285,13 +358,6 @@ export default function IntelligentCCHMCSpace() {
               <p className="text-lg text-gray-600 mt-1">Intelligent Medical Space Structure</p>
             </div>
             <div className="flex items-center space-x-4">
-              <Button
-                onClick={() => window.location.href = '/ai-assistant'}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
-              >
-                <Bot className="w-4 h-4 mr-2" />
-                Ask Sarah
-              </Button>
               <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
                 {spaceData.total_content} Total Items
               </Badge>
@@ -304,9 +370,9 @@ export default function IntelligentCCHMCSpace() {
       </div>
 
       <div className="container mx-auto px-6 py-8">
-        {/* Search Bar */}
-        <div className="mb-8">
-          <div className="relative max-w-md">
+        {/* Search Bar and Ask Sarah Button */}
+        <div className="mb-8 flex items-center gap-4">
+          <div className="relative max-w-md flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
             <Input
               placeholder="Search procedures, specialties, or content..."
@@ -314,6 +380,70 @@ export default function IntelligentCCHMCSpace() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 bg-white border-gray-200 focus:border-blue-500 focus:ring-blue-500"
             />
+          </div>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => window.location.href = '/ai-assistant'}
+              className="bg-gradient-to-r from-gray-900 via-black to-gray-800 text-white border border-gray-600 px-4 py-2 rounded-lg relative overflow-hidden group hover:scale-105 transition-all duration-300"
+            >
+              {/* Dark wavy background animation */}
+              <div className="absolute inset-0 opacity-30">
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-700 via-gray-800 to-gray-700 animate-pulse"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-600 to-transparent opacity-40 animate-bounce"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-gray-800 via-transparent to-gray-700 opacity-20 animate-pulse animation-delay-200"></div>
+              </div>
+              
+              {/* Wave animations */}
+              <div className="absolute inset-0 overflow-hidden">
+                {/* Wave 1 - Top wave with purple hint */}
+                <div className="absolute -top-1 left-0 w-full h-3 bg-gradient-to-r from-transparent via-purple-900/40 to-transparent opacity-60 wave-flow"></div>
+                {/* Wave 2 - Middle wave */}
+                <div className="absolute top-1/3 left-0 w-full h-2 bg-gradient-to-r from-transparent via-gray-600/60 to-transparent opacity-70 wave-flow wave-flow-delay-1"></div>
+                {/* Wave 3 - Ripple effect */}
+                <div className="absolute bottom-1/3 left-0 w-full h-2 bg-gradient-to-r from-transparent via-purple-800/50 to-transparent opacity-80 wave-ripple wave-ripple-delay-1"></div>
+                {/* Wave 4 - Bottom wave */}
+                <div className="absolute -bottom-1 left-0 w-full h-3 bg-gradient-to-r from-transparent via-gray-700/60 to-transparent opacity-60 wave-flow wave-flow-delay-2"></div>
+                {/* Wave 5 - Additional ripple */}
+                <div className="absolute top-1/2 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-purple-900/30 to-transparent opacity-50 wave-ripple wave-ripple-delay-2"></div>
+              </div>
+              
+              {/* Content */}
+              <div className="relative z-10 flex items-center">
+                <Bot className="w-4 h-4 mr-2 text-gray-300 group-hover:text-white transition-colors duration-300" />
+                <span className="font-medium">Ask Sarah</span>
+              </div>
+          </Button>
+          
+            <Button
+              onClick={() => window.location.href = '/voice-assistant'}
+              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border border-purple-500 px-4 py-2 rounded-lg relative overflow-hidden group hover:scale-105 transition-all duration-300"
+            >
+              {/* Voice assistant background animation */}
+              <div className="absolute inset-0 opacity-30">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-700 via-pink-700 to-purple-700 animate-pulse"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-600 to-transparent opacity-40 animate-bounce"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-purple-800 via-transparent to-pink-700 opacity-20 animate-pulse animation-delay-200"></div>
+              </div>
+              
+              {/* Voice floating elements */}
+              <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute -top-4 -left-4 w-8 h-8 bg-purple-600 rounded-full opacity-30 animate-ping"></div>
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-pink-500 rounded-full opacity-40 animate-ping animation-delay-200"></div>
+                <div className="absolute -bottom-3 left-1/4 w-4 h-4 bg-purple-700 rounded-full opacity-25 animate-ping animation-delay-400"></div>
+                <div className="absolute -bottom-2 right-1/3 w-5 h-5 bg-pink-600 rounded-full opacity-35 animate-ping animation-delay-600"></div>
+                <div className="absolute top-1/2 -left-2 w-3 h-3 bg-purple-800 rounded-full opacity-20 animate-ping animation-delay-300"></div>
+                <div className="absolute top-1/3 -right-1 w-2 h-2 bg-pink-700 rounded-full opacity-30 animate-ping animation-delay-500"></div>
+              </div>
+              
+              {/* Content */}
+              <div className="relative z-10 flex items-center">
+                <svg className="w-4 h-4 mr-2 text-purple-300 group-hover:text-white transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                  <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                </svg>
+                <span className="font-medium">Voice Assistant</span>
+              </div>
+            </Button>
           </div>
         </div>
 

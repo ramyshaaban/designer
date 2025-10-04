@@ -15,10 +15,10 @@ const s3Client = new S3Client({
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const key = searchParams.get('key');
+    const key = searchParams.get('key') || searchParams.get('id');
     
     if (!key) {
-      return NextResponse.json({ error: 'Missing key parameter' }, { status: 400 });
+      return NextResponse.json({ error: 'Missing key or id parameter' }, { status: 400 });
     }
 
     // Check if key appears to be a full URL instead of an S3 key
@@ -26,14 +26,21 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Key appears to be a full URL, not an S3 key' }, { status: 400 });
     }
 
-    // Validate that the key is within the spaces directory for security
+    // Convert ID to proper S3 key if needed
+    let s3Key = key;
     if (!key.startsWith('spaces/')) {
+      // If it's just an ID, construct the proper S3 key
+      s3Key = `spaces/4/content/${key}`;
+    }
+
+    // Validate that the key is within the spaces directory for security
+    if (!s3Key.startsWith('spaces/')) {
       return NextResponse.json({ error: 'Invalid key path - must start with spaces/' }, { status: 400 });
     }
 
     const command = new GetObjectCommand({
       Bucket: 'staycurrent-app-dev',
-      Key: key,
+      Key: s3Key,
     });
 
     // Generate a signed URL that expires in 1 hour

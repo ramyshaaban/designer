@@ -87,18 +87,59 @@ export async function POST(request: NextRequest) {
       aiResponse = generateFallbackResponse(query, topResults);
     }
 
+    // Generate URLs for resources (proxy or mock based on AWS availability)
+    const resourcesWithUrls = await Promise.all(
+      topResults.map(async (result) => {
+        try {
+          // Check if AWS credentials are available by testing the proxy API with HEAD request
+          const proxyTest = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/proxy-content?id=${result.id}`, {
+            method: 'HEAD'
+          });
+          
+          if (proxyTest.ok) {
+            // Use proxy API when AWS credentials are available
+            return {
+              id: result.id,
+              title: result.title,
+              type: result.type,
+              specialty: result.specialty,
+              fileUrl: `/api/proxy-content?id=${result.id}`,
+              relevanceScore: result.relevanceScore,
+              matchedKeywords: result.matchedKeywords
+            };
+          } else {
+            // Use mock content API when AWS credentials are not available
+            return {
+              id: result.id,
+              title: result.title,
+              type: result.type,
+              specialty: result.specialty,
+              fileUrl: `/api/mock-content?id=${result.id}`,
+              relevanceScore: result.relevanceScore,
+              matchedKeywords: result.matchedKeywords,
+              note: 'Development mode - AWS credentials not configured'
+            };
+          }
+        } catch (error) {
+          console.error('Error determining content access method for', result.id, error);
+          // Fallback to mock content
+          return {
+            id: result.id,
+            title: result.title,
+            type: result.type,
+            specialty: result.specialty,
+            fileUrl: `/api/mock-content?id=${result.id}`,
+            relevanceScore: result.relevanceScore,
+            matchedKeywords: result.matchedKeywords
+          };
+        }
+      })
+    );
+
     return NextResponse.json({
       query,
       response: aiResponse,
-      resources: topResults.map(result => ({
-        id: result.id,
-        title: result.title,
-        type: result.type,
-        specialty: result.specialty,
-        fileUrl: result.fileUrl,
-        relevanceScore: result.relevanceScore,
-        matchedKeywords: result.matchedKeywords
-      })),
+      resources: resourcesWithUrls,
       totalFound: searchResults.length,
       totalItems: allItems.length
     });
@@ -119,8 +160,8 @@ function generateFallbackResponse(query: string, results: any[]): string {
     return "ECMO (Extracorporeal Membrane Oxygenation) is a life-saving procedure used in pediatric patients with severe respiratory or cardiac failure. The procedure involves cannulating major vessels to provide temporary cardiopulmonary support. Key considerations include patient selection, cannulation technique, and ongoing monitoring. I've found relevant resources below to support your learning.";
   }
   
-  if (lowerQuery.includes('appendectomy')) {
-    return "Appendectomy is one of the most common emergency procedures in pediatric surgery. The procedure involves removing the inflamed appendix, typically through laparoscopic or open techniques. Preoperative preparation, antibiotic prophylaxis, and postoperative care are crucial for optimal outcomes. Check the resources below for detailed protocols.";
+  if (lowerQuery.includes('appendectomy') || lowerQuery.includes('appendicitis') || lowerQuery.includes('apendicitis')) {
+    return "Appendicitis is a common condition in pediatric patients where the appendix becomes inflamed and requires surgical intervention. At CCHMC, we have comprehensive guidelines for managing both perforated and non-perforated appendicitis cases. The treatment approach depends on the severity and whether the appendix has ruptured. Our protocols include both operative and non-operative management strategies, with detailed guidelines for each scenario. Check the resources below for specific protocols and procedures.";
   }
   
   if (lowerQuery.includes('neonatal') || lowerQuery.includes('newborn')) {
@@ -138,6 +179,16 @@ function searchContent(query: string, items: ContentItem[]): any[] {
   const queryLower = query.toLowerCase();
   const queryWords = queryLower.split(/\s+/).filter(word => word.length > 2);
 
+  // Medical term synonyms and related terms (including common misspellings)
+  const medicalSynonyms: { [key: string]: string[] } = {
+    'appendicitis': ['appendix', 'appendectomy', 'appendiceal', 'perforated', 'non-operative', 'non-perforated', 'apendicitis', 'apendectomy', 'apendix'],
+    'ecmo': ['extracorporeal', 'membrane', 'oxygenation', 'cannulation', 'cannulas'],
+    'gastrointestinal': ['gi', 'intestinal', 'bowel', 'stomach', 'digestive'],
+    'surgery': ['surgical', 'procedure', 'operation', 'operative'],
+    'guideline': ['protocol', 'procedure', 'standard', 'policy'],
+    'video': ['recording', 'demonstration', 'tutorial', 'training']
+  };
+
   const searchResults: any[] = [];
 
   items.forEach(item => {
@@ -145,7 +196,7 @@ function searchContent(query: string, items: ContentItem[]): any[] {
     const matchedKeywords: string[] = [];
     let relevanceScore = 0;
 
-    // Exact phrase match
+    // Exact phrase match (highest priority)
     if (titleLower.includes(queryLower)) {
       relevanceScore += 100;
       matchedKeywords.push(queryLower);
@@ -156,6 +207,28 @@ function searchContent(query: string, items: ContentItem[]): any[] {
       if (titleLower.includes(word)) {
         relevanceScore += 50;
         matchedKeywords.push(word);
+      }
+      
+      // Check for synonyms and related terms
+      if (medicalSynonyms[word]) {
+        medicalSynonyms[word].forEach(synonym => {
+          if (titleLower.includes(synonym)) {
+            relevanceScore += 40;
+            matchedKeywords.push(synonym);
+          }
+        });
+      }
+    });
+
+    // Reverse lookup - check if any query words are synonyms of terms in the title
+    Object.keys(medicalSynonyms).forEach(key => {
+      if (queryLower.includes(key)) {
+        medicalSynonyms[key].forEach(synonym => {
+          if (titleLower.includes(synonym)) {
+            relevanceScore += 35;
+            matchedKeywords.push(synonym);
+          }
+        });
       }
     });
 
@@ -176,11 +249,48 @@ function searchContent(query: string, items: ContentItem[]): any[] {
       matchedKeywords.push(item.specialty);
     }
 
+    // Partial word matching for medical terms
+    queryWords.forEach(word => {
+      if (word.length > 4) { // Only for longer words to avoid false positives
+        const partialMatches = titleLower.split(/\s+/).filter(titleWord => 
+          titleWord.includes(word) || word.includes(titleWord)
+        );
+        if (partialMatches.length > 0) {
+          relevanceScore += 20;
+          matchedKeywords.push(...partialMatches);
+        }
+      }
+    });
+
+    // Fuzzy matching for common misspellings
+    queryWords.forEach(word => {
+      if (word.length > 6) { // Only for longer words
+        // Check for common medical misspellings
+        const misspellings: { [key: string]: string[] } = {
+          'apendicitis': ['appendicitis'],
+          'apendectomy': ['appendectomy'],
+          'apendix': ['appendix'],
+          'ecmo': ['extracorporeal', 'membrane', 'oxygenation'],
+          'neonatal': ['neonatal', 'newborn'],
+          'pediatric': ['pediatric', 'paediatric']
+        };
+        
+        if (misspellings[word]) {
+          misspellings[word].forEach(correctTerm => {
+            if (titleLower.includes(correctTerm)) {
+              relevanceScore += 30; // Higher score for corrected misspellings
+              matchedKeywords.push(correctTerm);
+            }
+          });
+        }
+      }
+    });
+
     if (relevanceScore > 0) {
       searchResults.push({
         ...item,
-        relevanceScore,
-        matchedKeywords
+        relevanceScore: Math.min(relevanceScore, 100), // Cap at 100%
+        matchedKeywords: [...new Set(matchedKeywords)] // Remove duplicates
       });
     }
   });

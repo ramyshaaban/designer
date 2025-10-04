@@ -8,8 +8,76 @@ import SarahAssistant from '@/components/DrSarahAssistant';
 export default function AIAssistantPage() {
   const [isAssistantOpen, setIsAssistantOpen] = useState(true);
 
+  // Ensure full-screen layout
+  React.useEffect(() => {
+    if (isAssistantOpen) {
+      // Reset all possible constraints
+      document.body.style.margin = '0';
+      document.body.style.padding = '0';
+      document.body.style.overflow = 'hidden';
+      document.body.style.height = '100vh';
+      document.body.style.width = '100vw';
+      document.documentElement.style.margin = '0';
+      document.documentElement.style.padding = '0';
+      document.documentElement.style.overflow = 'hidden';
+      document.documentElement.style.height = '100vh';
+      document.documentElement.style.width = '100vw';
+      
+      // Add CSS to ensure full coverage
+      const style = document.createElement('style');
+      style.textContent = `
+        html, body {
+          margin: 0 !important;
+          padding: 0 !important;
+          height: 100vh !important;
+          width: 100vw !important;
+          overflow: hidden !important;
+        }
+        #__next {
+          margin: 0 !important;
+          padding: 0 !important;
+          height: 100vh !important;
+          width: 100vw !important;
+        }
+      `;
+      document.head.appendChild(style);
+      
+      return () => {
+        document.body.style.margin = '';
+        document.body.style.padding = '';
+        document.body.style.overflow = '';
+        document.body.style.height = '';
+        document.body.style.width = '';
+        document.documentElement.style.margin = '';
+        document.documentElement.style.padding = '';
+        document.documentElement.style.overflow = '';
+        document.documentElement.style.height = '';
+        document.documentElement.style.width = '';
+        document.head.removeChild(style);
+      };
+    }
+  }, [isAssistantOpen]);
+
   if (isAssistantOpen) {
-    return <SarahAssistant onClose={() => setIsAssistantOpen(false)} />;
+    return (
+      <div 
+        className="fixed inset-0 w-screen h-screen overflow-hidden" 
+        style={{ 
+          margin: 0, 
+          padding: 0, 
+          top: 0, 
+          left: 0, 
+          right: 0, 
+          bottom: 0,
+          width: '100vw',
+          height: '100vh',
+          position: 'fixed',
+          zIndex: 9999
+        }}
+      >
+        <SarahAssistant onClose={() => setIsAssistantOpen(false)} />
+      </div>
+    );
   }
 
   return (
