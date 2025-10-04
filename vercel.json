@@ -1,0 +1,11 @@
+{
+  "buildCommand": "npm install && npm run build",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "rewrites": [
+    {
+      "source": "/designer/cchmc/(.*)",
+      "destination": "/$1"
+    }
+  ]
+}
