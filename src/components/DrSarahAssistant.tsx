@@ -28,12 +28,12 @@ interface DrSarahAssistantProps {
   onClose: () => void;
 }
 
-export default function DrSarahAssistant({ onClose }: DrSarahAssistantProps) {
+export default function SarahAssistant({ onClose }: DrSarahAssistantProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       type: 'assistant',
-      content: "Hello! I'm Dr. Sarah, your Pediatric Surgery AI Assistant. I'm here to help you with questions about procedures, guidelines, and protocols. What would you like to know?",
+      content: "Hello! I'm Sarah, your CCHMC Pediatric Surgery AI Assistant. I'm here to help you with questions about procedures, guidelines, and protocols. What would you like to know?",
       timestamp: new Date(),
     }
   ]);
@@ -182,33 +182,50 @@ export default function DrSarahAssistant({ onClose }: DrSarahAssistantProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-white z-50 flex flex-col">
+    <div className="fixed inset-0 bg-black z-50 flex flex-col overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
+        <div className="absolute inset-0 opacity-20">
+          {/* Animated Waves */}
+          <div className="absolute top-0 left-0 w-full h-full">
+            <div className="absolute top-1/4 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent animate-pulse"></div>
+            <div className="absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent animate-pulse" style={{ animationDelay: '1s' }}></div>
+            <div className="absolute top-3/4 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent animate-pulse" style={{ animationDelay: '2s' }}></div>
+          </div>
+          {/* Floating Tech Elements */}
+          <div className="absolute top-20 left-20 w-2 h-2 bg-cyan-400 rounded-full animate-ping"></div>
+          <div className="absolute top-40 right-32 w-1 h-1 bg-blue-400 rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
+          <div className="absolute bottom-32 left-1/4 w-1.5 h-1.5 bg-purple-400 rounded-full animate-ping" style={{ animationDelay: '1.5s' }}></div>
+        </div>
+      </div>
+
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 flex items-center justify-between">
+      <div className="relative bg-gradient-to-r from-gray-900 to-black border-b border-gray-800 text-white p-4 flex items-center justify-between backdrop-blur-sm">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-            <Bot className="w-6 h-6" />
+          <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
+            <Bot className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-semibold">Dr. Sarah</h1>
-            <p className="text-blue-100 text-sm">Pediatric Surgery AI Assistant</p>
+            <h1 className="text-xl font-semibold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Sarah</h1>
+            <p className="text-gray-300 text-sm">CCHMC Pediatric Surgery AI Assistant</p>
           </div>
         </div>
         <Button
           variant="ghost"
           size="sm"
           onClick={onClose}
-          className="text-white hover:bg-white/20"
+          className="text-gray-300 hover:bg-gray-800 hover:text-white border border-gray-700"
         >
           <X className="w-5 h-5" />
         </Button>
       </div>
 
       {/* Chat Area */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="relative flex-1 flex overflow-hidden">
         {/* Messages */}
         <div className="flex-1 flex flex-col">
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 relative z-10">
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -217,15 +234,15 @@ export default function DrSarahAssistant({ onClose }: DrSarahAssistantProps) {
                 <div className={`flex items-start space-x-3 max-w-3xl ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                     message.type === 'user' 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-gray-100 text-gray-600'
+                      ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-lg' 
+                      : 'bg-gradient-to-br from-gray-700 to-gray-800 text-gray-300 border border-gray-600'
                   }`}>
                     {message.type === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                   </div>
-                  <div className={`rounded-lg p-4 ${
+                  <div className={`rounded-lg p-4 backdrop-blur-sm ${
                     message.type === 'user'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-50 text-gray-900'
+                      ? 'bg-gradient-to-br from-cyan-600 to-blue-700 text-white border border-cyan-500/30'
+                      : 'bg-gray-800/80 text-gray-100 border border-gray-700'
                   }`}>
                     <p className="whitespace-pre-wrap">{message.content}</p>
                     {message.resources && message.resources.length > 0 && (
@@ -235,7 +252,7 @@ export default function DrSarahAssistant({ onClose }: DrSarahAssistantProps) {
                           {message.resources.map((resource) => (
                             <Card
                               key={resource.id}
-                              className={`p-3 cursor-pointer hover:shadow-md transition-shadow ${getResourceColor(resource.type)}`}
+                              className={`p-3 cursor-pointer hover:shadow-lg transition-all duration-300 bg-gray-800/60 border border-gray-600 hover:border-cyan-500/50 hover:bg-gray-700/60 backdrop-blur-sm`}
                               onClick={() => setSelectedResource(resource)}
                             >
                               <div className="flex items-center space-x-2">
@@ -260,14 +277,14 @@ export default function DrSarahAssistant({ onClose }: DrSarahAssistantProps) {
             {isLoading && (
               <div className="flex justify-start">
                 <div className="flex items-start space-x-3 max-w-3xl">
-                  <div className="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 text-gray-300 border border-gray-600 flex items-center justify-center">
                     <Bot className="w-4 h-4" />
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="bg-gray-800/80 text-gray-100 border border-gray-700 rounded-lg p-4 backdrop-blur-sm">
                     <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                     </div>
                   </div>
                 </div>
@@ -278,20 +295,20 @@ export default function DrSarahAssistant({ onClose }: DrSarahAssistantProps) {
           </div>
 
           {/* Input Area */}
-          <div className="border-t bg-white p-4">
+          <div className="border-t border-gray-800 bg-gray-900/80 backdrop-blur-sm p-4 relative z-10">
             <div className="flex space-x-2">
               <Input
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Ask Dr. Sarah about pediatric surgery procedures, guidelines, or protocols..."
-                className="flex-1"
+                placeholder="Ask Sarah about pediatric surgery procedures, guidelines, or protocols..."
+                className="flex-1 bg-gray-800 border-gray-600 text-gray-100 placeholder-gray-400 focus:border-cyan-500 focus:ring-cyan-500/20"
                 disabled={isLoading}
               />
               <Button
                 onClick={handleSendMessage}
                 disabled={!inputValue.trim() || isLoading}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white border-0"
               >
                 <Send className="w-4 h-4" />
               </Button>
@@ -301,13 +318,14 @@ export default function DrSarahAssistant({ onClose }: DrSarahAssistantProps) {
 
         {/* Resource Viewer */}
         {selectedResource && (
-          <div className="w-96 border-l bg-gray-50 flex flex-col">
-            <div className="p-4 border-b bg-white flex items-center justify-between">
-              <h3 className="font-semibold text-gray-900">Resource Viewer</h3>
+          <div className="w-96 border-l border-gray-800 bg-gray-900/80 backdrop-blur-sm flex flex-col relative z-10">
+            <div className="p-4 border-b border-gray-800 bg-gray-800/60 flex items-center justify-between">
+              <h3 className="font-semibold text-gray-100">Resource Viewer</h3>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setSelectedResource(null)}
+                className="text-gray-300 hover:bg-gray-700 hover:text-white"
               >
                 <X className="w-4 h-4" />
               </Button>
@@ -316,18 +334,18 @@ export default function DrSarahAssistant({ onClose }: DrSarahAssistantProps) {
               <div className="space-y-4">
                 <div className="flex items-center space-x-2">
                   {getResourceIcon(selectedResource.type)}
-                  <Badge className={getResourceColor(selectedResource.type)}>
+                  <Badge className="bg-gray-700 text-gray-200 border-gray-600">
                     {selectedResource.type}
                   </Badge>
                 </div>
-                <h4 className="font-medium text-gray-900">{selectedResource.title}</h4>
+                <h4 className="font-medium text-gray-100">{selectedResource.title}</h4>
                 {selectedResource.description && (
-                  <p className="text-sm text-gray-600">{selectedResource.description}</p>
+                  <p className="text-sm text-gray-300">{selectedResource.description}</p>
                 )}
-                <div className="bg-gray-200 rounded-lg h-48 flex items-center justify-center">
-                  <p className="text-gray-500 text-sm">Resource Preview</p>
+                <div className="bg-gray-800 border border-gray-700 rounded-lg h-48 flex items-center justify-center">
+                  <p className="text-gray-400 text-sm">Resource Preview</p>
                 </div>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                <Button className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white">
                   Open Resource
                 </Button>
               </div>
