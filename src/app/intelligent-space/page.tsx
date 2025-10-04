@@ -25,7 +25,8 @@ import {
   Shield,
   Users,
   Clock,
-  Star
+  Star,
+  Bot
 } from 'lucide-react';
 
 interface IntelligentSpaceContentItem {
@@ -284,6 +285,13 @@ export default function IntelligentCCHMCSpace() {
               <p className="text-lg text-gray-600 mt-1">Intelligent Medical Space Structure</p>
             </div>
             <div className="flex items-center space-x-4">
+              <Button
+                onClick={() => window.location.href = '/ai-assistant'}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+              >
+                <Bot className="w-4 h-4 mr-2" />
+                Ask Dr. Sarah
+              </Button>
               <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
                 {spaceData.total_content} Total Items
               </Badge>
