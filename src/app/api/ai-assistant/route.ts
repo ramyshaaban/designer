@@ -1,9 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import OpenAI from 'openai';
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
 
 interface ContentItem {
   id: string;
@@ -48,27 +43,49 @@ export async function POST(request: NextRequest) {
     const searchResults = searchContent(query, allItems);
     const topResults = searchResults.slice(0, 5);
 
-    // Create context for OpenAI
-    const context = createContext(topResults, query);
+    // Check if OpenAI API key is available
+    const openaiApiKey = process.env.OPENAI_API_KEY;
+    
+    let aiResponse = '';
+    
+    if (openaiApiKey) {
+      try {
+        // Dynamic import to avoid build-time errors
+        const { default: OpenAI } = await import('openai');
+        
+        const openai = new OpenAI({
+          apiKey: openaiApiKey,
+        });
 
-    // Generate AI response using OpenAI
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [
-        {
-          role: "system",
-          content: `You are Sarah, a CCHMC Pediatric Surgery AI Assistant. You are knowledgeable, professional, and helpful. You provide evidence-based answers about pediatric surgery procedures, guidelines, and protocols. Always be concise and clear, especially for mobile users.`
-        },
-        {
-          role: "user",
-          content: `Context: ${context}\n\nQuestion: ${query}\n\nPlease provide a helpful answer based on the available CCHMC content. If relevant resources are available, mention them naturally in your response.`
-        }
-      ],
-      max_tokens: 500,
-      temperature: 0.7,
-    });
+        // Create context for OpenAI
+        const context = createContext(topResults, query);
 
-    const aiResponse = completion.choices[0]?.message?.content || "I'm sorry, I couldn't generate a response at this time.";
+        // Generate AI response using OpenAI
+        const completion = await openai.chat.completions.create({
+          model: "gpt-4",
+          messages: [
+            {
+              role: "system",
+              content: `You are Sarah, a CCHMC Pediatric Surgery AI Assistant. You are knowledgeable, professional, and helpful. You provide evidence-based answers about pediatric surgery procedures, guidelines, and protocols. Always be concise and clear, especially for mobile users.`
+            },
+            {
+              role: "user",
+              content: `Context: ${context}\n\nQuestion: ${query}\n\nPlease provide a helpful answer based on the available CCHMC content. If relevant resources are available, mention them naturally in your response.`
+            }
+          ],
+          max_tokens: 500,
+          temperature: 0.7,
+        });
+
+        aiResponse = completion.choices[0]?.message?.content || "I'm sorry, I couldn't generate a response at this time.";
+      } catch (openaiError) {
+        console.error('OpenAI API error:', openaiError);
+        aiResponse = generateFallbackResponse(query, topResults);
+      }
+    } else {
+      // Fallback response when OpenAI API key is not available
+      aiResponse = generateFallbackResponse(query, topResults);
+    }
 
     return NextResponse.json({
       query,
@@ -93,6 +110,28 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+function generateFallbackResponse(query: string, results: any[]): string {
+  const lowerQuery = query.toLowerCase();
+  
+  if (lowerQuery.includes('ecmo')) {
+    return "ECMO (Extracorporeal Membrane Oxygenation) is a life-saving procedure used in pediatric patients with severe respiratory or cardiac failure. The procedure involves cannulating major vessels to provide temporary cardiopulmonary support. Key considerations include patient selection, cannulation technique, and ongoing monitoring. I've found relevant resources below to support your learning.";
+  }
+  
+  if (lowerQuery.includes('appendectomy')) {
+    return "Appendectomy is one of the most common emergency procedures in pediatric surgery. The procedure involves removing the inflamed appendix, typically through laparoscopic or open techniques. Preoperative preparation, antibiotic prophylaxis, and postoperative care are crucial for optimal outcomes. Check the resources below for detailed protocols.";
+  }
+  
+  if (lowerQuery.includes('neonatal') || lowerQuery.includes('newborn')) {
+    return "Neonatal surgery requires specialized techniques and considerations due to the unique physiology of newborns. Key factors include temperature regulation, fluid management, and careful monitoring of vital signs. Procedures must be adapted to the smaller anatomy and immature organ systems. I've identified relevant resources for you.";
+  }
+  
+  if (results.length > 0) {
+    return `Based on the CCHMC Pediatric Surgery protocols and guidelines, I found ${results.length} relevant resources for your question about "${query}". The available content includes procedures, guidelines, and educational materials. I've highlighted the most relevant resources below to support your learning.`;
+  }
+  
+  return "I don't have specific information about that topic in the current CCHMC Pediatric Surgery content. Could you try rephrasing your question or ask about a different procedure? I'm here to help with pediatric surgery procedures, guidelines, and protocols.";
 }
 
 function searchContent(query: string, items: ContentItem[]): any[] {
