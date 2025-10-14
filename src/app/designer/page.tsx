@@ -2744,6 +2744,48 @@ export default function DesignerPage() {
     }
   };
 
+  const exportSpaceAsJSON = () => {
+    try {
+      // Create export data with metadata
+      const exportData = {
+        version: "1.0",
+        exportedAt: new Date().toISOString(),
+        exportedBy: "Space Designer",
+        space: space,
+        metadata: {
+          totalCards: space.cards.length,
+          totalItems: space.cards.reduce((total, card) => total + card.items.length, 0),
+          designMode: isDesignMode,
+          currentVersionId: currentVersionId
+        }
+      };
+
+      // Create filename with timestamp
+      const timestamp = new Date().toISOString().split('T')[0];
+      const filename = `space-design-${space.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-${timestamp}.json`;
+
+      // Create and download the file
+      const dataStr = JSON.stringify(exportData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(dataBlob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Clean up the object URL
+      URL.revokeObjectURL(link.href);
+      
+      alert(`Space design exported successfully as ${filename}`);
+      
+    } catch (error) {
+      console.error('Error exporting space as JSON:', error);
+      alert('Error exporting space: ' + (error as Error).message);
+    }
+  };
+
   const loadVersionBySlug = (slug: string) => {
     try {
       const savedVersions = JSON.parse(localStorage.getItem('designer-versions') || '[]');
@@ -4960,6 +5002,17 @@ export default function DesignerPage() {
                 <Eye className="w-5 h-5" />
                 Save Production Version
               </Button>
+              <Button
+                onClick={() => {
+                  exportSpaceAsJSON();
+                  setShowHamburgerMenu(false);
+                }}
+                variant="outline"
+                className="w-full flex items-center gap-3 justify-start h-12 text-base"
+              >
+                <FileText className="w-5 h-5" />
+                Export JSON
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -5100,6 +5153,62 @@ export default function DesignerPage() {
                 <Button variant="outline" onClick={() => setShowSpaceSettingsDialog(false)}>
                   Close
                 </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Version Dialog */}
+        <Dialog open={showVersionDialog} onOpenChange={setShowVersionDialog}>
+          <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-sm">
+            <DialogHeader>
+              <DialogTitle>Save Version</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">Version Name</label>
+                <Input
+                  placeholder="Enter version name"
+                  value={versionName}
+                  onChange={(e) => setVersionName(e.target.value)}
+                  className="min-h-[44px] text-base"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Description (Optional)</label>
+                <Textarea
+                  placeholder="Enter version description"
+                  value={versionDescription}
+                  onChange={(e) => setVersionDescription(e.target.value)}
+                  className="min-h-[80px] text-base"
+                  rows={3}
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 pt-4">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowVersionDialog(false)}
+                disabled={isSavingVersion}
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={saveVersion}
+                disabled={isSavingVersion || !versionName.trim()}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                {isSavingVersion ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4 mr-2" />
+                    Save Version
+                  </>
+                )}
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
