@@ -1131,17 +1131,17 @@ export default function DesignerPage() {
       if (typeof window !== 'undefined') {
         console.log('Saving space data:', space);
         localStorage.setItem('designer-space', JSON.stringify(space));
-        
+
         // Update saved state and clear unsaved changes flag
         setLastSavedState(JSON.stringify(space));
         setHasUnsavedChanges(false);
-        
+
         // If we're working on a version, also save to that version
         if (currentVersionId) {
           console.log('Saving to current version:', currentVersionId);
           const savedVersions = JSON.parse(localStorage.getItem('designer-versions') || '[]');
           const versionIndex = savedVersions.findIndex((v: any) => v.id === currentVersionId);
-          
+
           if (versionIndex !== -1) {
             savedVersions[versionIndex].space = space;
             savedVersions[versionIndex].timestamp = new Date().toISOString();
@@ -1149,7 +1149,7 @@ export default function DesignerPage() {
             console.log('Version updated successfully');
           }
         }
-        
+
         console.log('Space data saved successfully');
         alert('Space data saved successfully!');
       }
@@ -1192,10 +1192,10 @@ export default function DesignerPage() {
   const [showVersionDialog, setShowVersionDialog] = useState(false);
   const [versionName, setVersionName] = useState("");
   const [versionDescription, setVersionDescription] = useState("");
-  const [savedVersions, setSavedVersions] = useState<Array<{id: string, name: string, description: string, timestamp: Date, url: string}>>([]);
+  const [savedVersions, setSavedVersions] = useState<Array<{ id: string, name: string, description: string, timestamp: Date, url: string }>>([]);
   const [isSavingVersion, setIsSavingVersion] = useState(false);
   const [currentVersionId, setCurrentVersionId] = useState<string | null>(null);
-  
+
   // Onboarding state
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [currentOnboardingStep, setCurrentOnboardingStep] = useState(0);
@@ -1231,7 +1231,7 @@ export default function DesignerPage() {
   const [newItemMenuButtonTarget, setNewItemMenuButtonTarget] = useState("");
   const [showMenuButtonSearch, setShowMenuButtonSearch] = useState(false);
   const [menuButtonSearchQuery, setMenuButtonSearchQuery] = useState("");
-  
+
   // Unsaved changes tracking
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [lastSavedState, setLastSavedState] = useState<string>("");
@@ -1245,7 +1245,7 @@ export default function DesignerPage() {
         console.log('Auto-saving space data');
         localStorage.setItem('designer-space', JSON.stringify(space));
       }, 500); // Debounce for 500ms
-      
+
       return () => clearTimeout(timer);
     }
   }, [space, hasUnsavedChanges]);
@@ -1309,7 +1309,7 @@ export default function DesignerPage() {
         try {
           const parsedSpace = JSON.parse(saved);
           console.log('Loaded space data:', parsedSpace);
-          
+
           // Ensure all cards have isExpanded property
           const spaceWithExpansion = {
             ...parsedSpace,
@@ -1331,7 +1331,7 @@ export default function DesignerPage() {
               }) || []
             })) || []
           };
-          
+
           setSpace(spaceWithExpansion);
           setLastSavedState(saved); // Initialize saved state
         } catch (error) {
@@ -1365,7 +1365,7 @@ export default function DesignerPage() {
       // Check for version in query parameter (supports both ID and slug)
       const urlParams = new URLSearchParams(window.location.search);
       const versionParam = urlParams.get('version');
-      
+
       if (versionParam) {
         console.log('Loading version from URL parameter:', versionParam);
         // Try to load by slug first, then by ID
@@ -1380,10 +1380,10 @@ export default function DesignerPage() {
           loadVersionBySlug(versionSlug);
         }
       }
-      
+
       // Load saved versions list
       loadSavedVersions();
-      
+
       // Check if onboarding has been completed
       const onboardingCompleted = localStorage.getItem('designer-onboarding-completed');
       if (!onboardingCompleted) {
@@ -1432,12 +1432,12 @@ export default function DesignerPage() {
   // Helper function to get all content items for menu button search
   const getAllContentItems = (): ContentItem[] => {
     const allItems: ContentItem[] = [];
-    
+
     // Add items from main space cards
     space.cards.forEach(card => {
       allItems.push(...card.items);
     });
-    
+
     // Add items from collections (recursively)
     const addCollectionItems = (collection: ContentItem) => {
       if (collection.type === 'collection' && collection.children) {
@@ -1455,7 +1455,7 @@ export default function DesignerPage() {
         });
       }
     };
-    
+
     // Add items from ALL collections in the main space
     space.cards.forEach(card => {
       card.items.forEach(item => {
@@ -1464,7 +1464,7 @@ export default function DesignerPage() {
         }
       });
     });
-    
+
     return allItems.filter(item => item.type === 'content');
   };
 
@@ -2088,24 +2088,24 @@ export default function DesignerPage() {
   const getTextColorForBackground = (backgroundColor: string) => {
     // Convert hex to RGB
     let hex = backgroundColor.replace('#', '');
-    
+
     // Handle 8-character hex colors (with alpha) by taking only the first 6 characters
     if (hex.length === 8) {
       hex = hex.substr(0, 6);
     }
-    
+
     // Handle 3-character hex colors by expanding them
     if (hex.length === 3) {
       hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
     }
-    
+
     const r = parseInt(hex.substr(0, 2), 16);
     const g = parseInt(hex.substr(2, 2), 16);
     const b = parseInt(hex.substr(4, 2), 16);
-    
+
     // Calculate brightness using luminance formula
     const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    
+
     // Return dark text for light backgrounds, light text for dark backgrounds
     const textColor = brightness > 128 ? '#000000' : '#ffffff';
     console.log(`Background: ${backgroundColor}, Brightness: ${brightness}, Text Color: ${textColor}`);
@@ -2115,17 +2115,17 @@ export default function DesignerPage() {
   // Helper function to determine if background is light or dark
   const isLightBackground = (backgroundColor: string) => {
     let hex = backgroundColor.replace('#', '');
-    
+
     // Handle 8-character hex colors (with alpha) by taking only the first 6 characters
     if (hex.length === 8) {
       hex = hex.substr(0, 6);
     }
-    
+
     // Handle 3-character hex colors by expanding them
     if (hex.length === 3) {
       hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
     }
-    
+
     const r = parseInt(hex.substr(0, 2), 16);
     const g = parseInt(hex.substr(2, 2), 16);
     const b = parseInt(hex.substr(4, 2), 16);
@@ -2143,18 +2143,18 @@ export default function DesignerPage() {
   // Helper function to process and enhance logo colors
   const processLogoColors = (extractedColors: string[]): string[] => {
     const processedColors: string[] = [];
-    
+
     // Get the most prominent color (usually the main brand color)
     const primaryColor = extractedColors[0];
     if (primaryColor) {
       processedColors.push(primaryColor);
-      
+
       // Convert hex to RGB for calculations
       const hex = primaryColor.replace('#', '');
       const r = parseInt(hex.substr(0, 2), 16);
       const g = parseInt(hex.substr(2, 2), 16);
       const b = parseInt(hex.substr(4, 2), 16);
-      
+
       // Create lighter variations for better usability
       const createLighterShade = (factor: number) => {
         const newR = Math.min(255, Math.round(r + (255 - r) * factor));
@@ -2162,22 +2162,22 @@ export default function DesignerPage() {
         const newB = Math.min(255, Math.round(b + (255 - b) * factor));
         return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
       };
-      
+
       // Add lighter variations
       processedColors.push(createLighterShade(0.7)); // Very light
       processedColors.push(createLighterShade(0.5)); // Medium light
       processedColors.push(createLighterShade(0.3)); // Light
-      
+
       // Add white for contrast (if not already very light)
       const brightness = (r * 299 + g * 587 + b * 114) / 1000;
       if (brightness < 200) {
         processedColors.push('#ffffff');
       }
-      
+
       // Add a complementary neutral gray
       processedColors.push('#f8fafc');
     }
-    
+
     // Remove duplicates and ensure we have exactly 6 colors
     const uniqueColors = [...new Set(processedColors)];
     return uniqueColors.slice(0, 6);
@@ -2188,59 +2188,59 @@ export default function DesignerPage() {
     return new Promise((resolve) => {
       const img = new window.Image();
       img.crossOrigin = 'anonymous';
-      
+
       img.onload = () => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        
+
         if (!ctx) {
           resolve([]);
           return;
         }
-        
+
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
-        
+
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
         const colorMap = new Map<string, number>();
-        
+
         // Sample every 4th pixel to improve performance
         for (let i = 0; i < data.length; i += 16) {
           const r = data[i];
           const g = data[i + 1];
           const b = data[i + 2];
           const a = data[i + 3];
-          
+
           // Skip transparent pixels
           if (a < 128) continue;
-          
+
           // Skip very light colors (near white)
           if (r > 240 && g > 240 && b > 240) continue;
-          
+
           const hex = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
           colorMap.set(hex, (colorMap.get(hex) || 0) + 1);
         }
-        
+
         // Sort colors by frequency
         const sortedColors = Array.from(colorMap.entries())
           .sort((a, b) => b[1] - a[1])
           .map(([color]) => color);
-        
+
         // Group similar colors and create variations
         const processedColors = processLogoColors(sortedColors);
-        
+
         console.log('🎨 Extracted logo colors:', sortedColors);
         console.log('✨ Processed logo colors:', processedColors);
         resolve(processedColors);
       };
-      
+
       img.onerror = () => {
         console.error('Failed to load logo for color extraction');
         resolve([]);
       };
-      
+
       img.src = logoUrl;
     });
   };
@@ -2251,12 +2251,12 @@ export default function DesignerPage() {
     const r = parseInt(hex.substr(0, 2), 16);
     const g = parseInt(hex.substr(2, 2), 16);
     const b = parseInt(hex.substr(4, 2), 16);
-    
+
     // Make border color slightly darker/more saturated
     const borderR = Math.max(0, Math.min(255, r - 20));
     const borderG = Math.max(0, Math.min(255, g - 20));
     const borderB = Math.max(0, Math.min(255, b - 20));
-    
+
     return `#${borderR.toString(16).padStart(2, '0')}${borderG.toString(16).padStart(2, '0')}${borderB.toString(16).padStart(2, '0')}`;
   };
 
@@ -2300,10 +2300,10 @@ export default function DesignerPage() {
   // Search functionality
   const filterCardsBySearch = (cards: SpaceCard[]) => {
     if (!searchQuery.trim()) return cards;
-    
-    return cards.filter(card => 
+
+    return cards.filter(card =>
       card.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      card.items.some(item => 
+      card.items.some(item =>
         item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.description.toLowerCase().includes(searchQuery.toLowerCase())
       )
@@ -2350,32 +2350,32 @@ export default function DesignerPage() {
           createdAt: new Date(),
           updatedAt: new Date()
         };
-        
+
         setCurrentCollection({
           ...currentCollection,
           children: [...(currentCollection.children || []), newCard]
         });
         markAsChanged();
-        } else {
-          // Create a SpaceCard for main space
-          const newCard: SpaceCard = {
-            id: `card-${Date.now()}`,
-            title: newCardTitle.trim(),
-            items: [],
-            color: newCardColor, // Add color property
-            order: space.cards.length + 1,
-            isExpanded: false, // Minimized by default
-            createdAt: new Date(),
-            updatedAt: new Date()
-          };
-        
+      } else {
+        // Create a SpaceCard for main space
+        const newCard: SpaceCard = {
+          id: `card-${Date.now()}`,
+          title: newCardTitle.trim(),
+          items: [],
+          color: newCardColor, // Add color property
+          order: space.cards.length + 1,
+          isExpanded: false, // Minimized by default
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+
         setSpace({
           ...space,
           cards: [...space.cards, newCard]
         });
         markAsChanged();
       }
-      
+
       setNewCardTitle("");
       setNewCardColor("#f3f4f6");
       setShowAddCardDialog(false);
@@ -2396,7 +2396,7 @@ export default function DesignerPage() {
       // Update CollectionCard in collection
       setCurrentCollection({
         ...currentCollection,
-        children: currentCollection.children?.map(card => 
+        children: currentCollection.children?.map(card =>
           card.id === updatedCard.id ? { ...updatedCard, updatedAt: new Date() } as CollectionCard : card
         )
       });
@@ -2404,7 +2404,7 @@ export default function DesignerPage() {
       // Update SpaceCard in main space
       setSpace({
         ...space,
-        cards: space.cards.map(card => 
+        cards: space.cards.map(card =>
           card.id === updatedCard.id ? { ...updatedCard, updatedAt: new Date() } as SpaceCard : card
         )
       });
@@ -2417,36 +2417,36 @@ export default function DesignerPage() {
     console.log('Current collection:', currentCollection);
     console.log('Current space cards:', space.cards);
     console.log('Current mode:', isDesignMode ? 'Design' : 'Production');
-    
+
     try {
-    if (currentCollection) {
-      console.log('Toggling collection card expansion');
-      setCurrentCollection({
-        ...currentCollection,
-        children: currentCollection.children?.map(card => {
+      if (currentCollection) {
+        console.log('Toggling collection card expansion');
+        setCurrentCollection({
+          ...currentCollection,
+          children: currentCollection.children?.map(card => {
+            if (card.id === cardId) {
+              console.log('Found collection card to toggle:', card, 'Current isExpanded:', card.isExpanded);
+              return { ...card, isExpanded: !card.isExpanded, updatedAt: new Date() };
+            }
+            return card;
+          })
+        });
+      } else {
+        console.log('Toggling main space card expansion');
+        // Toggle expansion for main space cards
+        const updatedCards = space.cards.map(card => {
           if (card.id === cardId) {
-            console.log('Found collection card to toggle:', card, 'Current isExpanded:', card.isExpanded);
+            console.log('Found main space card to toggle:', card, 'Current isExpanded:', card.isExpanded);
             return { ...card, isExpanded: !card.isExpanded, updatedAt: new Date() };
           }
           return card;
-        })
-      });
-    } else {
-      console.log('Toggling main space card expansion');
-      // Toggle expansion for main space cards
-      const updatedCards = space.cards.map(card => {
-        if (card.id === cardId) {
-          console.log('Found main space card to toggle:', card, 'Current isExpanded:', card.isExpanded);
-          return { ...card, isExpanded: !card.isExpanded, updatedAt: new Date() };
-        }
-        return card;
-      });
-      console.log('Updated cards:', updatedCards);
-      setSpace({
-        ...space,
-        cards: updatedCards
-      });
-        
+        });
+        console.log('Updated cards:', updatedCards);
+        setSpace({
+          ...space,
+          cards: updatedCards
+        });
+
         // Mark as changed to persist the expansion state
         markAsChanged();
       }
@@ -2465,16 +2465,16 @@ export default function DesignerPage() {
   const moveCardUp = (cardId: string) => {
     const cards = [...space.cards];
     const currentIndex = cards.findIndex(card => card.id === cardId);
-    
+
     if (currentIndex > 0) {
       // Swap with the card above
       [cards[currentIndex], cards[currentIndex - 1]] = [cards[currentIndex - 1], cards[currentIndex]];
-      
+
       // Update order values
       cards.forEach((card, index) => {
         card.order = index;
       });
-      
+
       setSpace({
         ...space,
         cards: cards
@@ -2485,16 +2485,16 @@ export default function DesignerPage() {
   const moveCardDown = (cardId: string) => {
     const cards = [...space.cards];
     const currentIndex = cards.findIndex(card => card.id === cardId);
-    
+
     if (currentIndex < cards.length - 1) {
       // Swap with the card below
       [cards[currentIndex], cards[currentIndex + 1]] = [cards[currentIndex + 1], cards[currentIndex]];
-      
+
       // Update order values
       cards.forEach((card, index) => {
         card.order = index;
       });
-      
+
       setSpace({
         ...space,
         cards: cards
@@ -2504,19 +2504,19 @@ export default function DesignerPage() {
 
   const moveCollectionCardUp = (cardId: string) => {
     if (!currentCollection?.children) return;
-    
+
     const cards = [...currentCollection.children];
     const currentIndex = cards.findIndex(card => card.id === cardId);
-    
+
     if (currentIndex > 0) {
       // Swap with the card above
       [cards[currentIndex], cards[currentIndex - 1]] = [cards[currentIndex - 1], cards[currentIndex]];
-      
+
       // Update order values
       cards.forEach((card, index) => {
         card.order = index;
       });
-      
+
       setCurrentCollection({
         ...currentCollection,
         children: cards
@@ -2527,19 +2527,19 @@ export default function DesignerPage() {
 
   const moveCollectionCardDown = (cardId: string) => {
     if (!currentCollection?.children) return;
-    
+
     const cards = [...currentCollection.children];
     const currentIndex = cards.findIndex(card => card.id === cardId);
-    
+
     if (currentIndex < cards.length - 1) {
       // Swap with the card below
       [cards[currentIndex], cards[currentIndex + 1]] = [cards[currentIndex + 1], cards[currentIndex]];
-      
+
       // Update order values
       cards.forEach((card, index) => {
         card.order = index;
       });
-      
+
       setCurrentCollection({
         ...currentCollection,
         children: cards
@@ -2631,10 +2631,10 @@ export default function DesignerPage() {
     try {
       // Generate a unique version ID
       const versionId = `production-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      
+
       // Generate a clean slug from the space name
       const versionSlug = space.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'production';
-      
+
       // Create production version data (same as regular version but with production prefix)
       const versionData = {
         id: versionId,
@@ -2653,7 +2653,7 @@ export default function DesignerPage() {
 
       // Generate shareable URL
       const versionUrl = `${window.location.origin}/designer/${versionSlug}`;
-      
+
       // Update saved versions list
       setSavedVersions(prev => [...prev, {
         id: versionId,
@@ -2666,12 +2666,12 @@ export default function DesignerPage() {
       // Show success message
       const shareText = `Production version "${versionData.name}" saved! Share this link: ${versionUrl}`;
       alert(shareText);
-      
+
       // Copy to clipboard
       if (navigator.clipboard) {
         await navigator.clipboard.writeText(versionUrl);
       }
-      
+
     } catch (error) {
       console.error('Error saving production version:', error);
       alert('Failed to save production version. Please try again.');
@@ -2688,10 +2688,10 @@ export default function DesignerPage() {
     try {
       // Generate a unique version ID
       const versionId = `version-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      
+
       // Generate a clean slug from the version name
       const versionSlug = versionName.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-      
+
       // Create version data
       const versionData = {
         id: versionId,
@@ -2767,19 +2767,19 @@ export default function DesignerPage() {
       // Create and download the file
       const dataStr = JSON.stringify(exportData, null, 2);
       const dataBlob = new Blob([dataStr], { type: 'application/json' });
-      
+
       const link = document.createElement('a');
       link.href = URL.createObjectURL(dataBlob);
       link.download = filename;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
+
       // Clean up the object URL
       URL.revokeObjectURL(link.href);
-      
+
       alert(`Space design exported successfully as ${filename}`);
-      
+
     } catch (error) {
       console.error('Error exporting space as JSON:', error);
       alert('Error exporting space: ' + (error as Error).message);
@@ -2790,7 +2790,7 @@ export default function DesignerPage() {
     try {
       const savedVersions = JSON.parse(localStorage.getItem('designer-versions') || '[]');
       const version = savedVersions.find((v: any) => v.slug === slug);
-      
+
       if (version) {
         setSpace(version.space);
         setCurrentVersionId(version.id); // Set the current version ID
@@ -2809,7 +2809,7 @@ export default function DesignerPage() {
     try {
       const savedVersions = JSON.parse(localStorage.getItem('designer-versions') || '[]');
       const version = savedVersions.find((v: any) => v.id === versionId);
-      
+
       if (version) {
         setSpace(version.space);
         setCurrentVersionId(versionId); // Set the current version ID
@@ -2916,15 +2916,15 @@ export default function DesignerPage() {
         // Add or update item in collection card
         setCurrentCollection({
           ...currentCollection,
-          children: currentCollection.children?.map(card => 
-            card.id === cardId 
-              ? { 
-                  ...card, 
-                  items: editingItem 
-                    ? card.items?.map(item => item.id === editingItem.id ? itemData : item) || []
-                    : [...(card.items || []), { ...itemData, order: (card.items?.length || 0) + 1 }],
-                  updatedAt: new Date()
-                }
+          children: currentCollection.children?.map(card =>
+            card.id === cardId
+              ? {
+                ...card,
+                items: editingItem
+                  ? card.items?.map(item => item.id === editingItem.id ? itemData : item) || []
+                  : [...(card.items || []), { ...itemData, order: (card.items?.length || 0) + 1 }],
+                updatedAt: new Date()
+              }
               : card
           )
         });
@@ -2933,15 +2933,15 @@ export default function DesignerPage() {
         // Add or update item in main space card
         setSpace({
           ...space,
-          cards: space.cards.map(card => 
-            card.id === cardId 
-              ? { 
-                  ...card, 
-                  items: editingItem 
-                    ? card.items.map(item => item.id === editingItem.id ? itemData : item)
-                    : [...card.items, { ...itemData, order: card.items.length + 1 }],
-                  updatedAt: new Date()
-                }
+          cards: space.cards.map(card =>
+            card.id === cardId
+              ? {
+                ...card,
+                items: editingItem
+                  ? card.items.map(item => item.id === editingItem.id ? itemData : item)
+                  : [...card.items, { ...itemData, order: card.items.length + 1 }],
+                updatedAt: new Date()
+              }
               : card
           )
         });
@@ -2971,13 +2971,13 @@ export default function DesignerPage() {
       // Delete item from card in collection
       setCurrentCollection({
         ...currentCollection,
-        children: currentCollection.children?.map(card => 
-          card.id === cardId 
-            ? { 
-                ...card, 
-                items: (card.items || []).filter(item => item.id !== itemId),
-                updatedAt: new Date()
-              }
+        children: currentCollection.children?.map(card =>
+          card.id === cardId
+            ? {
+              ...card,
+              items: (card.items || []).filter(item => item.id !== itemId),
+              updatedAt: new Date()
+            }
             : card
         )
       });
@@ -2986,13 +2986,13 @@ export default function DesignerPage() {
       // Delete item from card in main space
       setSpace({
         ...space,
-        cards: space.cards.map(card => 
-          card.id === cardId 
-            ? { 
-                ...card, 
-                items: card.items.filter(item => item.id !== itemId),
-                updatedAt: new Date()
-              }
+        cards: space.cards.map(card =>
+          card.id === cardId
+            ? {
+              ...card,
+              items: card.items.filter(item => item.id !== itemId),
+              updatedAt: new Date()
+            }
             : card
         )
       });
@@ -3005,14 +3005,14 @@ export default function DesignerPage() {
     if (currentCollection) {
       // Deep clone the space to avoid mutations
       const updatedSpace = JSON.parse(JSON.stringify(space));
-      
+
       // Function to recursively find and update a collection by path
       const updateCollectionByPath = (cards: CollectionCard[], path: string[], updatedCollection: ContentItem): CollectionCard[] => {
         if (path.length === 0) return cards;
-        
+
         const targetId = path[0];
         const remainingPath = path.slice(1);
-        
+
         return cards.map(card => ({
           ...card,
           items: card.items.map(item => {
@@ -3036,7 +3036,7 @@ export default function DesignerPage() {
       };
 
       const newCards = updateCollectionByPath(updatedSpace.cards, collectionPath, currentCollection);
-      
+
       // Ensure all space cards have isExpanded property
       const ensureExpansionProperty = (cards: SpaceCard[]): SpaceCard[] => {
         return cards.map(card => ({
@@ -3056,9 +3056,9 @@ export default function DesignerPage() {
           }) : []
         }));
       };
-      
+
       const cardsWithExpansion = ensureExpansionProperty(newCards);
-      
+
       setSpace({
         ...updatedSpace,
         cards: cardsWithExpansion
@@ -3070,18 +3070,18 @@ export default function DesignerPage() {
   // This includes content in nested subcollections
   const getCollectionItemCount = (collection: ContentItem) => {
     if (!collection.children) return 0;
-    
+
     return collection.children.reduce((total, card) => {
       // Count content items in this card
       const contentItems = (card.items || []).filter(item => item.type === 'content');
       let cardTotal = contentItems.length;
-      
+
       // Also count content items in any subcollections within this card
       const subcollections = (card.items || []).filter(item => item.type === 'collection');
       subcollections.forEach(subcollection => {
         cardTotal += getCollectionItemCount(subcollection);
       });
-      
+
       return total + cardTotal;
     }, 0);
   };
@@ -3107,17 +3107,17 @@ export default function DesignerPage() {
 
     const draggedIndex = space.cards.findIndex(c => c.id === draggedCard);
     const targetIndex = space.cards.findIndex(c => c.id === targetCardId);
-    
+
     const newCards = [...space.cards];
     const [draggedCardData] = newCards.splice(draggedIndex, 1);
     newCards.splice(targetIndex, 0, draggedCardData);
-    
+
     // Update order numbers
     const updatedCards = newCards.map((card, index) => ({
       ...card,
       order: index + 1
     }));
-    
+
     setSpace({ ...space, cards: updatedCards });
     setDraggedCard(null);
   };
@@ -3149,45 +3149,45 @@ export default function DesignerPage() {
 
     const getTooltipPosition = () => {
       if (!targetElement) return { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' };
-      
+
       const rect = targetElement.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-      
+
       // Determine position based on step preference and available space
       let position = currentStep.position || 'bottom';
-      
+
       // Adjust position if element is near edges
       if (rect.right > viewportWidth - 300) position = 'left';
       if (rect.left < 300) position = 'right';
       if (rect.bottom > viewportHeight - 200) position = 'top';
-      
+
       const tooltipWidth = 320;
       const tooltipHeight = 200;
       const offset = 20;
-      
+
       switch (position) {
         case 'top':
           return {
             top: rect.top - tooltipHeight - offset,
-            left: Math.max(20, Math.min(rect.left + rect.width/2 - tooltipWidth/2, viewportWidth - tooltipWidth - 20)),
+            left: Math.max(20, Math.min(rect.left + rect.width / 2 - tooltipWidth / 2, viewportWidth - tooltipWidth - 20)),
             transform: 'none'
           };
         case 'bottom':
           return {
             top: rect.bottom + offset,
-            left: Math.max(20, Math.min(rect.left + rect.width/2 - tooltipWidth/2, viewportWidth - tooltipWidth - 20)),
+            left: Math.max(20, Math.min(rect.left + rect.width / 2 - tooltipWidth / 2, viewportWidth - tooltipWidth - 20)),
             transform: 'none'
           };
         case 'left':
           return {
-            top: Math.max(20, Math.min(rect.top + rect.height/2 - tooltipHeight/2, viewportHeight - tooltipHeight - 20)),
+            top: Math.max(20, Math.min(rect.top + rect.height / 2 - tooltipHeight / 2, viewportHeight - tooltipHeight - 20)),
             left: rect.left - tooltipWidth - offset,
             transform: 'none'
           };
         case 'right':
           return {
-            top: Math.max(20, Math.min(rect.top + rect.height/2 - tooltipHeight/2, viewportHeight - tooltipHeight - 20)),
+            top: Math.max(20, Math.min(rect.top + rect.height / 2 - tooltipHeight / 2, viewportHeight - tooltipHeight - 20)),
             left: rect.right + offset,
             transform: 'none'
           };
@@ -3201,7 +3201,7 @@ export default function DesignerPage() {
     return (
       <div className="fixed inset-0 z-50 pointer-events-none">
         {/* Dark Overlay with Rounded Cutout */}
-        <div 
+        <div
           className="absolute pointer-events-auto"
           style={{
             top: 0,
@@ -3224,10 +3224,10 @@ export default function DesignerPage() {
             )` : 'none'
           }}
         />
-        
+
         {/* Rounded Border around Cutout */}
         {targetElement && (
-          <div 
+          <div
             className="absolute pointer-events-none"
             style={{
               top: targetElement.getBoundingClientRect().top - 8,
@@ -3241,10 +3241,10 @@ export default function DesignerPage() {
             }}
           />
         )}
-        
-        
+
+
         {/* Tooltip */}
-        <div 
+        <div
           className="absolute bg-white rounded-xl shadow-2xl border border-gray-200 pointer-events-auto"
           style={{
             ...tooltipStyle,
@@ -3266,11 +3266,11 @@ export default function DesignerPage() {
               <X className="w-5 h-5" />
             </button>
           </div>
-          
+
           {/* Content */}
           <div className="p-4">
             <p className="text-gray-700 text-sm leading-relaxed mb-4">{currentStep.description}</p>
-            
+
             {/* Progress */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-2">
@@ -3282,14 +3282,13 @@ export default function DesignerPage() {
                 {onboardingTour.steps.map((_, index) => (
                   <div
                     key={index}
-                    className={`w-2 h-2 rounded-full ${
-                      index === currentOnboardingStep ? 'bg-blue-500' : 'bg-gray-300'
-                    }`}
+                    className={`w-2 h-2 rounded-full ${index === currentOnboardingStep ? 'bg-blue-500' : 'bg-gray-300'
+                      }`}
                   />
                 ))}
               </div>
             </div>
-            
+
             {/* Actions */}
             <div className="flex items-center justify-between">
               <button
@@ -3298,7 +3297,7 @@ export default function DesignerPage() {
               >
                 Skip Tour
               </button>
-              
+
               <div className="flex items-center space-x-2">
                 {currentOnboardingStep > 0 && (
                   <button
@@ -3308,7 +3307,7 @@ export default function DesignerPage() {
                     Previous
                   </button>
                 )}
-                
+
                 {currentOnboardingStep < onboardingTour.steps.length - 1 ? (
                   <button
                     onClick={nextOnboardingStep}
@@ -3344,7 +3343,7 @@ export default function DesignerPage() {
           onComplete={() => setMagicalStarTarget(null)}
         />
       )}
-      
+
       {/* Main App Container */}
       <div className={`${showAIDesigner ? 'w-1/2' : 'w-full'} max-w-md bg-white h-screen overflow-y-auto relative`}>
         {/* Header */}
@@ -3356,7 +3355,7 @@ export default function DesignerPage() {
                 variant={isDesignMode ? "default" : "outline"}
                 onClick={() => setIsDesignMode(true)}
                 className={`rounded-r-none border ${isDesignMode ? (isLightBackground(space.backgroundColor) ? 'button-light-bg' : 'button-dark-bg') : ''}`}
-                style={isDesignMode ? { 
+                style={isDesignMode ? {
                   '--button-bg-color': space.backgroundColor,
                   '--button-border-color': space.borderColor
                 } as React.CSSProperties : {}}
@@ -3370,7 +3369,7 @@ export default function DesignerPage() {
                 variant={!isDesignMode ? "default" : "outline"}
                 onClick={() => setIsDesignMode(false)}
                 className={`rounded-l-none border ${!isDesignMode ? (isLightBackground(space.backgroundColor) ? 'button-light-bg' : 'button-dark-bg') : ''}`}
-                style={!isDesignMode ? { 
+                style={!isDesignMode ? {
                   '--button-bg-color': space.backgroundColor,
                   '--button-border-color': space.borderColor
                 } as React.CSSProperties : {}}
@@ -3381,33 +3380,33 @@ export default function DesignerPage() {
                 Production Mode
               </Button>
             </div>
-            
+
             {/* AI Designer Button - Only in Design Mode */}
             {isDesignMode && (
-            <div className="relative">
-            <Button
-              variant="outline"
-              size="sm"
-                onClick={() => setShowAIDesigner(!showAIDesigner)}
-              className="bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-900 border border-gray-700 text-white shadow-lg shadow-gray-800/50 hover:shadow-gray-800/70 hover:text-gray-200 hover:drop-shadow-[0_0_8px_rgba(0,0,0,0.8)] transition-all duration-300"
-                title="AI Designer"
-            >
-                <Bot className="w-4 h-4" />
-            </Button>
-            </div>
+              <div className="relative">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowAIDesigner(!showAIDesigner)}
+                  className="bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-900 border border-gray-700 text-white shadow-lg shadow-gray-800/50 hover:shadow-gray-800/70 hover:text-gray-200 hover:drop-shadow-[0_0_8px_rgba(0,0,0,0.8)] transition-all duration-300"
+                  title="AI Designer"
+                >
+                  <Bot className="w-4 h-4" />
+                </Button>
+              </div>
             )}
-            
+
             {/* Hamburger Menu */}
             <div className="relative hamburger-menu">
-            <Button
-              variant="outline"
-              size="sm"
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => setShowHamburgerMenu(!showHamburgerMenu)}
-              className="bg-transparent hover:bg-gray-100 border border-gray-300"
+                className="bg-transparent hover:bg-gray-100 border border-gray-300"
                 title="Menu"
-            >
+              >
                 <Menu className="w-4 h-4" />
-            </Button>
+              </Button>
             </div>
           </div>
 
@@ -3415,26 +3414,25 @@ export default function DesignerPage() {
           <div className="flex items-center justify-center mb-2">
             <div className="flex items-center gap-3">
               {/* Logo Placeholder */}
-              <div 
-                className={`w-12 h-12 rounded-lg flex items-center justify-center transition-colors ${
-                  isDesignMode 
-                    ? 'border-2 border-dashed border-gray-300 cursor-pointer hover:border-gray-400' 
+              <div
+                className={`w-12 h-12 rounded-lg flex items-center justify-center transition-colors ${isDesignMode
+                    ? 'border-2 border-dashed border-gray-300 cursor-pointer hover:border-gray-400'
                     : 'border border-solid'
-                }`}
+                  }`}
                 style={!isDesignMode ? { borderColor: space.borderColor } : {}}
                 onClick={isDesignMode ? () => document.getElementById('logo-upload')?.click() : undefined}
               >
                 {space.logo ? (
-                  <img 
-                    src={space.logo} 
-                    alt="Space Logo" 
+                  <img
+                    src={space.logo}
+                    alt="Space Logo"
                     className="w-10 h-10 rounded object-cover"
                   />
                 ) : (
                   <ImageIcon className="w-6 h-6 text-gray-400" />
                 )}
               </div>
-              
+
               {/* Space Name */}
               <div data-onboarding="space-title">
                 {isDesignMode && isEditingSpaceTitle ? (
@@ -3453,7 +3451,7 @@ export default function DesignerPage() {
                     autoFocus
                   />
                 ) : (
-                  <h1 
+                  <h1
                     className={`text-xl font-bold text-gray-900 ${isDesignMode ? 'cursor-pointer hover:text-gray-600 transition-colors' : ''}`}
                     onClick={isDesignMode ? () => setIsEditingSpaceTitle(true) : undefined}
                   >
@@ -3463,7 +3461,7 @@ export default function DesignerPage() {
               </div>
             </div>
           </div>
-          
+
           {/* Space Social Buttons - Only in Production Mode */}
           {!isDesignMode && (
             <div className="flex items-center justify-center gap-3 mb-2">
@@ -3471,15 +3469,14 @@ export default function DesignerPage() {
                 variant="ghost"
                 size="sm"
                 onClick={toggleSpaceLike}
-                className={`flex items-center gap-1 px-3 py-1 bg-transparent hover:bg-gray-100 border ${
-                  space.isLiked ? 'border-red-300 text-red-600' : 'border-gray-300 text-gray-600'
-                }`}
+                className={`flex items-center gap-1 px-3 py-1 bg-transparent hover:bg-gray-100 border ${space.isLiked ? 'border-red-300 text-red-600' : 'border-gray-300 text-gray-600'
+                  }`}
                 title={`${space.likes} likes`}
               >
                 <Heart className={`w-4 h-4 ${space.isLiked ? 'fill-current' : ''}`} />
                 <span className="text-sm">{space.likes}</span>
               </Button>
-              
+
               <Button
                 variant="ghost"
                 size="sm"
@@ -3505,30 +3502,29 @@ export default function DesignerPage() {
                   </div>
                 </div>
               )}
-              
+
               <div className="flex justify-center gap-2">
                 {/* Plus Menu */}
                 <div className="relative plus-menu">
-                <Button
+                  <Button
                     variant="ghost"
-                  size="sm"
+                    size="sm"
                     onClick={() => setShowPlusMenu(!showPlusMenu)}
                     className="bg-transparent hover:bg-gray-100 border border-gray-300"
                     title="Add Content"
                   >
                     <Plus className="w-4 h-4" />
-                </Button>
+                  </Button>
                 </div>
-                
+
                 {/* Save Button */}
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={saveSpaceData}
                   disabled={isSaving}
-                  className={`bg-transparent hover:bg-gray-100 border border-gray-300 ${
-                    hasUnsavedChanges ? 'border-orange-300 bg-orange-50 text-orange-700' : ''
-                  } ${isSaving ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`bg-transparent hover:bg-gray-100 border border-gray-300 ${hasUnsavedChanges ? 'border-orange-300 bg-orange-50 text-orange-700' : ''
+                    } ${isSaving ? 'opacity-50 cursor-not-allowed' : ''}`}
                   title={isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save (unsaved changes)' : 'Save'}
                 >
                   {isSaving ? (
@@ -3537,7 +3533,7 @@ export default function DesignerPage() {
                     <Save className="w-4 h-4" />
                   )}
                 </Button>
-                
+
                 {/* Settings Button */}
                 <Button
                   variant="ghost"
@@ -3573,9 +3569,9 @@ export default function DesignerPage() {
                 // Empty Space - Add First Card or Use Template
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4 flex justify-center">
-                    <img 
-                      src="https://ptp.yox.mybluehost.me/lab/SCMD.png" 
-                      alt="SCMD Icon" 
+                    <img
+                      src="https://ptp.yox.mybluehost.me/lab/SCMD.png"
+                      alt="SCMD Icon"
                       className="w-32 h-32 object-contain"
                       onError={(e) => {
                         // Fallback to stethoscope icon if image fails to load
@@ -3600,9 +3596,8 @@ export default function DesignerPage() {
                     .map((card) => (
                       <Card
                         key={card.id}
-                        className={`bg-white border transition-all duration-200 ${
-                          draggedCard === card.id ? 'opacity-50 scale-95' : ''
-                        }`}
+                        className={`bg-white border transition-all duration-200 ${draggedCard === card.id ? 'opacity-50 scale-95' : ''
+                          }`}
                         style={{ borderColor: space.borderColor }}
                         draggable
                         onDragStart={(e) => handleDragStart(e, card.id)}
@@ -3614,16 +3609,16 @@ export default function DesignerPage() {
                             <CardTitle className="text-lg">{card.title}</CardTitle>
                             <div className="flex items-center gap-1" data-onboarding="card-actions">
                               <div className="relative card-menu">
-                              <Button
-                                variant="ghost"
-                                size="sm"
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
                                   onClick={() => setShowCardMenu(card.id)}
-                                className="bg-transparent hover:bg-gray-100 border border-gray-300"
+                                  className="bg-transparent hover:bg-gray-100 border border-gray-300"
                                   title="Card Actions"
-                              >
+                                >
                                   <Menu className="w-4 h-4" />
-                              </Button>
-                                
+                                </Button>
+
                                 {/* Card Menu Dropdown */}
                                 {showCardMenu === card.id && (
                                   <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-200 rounded-md shadow-lg z-50">
@@ -3694,17 +3689,17 @@ export default function DesignerPage() {
                               <div className="grid grid-cols-3 gap-3">
                                 {card.portals && card.portals.length > 0 ? (
                                   card.portals.map((portal) => (
-                                    <div 
-                                      key={portal.id} 
+                                    <div
+                                      key={portal.id}
                                       className="relative group rounded-full p-3 transition-colors cursor-pointer hover:shadow-lg"
                                     >
                                       <div className="flex flex-col items-center text-center space-y-2">
-                                        <div 
-                                          className="rounded-full border-2 flex items-center justify-center bg-white relative shadow-md" 
-                                          style={{ 
-                                            borderColor: portal.spaceColor, 
-                                            width: '80px', 
-                                            height: '80px' 
+                                        <div
+                                          className="rounded-full border-2 flex items-center justify-center bg-white relative shadow-md"
+                                          style={{
+                                            borderColor: portal.spaceColor,
+                                            width: '80px',
+                                            height: '80px'
                                           }}
                                         >
                                           <span className="text-2xl">{portal.spaceIcon}</span>
@@ -3733,13 +3728,13 @@ export default function DesignerPage() {
                                   </div>
                                 )}
                               </div>
-                              
+
                               {/* Add Portal Button */}
                               <Button
                                 onClick={() => setShowPortalDialog(true)}
                                 variant="outline"
                                 className="w-full flex items-center gap-2 border hover:shadow-lg transition-all duration-200"
-                                style={{ 
+                                style={{
                                   backgroundColor: space.backgroundColor,
                                   borderColor: space.borderColor,
                                   color: space.textColor || getTextColorForBackground(space.backgroundColor)
@@ -3759,8 +3754,8 @@ export default function DesignerPage() {
                                   </div>
                                 ) : (
                                   card.items.map((item) => (
-                                    <div 
-                                      key={item.id} 
+                                    <div
+                                      key={item.id}
                                       className={`relative group rounded-lg p-2 transition-colors cursor-pointer`}
                                       onClick={() => {
                                         if (item.type === 'collection') {
@@ -3786,43 +3781,43 @@ export default function DesignerPage() {
                                           {/* Edit/Delete buttons above icon container */}
                                           {isDesignMode && (
                                             <div className="absolute -top-2 -right-2 flex gap-2 z-10">
-                                            <Button
-                                              variant="ghost"
-                                              size="sm"
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                if (item.type === 'collection') {
-                                                  setCurrentCollection(item);
-                                                  setShowCollectionDesigner(true);
-                                                } else {
-                                                setEditingItem(item);
-                                                setCurrentCardId(card.id);
-                                                setShowAddItemDialog(true);
-                                                }
-                                              }}
+                                              <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  if (item.type === 'collection') {
+                                                    setCurrentCollection(item);
+                                                    setShowCollectionDesigner(true);
+                                                  } else {
+                                                    setEditingItem(item);
+                                                    setCurrentCardId(card.id);
+                                                    setShowAddItemDialog(true);
+                                                  }
+                                                }}
                                                 className="h-8 w-8 p-0 bg-white hover:bg-blue-50 border-2 border-blue-200 text-blue-600 hover:text-blue-700 shadow-lg rounded-full hover:scale-105 transition-all duration-200"
                                                 title="Edit item"
-                                            >
+                                              >
                                                 <Edit className="w-4 h-4" />
-                                            </Button>
-                                            <Button
-                                              variant="ghost"
-                                              size="sm"
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                deleteItem(card.id, item.id);
-                                              }}
+                                              </Button>
+                                              <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  deleteItem(card.id, item.id);
+                                                }}
                                                 className="h-8 w-8 p-0 bg-white hover:bg-red-50 border-2 border-red-200 text-red-600 hover:text-red-700 shadow-lg rounded-full hover:scale-105 transition-all duration-200"
                                                 title="Delete item"
-                                            >
+                                              >
                                                 <Trash2 className="w-4 h-4" />
-                                            </Button>
-                                          </div>
-                                        )}
+                                              </Button>
+                                            </div>
+                                          )}
                                           <div className="relative z-10 -mt-8">
-                                            {item.type === 'collection' ? <FolderOpen className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} /> : 
-                                              typeof item.icon === 'string' ? 
-                                                <span className="text-2xl">{item.icon}</span> : 
+                                            {item.type === 'collection' ? <FolderOpen className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} /> :
+                                              typeof item.icon === 'string' ?
+                                                <span className="text-2xl">{item.icon}</span> :
                                                 typeof item.icon === 'object' && item.contentType ?
                                                   React.createElement(getContentTypeIcon(item.contentType) || FileText, { className: "w-8 h-8", style: { color: space.borderColor, strokeWidth: 1 } }) :
                                                   <FileText className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} />
@@ -3837,8 +3832,8 @@ export default function DesignerPage() {
                                               <div className="bg-gray-100 text-gray-800 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
                                                 <div className="truncate">{getCollectionItemCount(item)} items</div>
                                               </div>
-                                          </div>
-                                        )}
+                                            </div>
+                                          )}
                                         </div>
                                         <div className="w-full h-12 flex flex-col justify-center">
                                           <p className={`text-xs font-medium leading-tight line-clamp-2 ${item.type === 'collection' ? '' : ''}`} style={item.type === 'collection' ? { color: space.borderColor } : {}}>{item.title}</p>
@@ -3871,13 +3866,13 @@ export default function DesignerPage() {
                   className="pl-10 border-gray-300 focus:border-blue-500"
                 />
               </div>
-              
+
               {space.cards.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4 flex justify-center">
-                    <img 
-                      src="https://ptp.yox.mybluehost.me/lab/SCMD.png" 
-                      alt="SCMD Icon" 
+                    <img
+                      src="https://ptp.yox.mybluehost.me/lab/SCMD.png"
+                      alt="SCMD Icon"
                       className="w-32 h-32 object-contain"
                       onError={(e) => {
                         // Fallback to stethoscope icon if image fails to load
@@ -3900,7 +3895,7 @@ export default function DesignerPage() {
                     <Card key={card.id} className="bg-white border transition-all duration-200" style={{ borderColor: space.borderColor }}>
                       <CardHeader>
                         <div className="flex items-center justify-between">
-                          <div 
+                          <div
                             className="flex items-center gap-2 cursor-pointer flex-1"
                             onClick={() => toggleCardExpansion(card.id)}
                             data-onboarding="card-expansion"
@@ -3909,118 +3904,117 @@ export default function DesignerPage() {
                             <Badge variant="secondary" className="text-xs">
                               {card.items.length} {card.items.length === 1 ? 'item' : 'items'}
                             </Badge>
-                            <ChevronRight 
-                              className={`w-4 h-4 transition-transform ${card.isExpanded ? 'rotate-90' : ''}`} 
+                            <ChevronRight
+                              className={`w-4 h-4 transition-transform ${card.isExpanded ? 'rotate-90' : ''}`}
                             />
                           </div>
                           {/* No edit/delete buttons in production mode */}
                         </div>
                       </CardHeader>
                       {card.isExpanded && (
-                      <CardContent>
-                        {card.title === 'Portals' ? (
-                          // Special Portals card rendering for Production Mode
-                          <div className="grid grid-cols-3 gap-3">
-                            {card.portals && card.portals.length > 0 ? (
-                              card.portals.map((portal) => (
-                                <div 
-                                  key={portal.id} 
-                                  className="relative group rounded-full p-3 transition-colors cursor-pointer hover:shadow-lg"
-                                >
-                                  <div className="flex flex-col items-center text-center space-y-2">
-                                    <div 
-                                      className="rounded-full border-2 flex items-center justify-center bg-white relative shadow-md" 
-                                      style={{ 
-                                        borderColor: portal.spaceColor, 
-                                        width: '80px', 
-                                        height: '80px' 
-                                      }}
-                                    >
-                                      <span className="text-2xl">{portal.spaceIcon}</span>
-                                    </div>
-                                    <div className="text-xs font-medium text-gray-700 max-w-full truncate">
-                                      {portal.spaceName}
-                                    </div>
-                                  </div>
-                                </div>
-                              ))
-                            ) : (
-                              <div className="col-span-3 text-center py-8">
-                                <p className="text-sm text-gray-500 italic">No portals available</p>
-                              </div>
-                            )}
-                          </div>
-                        ) : (
-                          // Regular card rendering for Production Mode
-                          <div className="grid grid-cols-3 gap-2">
-                            {card.items.length === 0 ? (
-                              <div className="col-span-3 text-center py-8">
-                                <p className="text-sm text-gray-500 italic">No content available</p>
-                              </div>
-                            ) : (
-                              card.items.map((item) => (
-                              <div 
-                                key={item.id} 
-                                className={`rounded-lg p-2 transition-colors cursor-pointer ${
-                                  item.type === 'collection' 
-                                    ? 'bg-gradient-to-br from-gray-50 to-gray-100' 
-                                    : ''
-                                }`}
-                                onClick={() => item.type === 'collection' && (setCurrentCollection(item), setCollectionPath([...collectionPath, item.id]), setShowCollectionDialog(true))}
-                              >
-                                <div className="flex flex-col items-center text-center space-y-2 h-full justify-center">
-                                  <div className={`rounded-lg border flex items-center justify-center bg-white relative ${item.type === 'collection' ? 'shadow-lg' : ''}`} style={{ borderColor: space.borderColor, width: '100px', height: '120px' }}>
-                                    {/* Stack effect for collections */}
-                                    {item.type === 'collection' && (
-                                      <>
-                                        {/* Third square (back) */}
-                                        <div className="absolute inset-0 rounded-lg border bg-gray-50 transform translate-x-2 translate-y-2 rotate-2 opacity-40" style={{ borderColor: space.borderColor }}></div>
-                                        {/* Second square (middle) */}
-                                        <div className="absolute inset-0 rounded-lg border bg-gray-100 transform translate-x-1 translate-y-1 -rotate-1 opacity-60" style={{ borderColor: space.borderColor }}></div>
-                                        {/* First square (front) - solid white */}
-                                        <div className="absolute inset-0 rounded-lg border bg-white transform translate-x-0 translate-y-0 rotate-0 opacity-100" style={{ borderColor: space.borderColor }}></div>
-                                      </>
-                                    )}
-                                    <div className="relative z-10 flex items-center justify-center w-full h-full -mt-8">
-                                      {item.type === 'collection' ? <FolderOpen className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} /> : 
-                                        typeof item.icon === 'string' ? 
-                                          <span className="text-2xl flex items-center justify-center">{item.icon}</span> : 
-                                          typeof item.icon === 'object' && item.contentType ?
-                                            React.createElement(getContentTypeIcon(item.contentType) || FileText, { className: "w-8 h-8", style: { color: space.borderColor, strokeWidth: 1 } }) :
-                                            <FileText className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} />
-                                      }
-                                    </div>
-                                    {/* Item count inside container for collections */}
-                                    {item.type === 'collection' && (
-                                      <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex flex-col space-y-1">
-                                        <div className="bg-gray-100 text-gray-800 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
-                                          <div className="truncate">{getCollectionCardCount(item)} cards</div>
-                                        </div>
-                                        <div className="bg-gray-100 text-gray-800 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
-                                          <div className="truncate">{getCollectionItemCount(item)} items</div>
-                                        </div>
-                                      </div>
-                                    )}
-                                  </div>
-                                  <div className="w-full h-12 flex flex-col justify-center">
-                                    <h4 className={`text-xs font-medium line-clamp-2 ${item.type === 'collection' ? '' : ''}`} style={item.type === 'collection' ? { color: space.borderColor } : {}}>{item.title}</h4>
-                                    <p className="text-xs text-gray-600 line-clamp-1 leading-tight">{item.description}</p>
-                                  </div>
-                                    {item.externalUrl && (
-                                      <a 
-                                        href={item.externalUrl} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        className="text-xs text-blue-600 hover:underline block mt-1"
+                        <CardContent>
+                          {card.title === 'Portals' ? (
+                            // Special Portals card rendering for Production Mode
+                            <div className="grid grid-cols-3 gap-3">
+                              {card.portals && card.portals.length > 0 ? (
+                                card.portals.map((portal) => (
+                                  <div
+                                    key={portal.id}
+                                    className="relative group rounded-full p-3 transition-colors cursor-pointer hover:shadow-lg"
+                                  >
+                                    <div className="flex flex-col items-center text-center space-y-2">
+                                      <div
+                                        className="rounded-full border-2 flex items-center justify-center bg-white relative shadow-md"
+                                        style={{
+                                          borderColor: portal.spaceColor,
+                                          width: '80px',
+                                          height: '80px'
+                                        }}
                                       >
-                                        Open Link
-                                      </a>
-                                    )}
+                                        <span className="text-2xl">{portal.spaceIcon}</span>
+                                      </div>
+                                      <div className="text-xs font-medium text-gray-700 max-w-full truncate">
+                                        {portal.spaceName}
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))
+                              ) : (
+                                <div className="col-span-3 text-center py-8">
+                                  <p className="text-sm text-gray-500 italic">No portals available</p>
                                 </div>
-                              </div>
-                            ))
-                            )}
-                          </div>
+                              )}
+                            </div>
+                          ) : (
+                            // Regular card rendering for Production Mode
+                            <div className="grid grid-cols-3 gap-2">
+                              {card.items.length === 0 ? (
+                                <div className="col-span-3 text-center py-8">
+                                  <p className="text-sm text-gray-500 italic">No content available</p>
+                                </div>
+                              ) : (
+                                card.items.map((item) => (
+                                  <div
+                                    key={item.id}
+                                    className={`rounded-lg p-2 transition-colors cursor-pointer ${item.type === 'collection'
+                                        ? 'bg-gradient-to-br from-gray-50 to-gray-100'
+                                        : ''
+                                      }`}
+                                    onClick={() => item.type === 'collection' && (setCurrentCollection(item), setCollectionPath([...collectionPath, item.id]), setShowCollectionDialog(true))}
+                                  >
+                                    <div className="flex flex-col items-center text-center space-y-2 h-full justify-center">
+                                      <div className={`rounded-lg border flex items-center justify-center bg-white relative ${item.type === 'collection' ? 'shadow-lg' : ''}`} style={{ borderColor: space.borderColor, width: '100px', height: '120px' }}>
+                                        {/* Stack effect for collections */}
+                                        {item.type === 'collection' && (
+                                          <>
+                                            {/* Third square (back) */}
+                                            <div className="absolute inset-0 rounded-lg border bg-gray-50 transform translate-x-2 translate-y-2 rotate-2 opacity-40" style={{ borderColor: space.borderColor }}></div>
+                                            {/* Second square (middle) */}
+                                            <div className="absolute inset-0 rounded-lg border bg-gray-100 transform translate-x-1 translate-y-1 -rotate-1 opacity-60" style={{ borderColor: space.borderColor }}></div>
+                                            {/* First square (front) - solid white */}
+                                            <div className="absolute inset-0 rounded-lg border bg-white transform translate-x-0 translate-y-0 rotate-0 opacity-100" style={{ borderColor: space.borderColor }}></div>
+                                          </>
+                                        )}
+                                        <div className="relative z-10 flex items-center justify-center w-full h-full -mt-8">
+                                          {item.type === 'collection' ? <FolderOpen className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} /> :
+                                            typeof item.icon === 'string' ?
+                                              <span className="text-2xl flex items-center justify-center">{item.icon}</span> :
+                                              typeof item.icon === 'object' && item.contentType ?
+                                                React.createElement(getContentTypeIcon(item.contentType) || FileText, { className: "w-8 h-8", style: { color: space.borderColor, strokeWidth: 1 } }) :
+                                                <FileText className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} />
+                                          }
+                                        </div>
+                                        {/* Item count inside container for collections */}
+                                        {item.type === 'collection' && (
+                                          <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex flex-col space-y-1">
+                                            <div className="bg-gray-100 text-gray-800 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                              <div className="truncate">{getCollectionCardCount(item)} cards</div>
+                                            </div>
+                                            <div className="bg-gray-100 text-gray-800 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                              <div className="truncate">{getCollectionItemCount(item)} items</div>
+                                            </div>
+                                          </div>
+                                        )}
+                                      </div>
+                                      <div className="w-full h-12 flex flex-col justify-center">
+                                        <h4 className={`text-xs font-medium line-clamp-2 ${item.type === 'collection' ? '' : ''}`} style={item.type === 'collection' ? { color: space.borderColor } : {}}>{item.title}</h4>
+                                        <p className="text-xs text-gray-600 line-clamp-1 leading-tight">{item.description}</p>
+                                      </div>
+                                      {item.externalUrl && (
+                                        <a
+                                          href={item.externalUrl}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="text-xs text-blue-600 hover:underline block mt-1"
+                                        >
+                                          Open Link
+                                        </a>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))
+                              )}
+                            </div>
                           )}
                         </CardContent>
                       )}
@@ -4033,7 +4027,7 @@ export default function DesignerPage() {
 
         {/* Add Card Dialog */}
         <Dialog open={showAddCardDialog} onOpenChange={setShowAddCardDialog}>
-          <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-sm">
+          <DialogContent className="max-w-sm mx-auto max-w-[calc(100vw-1rem)] w-[calc(100vw-1rem)] sm:max-w-sm z-[70]">
             <DialogHeader>
               <DialogTitle>Add New Card</DialogTitle>
             </DialogHeader>
@@ -4274,15 +4268,15 @@ export default function DesignerPage() {
               <div className="max-h-60 overflow-y-auto space-y-2">
                 {(() => {
                   const allItems = getAllContentItems();
-                  const filteredItems = allItems.filter(item => 
+                  const filteredItems = allItems.filter(item =>
                     item.title.toLowerCase().includes(menuButtonSearchQuery.toLowerCase()) ||
                     item.description.toLowerCase().includes(menuButtonSearchQuery.toLowerCase())
                   );
-                  
+
                   console.log('All content items:', allItems);
                   console.log('Search query:', menuButtonSearchQuery);
                   console.log('Filtered items:', filteredItems);
-                  
+
                   return filteredItems.map((item) => {
                     const IconComponent = item.contentType ? getContentTypeIcon(item.contentType) : FileText;
                     return (
@@ -4306,16 +4300,16 @@ export default function DesignerPage() {
                     );
                   });
                 })()}
-                {getAllContentItems().filter(item => 
+                {getAllContentItems().filter(item =>
                   item.title.toLowerCase().includes(menuButtonSearchQuery.toLowerCase()) ||
                   item.description.toLowerCase().includes(menuButtonSearchQuery.toLowerCase())
                 ).length === 0 && (
-                  <div className="text-center py-8 text-gray-500">
-                    <Search className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                    <p className="text-sm">No content found</p>
-                    <p className="text-xs">Try adjusting your search terms</p>
-                  </div>
-                )}
+                    <div className="text-center py-8 text-gray-500">
+                      <Search className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                      <p className="text-sm">No content found</p>
+                      <p className="text-xs">Try adjusting your search terms</p>
+                    </div>
+                  )}
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-4 border-t">
@@ -4347,7 +4341,7 @@ export default function DesignerPage() {
               </div>
               <div className="max-h-60 overflow-y-auto space-y-2">
                 {sampleSpaces
-                  .filter(space => 
+                  .filter(space =>
                     space.name.toLowerCase().includes(portalSearchQuery.toLowerCase()) ||
                     space.description.toLowerCase().includes(portalSearchQuery.toLowerCase())
                   )
@@ -4357,8 +4351,8 @@ export default function DesignerPage() {
                       className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
                       onClick={() => addPortal(spaceData)}
                     >
-                      <div 
-                        className="w-12 h-12 rounded-full flex items-center justify-center mr-3 shadow-md" 
+                      <div
+                        className="w-12 h-12 rounded-full flex items-center justify-center mr-3 shadow-md"
                         style={{ backgroundColor: spaceData.color + '20', borderColor: spaceData.color }}
                       >
                         <span className="text-xl">{spaceData.icon}</span>
@@ -4369,16 +4363,16 @@ export default function DesignerPage() {
                       </div>
                     </div>
                   ))}
-                {sampleSpaces.filter(space => 
+                {sampleSpaces.filter(space =>
                   space.name.toLowerCase().includes(portalSearchQuery.toLowerCase()) ||
                   space.description.toLowerCase().includes(portalSearchQuery.toLowerCase())
                 ).length === 0 && (
-                  <div className="text-center py-8 text-gray-500">
-                    <Search className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                    <p className="text-sm">No spaces found</p>
-                    <p className="text-xs">Try adjusting your search terms</p>
-                  </div>
-                )}
+                    <div className="text-center py-8 text-gray-500">
+                      <Search className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                      <p className="text-sm">No spaces found</p>
+                      <p className="text-xs">Try adjusting your search terms</p>
+                    </div>
+                  )}
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-4 border-t">
@@ -4411,7 +4405,7 @@ export default function DesignerPage() {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div>
                 <label className="text-sm font-medium">Title</label>
                 <Input
@@ -4421,7 +4415,7 @@ export default function DesignerPage() {
                   className="min-h-[44px] text-base"
                 />
               </div>
-              
+
               <div>
                 <label className="text-sm font-medium">Description</label>
                 <Textarea
@@ -4515,8 +4509,8 @@ export default function DesignerPage() {
                 <Button variant="outline" onClick={() => setShowAddItemDialog(false)}>
                   Cancel
                 </Button>
-                <Button 
-                  onClick={() => currentCardId && addItem(currentCardId)} 
+                <Button
+                  onClick={() => currentCardId && addItem(currentCardId)}
                   disabled={!newItemTitle.trim()}
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -4595,8 +4589,8 @@ export default function DesignerPage() {
         {/* Collection Dialog */}
         {currentCollection && showCollectionDialog && (
           <div className="absolute inset-0 bg-black/50 z-60 flex items-center justify-center">
-            <div 
-              className="w-96 max-h-[calc(100vh-2rem)] overflow-y-auto bg-white border shadow-lg rounded-lg" 
+            <div
+              className="w-96 max-h-[calc(100vh-2rem)] overflow-y-auto bg-white border shadow-lg rounded-lg"
               data-onboarding="collection-dialog"
             >
               <div className="p-6 pb-0">
@@ -4614,22 +4608,21 @@ export default function DesignerPage() {
                   </div>
                 )}
                 <p className="text-sm text-gray-600">{currentCollection.description}</p>
-                
+
                 {/* Crowdsourcing Buttons */}
                 <div className="flex items-center justify-center gap-3 mt-3">
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={toggleCollectionLike}
-                    className={`flex items-center gap-1 px-3 py-1 bg-transparent hover:bg-gray-100 border ${
-                      currentCollection.isLiked ? 'border-red-300 text-red-600' : 'border-gray-300 text-gray-600'
-                    }`}
+                    className={`flex items-center gap-1 px-3 py-1 bg-transparent hover:bg-gray-100 border ${currentCollection.isLiked ? 'border-red-300 text-red-600' : 'border-gray-300 text-gray-600'
+                      }`}
                     title={`${currentCollection.likes || 0} likes`}
                   >
                     <Heart className={`w-4 h-4 ${currentCollection.isLiked ? 'fill-current' : ''}`} />
                     <span className="text-sm">{currentCollection.likes || 0}</span>
                   </Button>
-                  
+
                   <Button
                     variant="ghost"
                     size="sm"
@@ -4640,7 +4633,7 @@ export default function DesignerPage() {
                     <Share className="w-4 h-4" />
                     <span className="text-sm">{currentCollection.shares || 0}</span>
                   </Button>
-                  
+
                   {isDesignMode && (
                     <Button
                       variant="ghost"
@@ -4662,7 +4655,7 @@ export default function DesignerPage() {
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   )}
-                  
+
                   {/* Collection Menu */}
                   {isDesignMode && (
                     <div className="relative collection-menu">
@@ -4675,7 +4668,7 @@ export default function DesignerPage() {
                       >
                         <Plus className="w-4 h-4" />
                       </Button>
-                      
+
                       {/* Collection Menu Dropdown */}
                       {showCollectionMenu && (
                         <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-md shadow-lg z-50 transform -translate-x-4">
@@ -4707,120 +4700,119 @@ export default function DesignerPage() {
                   )}
                 </div>
               </div>
-              
+
               <div className="px-6 pb-6 space-y-4">
                 {/* Collection Cards Management */}
                 {currentCollection.children && currentCollection.children.length > 0 ? (
                   <div className="mt-8">
-                  <div className="space-y-3">
-                    {currentCollection.children
-                      .sort((a, b) => a.order - b.order)
-                      .map((card) => (
-                        <Card key={card.id} className="bg-white border transition-all duration-200" style={{ borderColor: card.color }}>
-                          <CardHeader className="px-3 pt-0 pb-3">
-                            {isDesignMode && (
-                              <div className="flex items-center justify-end gap-1 mb-2 -mt-3">
-                                <div className="relative card-menu">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                    onClick={() => setShowCardMenu(card.id)}
-                                  className="bg-transparent hover:bg-gray-100 border border-gray-300 h-8 w-8 p-0"
-                                    title="Card Actions"
-                                >
-                                    <Menu className="w-3 h-3" />
-                                </Button>
-                                  
-                                  {/* Card Menu Dropdown */}
-                                  {showCardMenu === card.id && (
-                                    <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                                      <div className="py-1">
-                                        <button
-                                          onClick={() => {
-                                            setEditingCard(card);
-                                            setShowCardMenu(null);
-                                          }}
-                                          className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 whitespace-nowrap"
-                                        >
-                                          <Edit className="w-4 h-4" />
-                                          Edit Card
-                                        </button>
-                                        <button
-                                          onClick={() => {
-                                            setCurrentCardId(card.id);
-                                            setShowAddItemDialog(true);
-                                            setShowCardMenu(null);
-                                          }}
-                                          className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 whitespace-nowrap"
-                                        >
-                                          <Plus className="w-4 h-4" />
-                                          Add Item
-                                        </button>
-                                        <button
-                                  onClick={() => {
-                                    setCurrentCollection({
-                                      ...currentCollection,
-                                      children: currentCollection.children?.filter(c => c.id !== card.id)
-                                    });
-                                            markAsChanged();
-                                            setShowCardMenu(null);
-                                  }}
-                                          className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 whitespace-nowrap"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                          Delete Card
-                                        </button>
+                    <div className="space-y-3">
+                      {currentCollection.children
+                        .sort((a, b) => a.order - b.order)
+                        .map((card) => (
+                          <Card key={card.id} className="bg-white border transition-all duration-200" style={{ borderColor: card.color }}>
+                            <CardHeader className="px-3 pt-0 pb-3">
+                              {isDesignMode && (
+                                <div className="flex items-center justify-end gap-1 mb-2 -mt-3">
+                                  <div className="relative card-menu">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => setShowCardMenu(card.id)}
+                                      className="bg-transparent hover:bg-gray-100 border border-gray-300 h-8 w-8 p-0"
+                                      title="Card Actions"
+                                    >
+                                      <Menu className="w-3 h-3" />
+                                    </Button>
+
+                                    {/* Card Menu Dropdown */}
+                                    {showCardMenu === card.id && (
+                                      <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                                        <div className="py-1">
+                                          <button
+                                            onClick={() => {
+                                              setEditingCard(card);
+                                              setShowCardMenu(null);
+                                            }}
+                                            className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 whitespace-nowrap"
+                                          >
+                                            <Edit className="w-4 h-4" />
+                                            Edit Card
+                                          </button>
+                                          <button
+                                            onClick={() => {
+                                              setCurrentCardId(card.id);
+                                              setShowAddItemDialog(true);
+                                              setShowCardMenu(null);
+                                            }}
+                                            className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 whitespace-nowrap"
+                                          >
+                                            <Plus className="w-4 h-4" />
+                                            Add Item
+                                          </button>
+                                          <button
+                                            onClick={() => {
+                                              setCurrentCollection({
+                                                ...currentCollection,
+                                                children: currentCollection.children?.filter(c => c.id !== card.id)
+                                              });
+                                              markAsChanged();
+                                              setShowCardMenu(null);
+                                            }}
+                                            className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 whitespace-nowrap"
+                                          >
+                                            <Trash2 className="w-4 h-4" />
+                                            Delete Card
+                                          </button>
+                                        </div>
                                       </div>
-                                    </div>
-                                  )}
+                                    )}
+                                  </div>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => moveCollectionCardUp(card.id)}
+                                    disabled={currentCollection.children?.findIndex(c => c.id === card.id) === 0}
+                                    className="bg-transparent hover:bg-gray-100 border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8 p-0"
+                                    title="Move up"
+                                  >
+                                    <ChevronUp className="w-3 h-3" />
+                                  </Button>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => moveCollectionCardDown(card.id)}
+                                    disabled={currentCollection.children?.findIndex(c => c.id === card.id) === (currentCollection.children?.length || 0) - 1}
+                                    className="bg-transparent hover:bg-gray-100 border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8 p-0"
+                                    title="Move down"
+                                  >
+                                    <ChevronDown className="w-3 h-3" />
+                                  </Button>
                                 </div>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => moveCollectionCardUp(card.id)}
-                                  disabled={currentCollection.children?.findIndex(c => c.id === card.id) === 0}
-                                  className="bg-transparent hover:bg-gray-100 border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8 p-0"
-                                  title="Move up"
-                                >
-                                  <ChevronUp className="w-3 h-3" />
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => moveCollectionCardDown(card.id)}
-                                  disabled={currentCollection.children?.findIndex(c => c.id === card.id) === (currentCollection.children?.length || 0) - 1}
-                                  className="bg-transparent hover:bg-gray-100 border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8 p-0"
-                                  title="Move down"
-                                >
-                                  <ChevronDown className="w-3 h-3" />
-                                </Button>
+                              )}
+                              <div
+                                className="flex items-center gap-2 cursor-pointer"
+                                onClick={() => toggleCardExpansion(card.id)}
+                              >
+                                <CardTitle className="text-sm truncate" style={{ color: card.color }}>{card.title}</CardTitle>
+                                <Badge variant="secondary" className="text-xs flex-shrink-0">
+                                  {(card.items || []).length} {(card.items || []).length === 1 ? 'item' : 'items'}
+                                </Badge>
+                                <ChevronRight
+                                  className={`w-4 h-4 transition-transform flex-shrink-0 ${card.isExpanded ? 'rotate-90' : ''}`}
+                                />
                               </div>
-                            )}
-                            <div 
-                              className="flex items-center gap-2 cursor-pointer"
-                              onClick={() => toggleCardExpansion(card.id)}
-                            >
-                              <CardTitle className="text-sm truncate" style={{ color: card.color }}>{card.title}</CardTitle>
-                              <Badge variant="secondary" className="text-xs flex-shrink-0">
-                                {(card.items || []).length} {(card.items || []).length === 1 ? 'item' : 'items'}
-                              </Badge>
-                              <ChevronRight 
-                                className={`w-4 h-4 transition-transform flex-shrink-0 ${card.isExpanded ? 'rotate-90' : ''}`} 
-                              />
-                            </div>
-                          </CardHeader>
-                          {card.isExpanded && (
-                            <CardContent>
-                            <div className="grid grid-cols-3 gap-2">
-                              {card.items && card.items.length > 0 ? (
-                                card.items.map((item) => (
-                                      <div 
-                                        key={item.id} 
-                                        className={`relative group rounded-lg p-2 transition-colors cursor-pointer ${
-                                          item.type === 'collection' 
-                                            ? 'bg-gradient-to-br from-gray-50 to-gray-100' 
+                            </CardHeader>
+                            {card.isExpanded && (
+                              <CardContent>
+                                <div className="grid grid-cols-3 gap-2">
+                                  {card.items && card.items.length > 0 ? (
+                                    card.items.map((item) => (
+                                      <div
+                                        key={item.id}
+                                        className={`relative group rounded-lg p-2 transition-colors cursor-pointer ${item.type === 'collection'
+                                            ? 'bg-gradient-to-br from-gray-50 to-gray-100'
                                             : ''
-                                        }`}
+                                          }`}
                                         onClick={() => {
                                           if (item.type === 'collection') {
                                             setCurrentCollection(item);
@@ -4830,95 +4822,95 @@ export default function DesignerPage() {
                                         }}
                                         data-onboarding="collection-item"
                                       >
-                                    <div className="flex flex-col items-center text-center space-y-2 h-full justify-center">
-                                      <div className={`rounded-lg border flex items-center justify-center bg-white relative ${item.type === 'collection' ? 'shadow-lg' : ''}`} style={{ borderColor: space.borderColor, width: '100px', height: '120px', minHeight: '120px', maxHeight: '120px' }}>
-                                        {/* Stack effect for collections */}
-                                        {item.type === 'collection' && (
-                                          <>
-                                        {/* Third square (back) */}
-                                        <div className="absolute inset-0 rounded-lg border bg-gray-50 transform translate-x-2 translate-y-2 rotate-2 opacity-40" style={{ borderColor: space.borderColor }}></div>
-                                        {/* Second square (middle) */}
-                                        <div className="absolute inset-0 rounded-lg border bg-gray-100 transform translate-x-1 translate-y-1 -rotate-1 opacity-60" style={{ borderColor: space.borderColor }}></div>
-                                        {/* First square (front) - solid white */}
-                                        <div className="absolute inset-0 rounded-lg border bg-white transform translate-x-0 translate-y-0 rotate-0 opacity-100" style={{ borderColor: space.borderColor }}></div>
-                                          </>
-                                        )}
-                                        {/* Edit/Delete buttons above icon container */}
-                                        {isDesignMode && (
-                                          <div className="absolute -top-2 -right-2 flex gap-2 z-10">
-                                          <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              if (item.type === 'collection') {
-                                                setCurrentCollection(item);
-                                                setShowCollectionDesigner(true);
-                                              } else {
-                                              setEditingItem(item);
-                                              setCurrentCardId(card.id);
-                                              setShowAddItemDialog(true);
+                                        <div className="flex flex-col items-center text-center space-y-2 h-full justify-center">
+                                          <div className={`rounded-lg border flex items-center justify-center bg-white relative ${item.type === 'collection' ? 'shadow-lg' : ''}`} style={{ borderColor: space.borderColor, width: '100px', height: '120px', minHeight: '120px', maxHeight: '120px' }}>
+                                            {/* Stack effect for collections */}
+                                            {item.type === 'collection' && (
+                                              <>
+                                                {/* Third square (back) */}
+                                                <div className="absolute inset-0 rounded-lg border bg-gray-50 transform translate-x-2 translate-y-2 rotate-2 opacity-40" style={{ borderColor: space.borderColor }}></div>
+                                                {/* Second square (middle) */}
+                                                <div className="absolute inset-0 rounded-lg border bg-gray-100 transform translate-x-1 translate-y-1 -rotate-1 opacity-60" style={{ borderColor: space.borderColor }}></div>
+                                                {/* First square (front) - solid white */}
+                                                <div className="absolute inset-0 rounded-lg border bg-white transform translate-x-0 translate-y-0 rotate-0 opacity-100" style={{ borderColor: space.borderColor }}></div>
+                                              </>
+                                            )}
+                                            {/* Edit/Delete buttons above icon container */}
+                                            {isDesignMode && (
+                                              <div className="absolute -top-2 -right-2 flex gap-2 z-10">
+                                                <Button
+                                                  variant="ghost"
+                                                  size="sm"
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    if (item.type === 'collection') {
+                                                      setCurrentCollection(item);
+                                                      setShowCollectionDesigner(true);
+                                                    } else {
+                                                      setEditingItem(item);
+                                                      setCurrentCardId(card.id);
+                                                      setShowAddItemDialog(true);
+                                                    }
+                                                  }}
+                                                  className="h-8 w-8 p-0 bg-white hover:bg-blue-50 border-2 border-blue-200 text-blue-600 hover:text-blue-700 shadow-lg rounded-full hover:scale-105 transition-all duration-200"
+                                                  title="Edit item"
+                                                >
+                                                  <Edit className="w-4 h-4" />
+                                                </Button>
+                                                <Button
+                                                  variant="ghost"
+                                                  size="sm"
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    deleteItem(card.id, item.id);
+                                                  }}
+                                                  className="h-8 w-8 p-0 bg-white hover:bg-red-50 border-2 border-red-200 text-red-600 hover:text-red-700 shadow-lg rounded-full hover:scale-105 transition-all duration-200"
+                                                  title="Delete item"
+                                                >
+                                                  <Trash2 className="w-4 h-4" />
+                                                </Button>
+                                              </div>
+                                            )}
+                                            <div className="relative z-10 -mt-8">
+                                              {item.type === 'collection' ? <FolderOpen className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} /> :
+                                                typeof item.icon === 'string' ?
+                                                  <span className="text-2xl">{item.icon}</span> :
+                                                  typeof item.icon === 'object' && item.contentType ?
+                                                    React.createElement(getContentTypeIcon(item.contentType) || FileText, { className: "w-8 h-8", style: { color: space.borderColor, strokeWidth: 1 } }) :
+                                                    <FileText className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} />
                                               }
-                                            }}
-                                              className="h-8 w-8 p-0 bg-white hover:bg-blue-50 border-2 border-blue-200 text-blue-600 hover:text-blue-700 shadow-lg rounded-full hover:scale-105 transition-all duration-200"
-                                              title="Edit item"
-                                          >
-                                              <Edit className="w-4 h-4" />
-                                          </Button>
-                                          <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              deleteItem(card.id, item.id);
-                                            }}
-                                              className="h-8 w-8 p-0 bg-white hover:bg-red-50 border-2 border-red-200 text-red-600 hover:text-red-700 shadow-lg rounded-full hover:scale-105 transition-all duration-200"
-                                              title="Delete item"
-                                          >
-                                              <Trash2 className="w-4 h-4" />
-                                          </Button>
-                                        </div>
-                                      )}
-                                        <div className="relative z-10 -mt-8">
-                                          {item.type === 'collection' ? <FolderOpen className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} /> : 
-                                            typeof item.icon === 'string' ? 
-                                              <span className="text-2xl">{item.icon}</span> : 
-                                              typeof item.icon === 'object' && item.contentType ?
-                                                React.createElement(getContentTypeIcon(item.contentType) || FileText, { className: "w-8 h-8", style: { color: space.borderColor, strokeWidth: 1 } }) :
-                                                <FileText className="w-8 h-8" style={{ color: space.borderColor, strokeWidth: 1 }} />
-                                          }
-                                        </div>
-                                        {/* Item count inside container for collections */}
-                                        {item.type === 'collection' && (
-                                          <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex flex-col space-y-1">
-                                            <div className="bg-gray-100 text-gray-800 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
-                                              <div className="truncate">{getCollectionCardCount(item)} cards</div>
                                             </div>
-                                            <div className="bg-gray-100 text-gray-800 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
-                                              <div className="truncate">{getCollectionItemCount(item)} items</div>
-                                            </div>
+                                            {/* Item count inside container for collections */}
+                                            {item.type === 'collection' && (
+                                              <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex flex-col space-y-1">
+                                                <div className="bg-gray-100 text-gray-800 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                                  <div className="truncate">{getCollectionCardCount(item)} cards</div>
+                                                </div>
+                                                <div className="bg-gray-100 text-gray-800 text-[10px] font-medium px-3 py-1 rounded-full text-center min-w-[70px]">
+                                                  <div className="truncate">{getCollectionItemCount(item)} items</div>
+                                                </div>
+                                              </div>
+                                            )}
+                                          </div>
+                                          <div className="w-full h-12 flex flex-col justify-center">
+                                            <p className={`text-xs font-medium line-clamp-2 ${item.type === 'collection' ? '' : ''}`} style={item.type === 'collection' ? { color: space.borderColor } : {}}>{item.title}</p>
+                                            <p className="text-xs text-gray-600 line-clamp-1 leading-tight">{item.description}</p>
+                                          </div>
                                         </div>
-                                      )}
                                       </div>
-                                      <div className="w-full h-12 flex flex-col justify-center">
-                                        <p className={`text-xs font-medium line-clamp-2 ${item.type === 'collection' ? '' : ''}`} style={item.type === 'collection' ? { color: space.borderColor } : {}}>{item.title}</p>
-                                        <p className="text-xs text-gray-600 line-clamp-1 leading-tight">{item.description}</p>
-                                      </div>
+                                    ))
+                                  ) : (
+                                    <div className="col-span-3 text-center py-4">
+                                      <p className="text-xs text-gray-500 italic">No items yet</p>
                                     </div>
-                                  </div>
-                                ))
-                              ) : (
-                                <div className="col-span-3 text-center py-4">
-                                  <p className="text-xs text-gray-500 italic">No items yet</p>
+                                  )}
                                 </div>
-                              )}
-                            </div>
 
-                          </CardContent>
-                          )}
-                        </Card>
-                      ))}
-                  </div>
+                              </CardContent>
+                            )}
+                          </Card>
+                        ))}
+                    </div>
                   </div>
                 ) : (
                   <div className="text-center py-8 mt-8">
@@ -4928,8 +4920,8 @@ export default function DesignerPage() {
               </div>
 
               <div className="flex justify-between gap-2 pt-4 px-6 pb-6">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => {
                     saveCollectionChanges();
                     setCollectionPath([]);
@@ -5105,8 +5097,8 @@ export default function DesignerPage() {
                     value={space.backgroundColor}
                     onChange={(e) => {
                       const newBgColor = e.target.value;
-                      setSpace({ 
-                        ...space, 
+                      setSpace({
+                        ...space,
                         backgroundColor: newBgColor,
                         borderColor: generateBorderColor(newBgColor)
                       });
@@ -5118,8 +5110,8 @@ export default function DesignerPage() {
                       value={space.backgroundColor}
                       onChange={(e) => {
                         const newBgColor = e.target.value;
-                        setSpace({ 
-                          ...space, 
+                        setSpace({
+                          ...space,
                           backgroundColor: newBgColor,
                           borderColor: generateBorderColor(newBgColor)
                         });
@@ -5135,24 +5127,24 @@ export default function DesignerPage() {
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-4">
-                <Button 
-                  variant="outline" 
-                  onClick={() => {
+              <Button
+                variant="outline"
+                onClick={() => {
                   // Save the space data to localStorage
                   if (typeof window !== 'undefined') {
                     localStorage.setItem('designer-space', JSON.stringify(space));
                   }
                   setHasUnsavedChanges(false);
-                    setShowSpaceSettingsDialog(false);
-                  }}
+                  setShowSpaceSettingsDialog(false);
+                }}
                 className="text-green-600 border-green-300 hover:bg-green-50"
-                >
+              >
                 <Save className="w-4 h-4 mr-2" />
                 Save
-                </Button>
-                <Button variant="outline" onClick={() => setShowSpaceSettingsDialog(false)}>
-                  Close
-                </Button>
+              </Button>
+              <Button variant="outline" onClick={() => setShowSpaceSettingsDialog(false)}>
+                Close
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -5185,14 +5177,14 @@ export default function DesignerPage() {
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-4">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => setShowVersionDialog(false)}
                 disabled={isSavingVersion}
               >
                 Cancel
               </Button>
-              <Button 
+              <Button
                 onClick={saveVersion}
                 disabled={isSavingVersion || !versionName.trim()}
                 className="bg-blue-600 hover:bg-blue-700"
@@ -5217,238 +5209,238 @@ export default function DesignerPage() {
         {showOnboarding && onboardingTour && (
           <>
             <OnboardingPointer step={onboardingTour.steps[currentOnboardingStep]} isVisible={true} />
-                  </>
-                )}
-              </div>
-      
+          </>
+        )}
+      </div>
+
       {/* AI Designer Container */}
       {showAIDesigner && (
-      <div className="w-1/2 max-w-md h-screen">
-        <AIDesigner 
-          ref={(ref) => { if (ref) (window as any).aiDesignerRef = ref; }}
-          space={space}
-          logoColors={logoColors}
-          onAddCard={(cardData) => {
-            const newCard: SpaceCard = {
-              id: `card-${Date.now()}`,
-              title: cardData.title,
-              color: cardData.color || '#f3f4f6',
-              items: [],
-              order: space.cards.length,
-              isExpanded: false,
-              createdAt: new Date(),
-              updatedAt: new Date()
-            };
-            setSpace({ ...space, cards: [...space.cards, newCard] });
-            markAsChanged();
-            
-            // Trigger magical star animation
-            setTimeout(() => {
-              setMagicalStarTarget(newCard.id);
-            }, 100);
-          }}
-          onDeleteCard={(cardId) => {
-            setSpace({ ...space, cards: space.cards.filter(card => card.id !== cardId) });
-            markAsChanged();
-          }}
-          onModifyCard={(cardId, cardData) => {
-            setSpace({
-              ...space,
-              cards: space.cards.map(card => 
-                card.id === cardId 
-                  ? { ...card, ...cardData, updatedAt: new Date() }
-                  : card
-              )
-            });
-            markAsChanged();
-          }}
-          onAddCollection={(collectionData, targetCardId) => {
-            const newCollection: ContentItem = {
-              id: `collection-${Date.now()}`,
-              type: 'collection',
-              title: collectionData.title,
-              description: collectionData.description,
-              icon: FolderOpen,
-              isPublic: false,
-              children: [],
-              order: 0,
-              createdAt: new Date(),
-              updatedAt: new Date()
-            };
-            
-            if (targetCardId) {
-              // Add to specific card
-              setSpace(prevSpace => {
-                const updatedSpace = {
-                  ...prevSpace,
-                  cards: prevSpace.cards.map(card => 
-                    card.id === targetCardId 
-                      ? { ...card, items: [...card.items, newCollection], updatedAt: new Date() }
-                      : card
-                  )
-                };
-                
-                // Notify AI Designer about the created collection
-                console.log('Main app: Notifying AI Designer about created collection:', newCollection);
-                if ((window as any).aiDesignerRef && (window as any).aiDesignerRef.onCollectionCreated) {
-                  console.log('Main app: Calling onCollectionCreated callback');
-                  (window as any).aiDesignerRef.onCollectionCreated(newCollection);
-                } else {
-                  console.log('Main app: AI Designer ref or callback not available');
-                }
-                
-                return updatedSpace;
+        <div className="w-1/2 max-w-md h-screen">
+          <AIDesigner
+            ref={(ref) => { if (ref) (window as any).aiDesignerRef = ref; }}
+            space={space}
+            logoColors={logoColors}
+            onAddCard={(cardData) => {
+              const newCard: SpaceCard = {
+                id: `card-${Date.now()}`,
+                title: cardData.title,
+                color: cardData.color || '#f3f4f6',
+                items: [],
+                order: space.cards.length,
+                isExpanded: false,
+                createdAt: new Date(),
+                updatedAt: new Date()
+              };
+              setSpace({ ...space, cards: [...space.cards, newCard] });
+              markAsChanged();
+
+              // Trigger magical star animation
+              setTimeout(() => {
+                setMagicalStarTarget(newCard.id);
+              }, 100);
+            }}
+            onDeleteCard={(cardId) => {
+              setSpace({ ...space, cards: space.cards.filter(card => card.id !== cardId) });
+              markAsChanged();
+            }}
+            onModifyCard={(cardId, cardData) => {
+              setSpace({
+                ...space,
+                cards: space.cards.map(card =>
+                  card.id === cardId
+                    ? { ...card, ...cardData, updatedAt: new Date() }
+                    : card
+                )
               });
-            } else {
-              // Add to first card or create a default card
-              if (space.cards.length > 0) {
-                const firstCard = space.cards[0];
+              markAsChanged();
+            }}
+            onAddCollection={(collectionData, targetCardId) => {
+              const newCollection: ContentItem = {
+                id: `collection-${Date.now()}`,
+                type: 'collection',
+                title: collectionData.title,
+                description: collectionData.description,
+                icon: FolderOpen,
+                isPublic: false,
+                children: [],
+                order: 0,
+                createdAt: new Date(),
+                updatedAt: new Date()
+              };
+
+              if (targetCardId) {
+                // Add to specific card
                 setSpace(prevSpace => {
                   const updatedSpace = {
                     ...prevSpace,
-                    cards: prevSpace.cards.map(card => 
-                      card.id === firstCard.id 
+                    cards: prevSpace.cards.map(card =>
+                      card.id === targetCardId
                         ? { ...card, items: [...card.items, newCollection], updatedAt: new Date() }
                         : card
                     )
                   };
-                  
+
                   // Notify AI Designer about the created collection
-                  console.log('Main app: Notifying AI Designer about created collection (fallback):', newCollection);
+                  console.log('Main app: Notifying AI Designer about created collection:', newCollection);
                   if ((window as any).aiDesignerRef && (window as any).aiDesignerRef.onCollectionCreated) {
-                    console.log('Main app: Calling onCollectionCreated callback (fallback)');
+                    console.log('Main app: Calling onCollectionCreated callback');
                     (window as any).aiDesignerRef.onCollectionCreated(newCollection);
                   } else {
-                    console.log('Main app: AI Designer ref or callback not available (fallback)');
+                    console.log('Main app: AI Designer ref or callback not available');
                   }
-                  
+
                   return updatedSpace;
                 });
-              }
-            }
-            markAsChanged();
-            
-            // Trigger magical star animation
-            setTimeout(() => {
-              setMagicalStarTarget(newCollection.id);
-            }, 100);
-          }}
-          onAddCollectionCards={(collection, cards) => {
-            console.log('Adding collection cards:', { collection, cards });
-            console.log('Current space before update:', space);
-            
-            // Find the collection in the space and add cards to it
-            setSpace(prevSpace => {
-              console.log('Previous space:', prevSpace);
-              
-              const updatedSpace = {
-                ...prevSpace,
-                cards: prevSpace.cards.map(card => {
-                  console.log('Processing card:', card.title, 'items:', card.items);
-                  
-                  const hasCollection = card.items.some((item: any) => item.id === collection.id);
-                  console.log('Card has collection?', hasCollection, 'collection.id:', collection.id);
-                  
-                  if (hasCollection) {
-                    console.log('Found collection in card:', card.title);
-                    return {
-                      ...card,
-                      items: card.items.map((item: any) => {
-                        console.log('Processing item:', item.title, 'item.id:', item.id, 'collection.id:', collection.id);
-                        
-                        if (item.id === collection.id) {
-                          console.log('Found matching collection item, adding cards');
-                          const newCards = cards.map((cardData: any, index: number) => ({
-                            id: `collection-card-${Date.now()}-${index}`,
-                            title: cardData.title,
-                            color: cardData.color,
-                            items: [],
-                            order: (item.children || []).length + index,
-                            isExpanded: false,
-                            createdAt: new Date(),
-                            updatedAt: new Date()
-                          }));
-                          
-                          console.log('New cards to add:', newCards);
-                          
-                          return {
-                            ...item,
-                            children: [
-                              ...(item.children || []),
-                              ...newCards
-                            ],
-                            updatedAt: new Date()
-                          };
-                        }
-                        return item;
-                      }),
-                      updatedAt: new Date()
+              } else {
+                // Add to first card or create a default card
+                if (space.cards.length > 0) {
+                  const firstCard = space.cards[0];
+                  setSpace(prevSpace => {
+                    const updatedSpace = {
+                      ...prevSpace,
+                      cards: prevSpace.cards.map(card =>
+                        card.id === firstCard.id
+                          ? { ...card, items: [...card.items, newCollection], updatedAt: new Date() }
+                          : card
+                      )
                     };
-                  }
-                  return card;
-                })
-              };
-              
-              console.log('Updated space:', updatedSpace);
-              
-              // Find the updated collection and open it
-              const updatedCollection = updatedSpace.cards
-                .flatMap(card => card.items)
-                .find(item => item.id === collection.id);
-              
-              console.log('Updated collection found:', updatedCollection);
-              
-              if (updatedCollection) {
-                console.log('Opening collection dialog for:', updatedCollection);
-                setCurrentCollection(updatedCollection);
-                setCollectionPath([]);
-                setShowCollectionDialog(true);
+
+                    // Notify AI Designer about the created collection
+                    console.log('Main app: Notifying AI Designer about created collection (fallback):', newCollection);
+                    if ((window as any).aiDesignerRef && (window as any).aiDesignerRef.onCollectionCreated) {
+                      console.log('Main app: Calling onCollectionCreated callback (fallback)');
+                      (window as any).aiDesignerRef.onCollectionCreated(newCollection);
+                    } else {
+                      console.log('Main app: AI Designer ref or callback not available (fallback)');
+                    }
+
+                    return updatedSpace;
+                  });
+                }
               }
-              
-              return updatedSpace;
-            });
-            markAsChanged();
-          }}
-          onAddContent={(cardId, contentData) => {
-            const newContent: ContentItem = {
-              id: `content-${Date.now()}`,
-              type: 'content',
-              title: contentData.title,
-              description: '',
-              contentType: contentData.contentType,
-              icon: FileText,
-              isPublic: false,
-              order: 0,
-              createdAt: new Date(),
-              updatedAt: new Date()
-            };
-            setSpace({
-              ...space,
-              cards: space.cards.map(card => 
-                card.id === cardId 
-                  ? { ...card, items: [...card.items, newContent], updatedAt: new Date() }
-                  : card
-              )
-            });
-            markAsChanged();
-            
-            // Trigger magical star animation
-            setTimeout(() => {
-              setMagicalStarTarget(newContent.id);
-            }, 100);
-          }}
-          onModifySpace={(spaceData) => {
-            setSpace({ ...space, ...spaceData, updatedAt: new Date() });
-            markAsChanged();
-          }}
-          onOpenCollectionDesigner={(collection) => {
-            setCurrentCollection(collection);
-            setShowCollectionDesigner(true);
-          }}
-        />
-      </div>
+              markAsChanged();
+
+              // Trigger magical star animation
+              setTimeout(() => {
+                setMagicalStarTarget(newCollection.id);
+              }, 100);
+            }}
+            onAddCollectionCards={(collection, cards) => {
+              console.log('Adding collection cards:', { collection, cards });
+              console.log('Current space before update:', space);
+
+              // Find the collection in the space and add cards to it
+              setSpace(prevSpace => {
+                console.log('Previous space:', prevSpace);
+
+                const updatedSpace = {
+                  ...prevSpace,
+                  cards: prevSpace.cards.map(card => {
+                    console.log('Processing card:', card.title, 'items:', card.items);
+
+                    const hasCollection = card.items.some((item: any) => item.id === collection.id);
+                    console.log('Card has collection?', hasCollection, 'collection.id:', collection.id);
+
+                    if (hasCollection) {
+                      console.log('Found collection in card:', card.title);
+                      return {
+                        ...card,
+                        items: card.items.map((item: any) => {
+                          console.log('Processing item:', item.title, 'item.id:', item.id, 'collection.id:', collection.id);
+
+                          if (item.id === collection.id) {
+                            console.log('Found matching collection item, adding cards');
+                            const newCards = cards.map((cardData: any, index: number) => ({
+                              id: `collection-card-${Date.now()}-${index}`,
+                              title: cardData.title,
+                              color: cardData.color,
+                              items: [],
+                              order: (item.children || []).length + index,
+                              isExpanded: false,
+                              createdAt: new Date(),
+                              updatedAt: new Date()
+                            }));
+
+                            console.log('New cards to add:', newCards);
+
+                            return {
+                              ...item,
+                              children: [
+                                ...(item.children || []),
+                                ...newCards
+                              ],
+                              updatedAt: new Date()
+                            };
+                          }
+                          return item;
+                        }),
+                        updatedAt: new Date()
+                      };
+                    }
+                    return card;
+                  })
+                };
+
+                console.log('Updated space:', updatedSpace);
+
+                // Find the updated collection and open it
+                const updatedCollection = updatedSpace.cards
+                  .flatMap(card => card.items)
+                  .find(item => item.id === collection.id);
+
+                console.log('Updated collection found:', updatedCollection);
+
+                if (updatedCollection) {
+                  console.log('Opening collection dialog for:', updatedCollection);
+                  setCurrentCollection(updatedCollection);
+                  setCollectionPath([]);
+                  setShowCollectionDialog(true);
+                }
+
+                return updatedSpace;
+              });
+              markAsChanged();
+            }}
+            onAddContent={(cardId, contentData) => {
+              const newContent: ContentItem = {
+                id: `content-${Date.now()}`,
+                type: 'content',
+                title: contentData.title,
+                description: '',
+                contentType: contentData.contentType,
+                icon: FileText,
+                isPublic: false,
+                order: 0,
+                createdAt: new Date(),
+                updatedAt: new Date()
+              };
+              setSpace({
+                ...space,
+                cards: space.cards.map(card =>
+                  card.id === cardId
+                    ? { ...card, items: [...card.items, newContent], updatedAt: new Date() }
+                    : card
+                )
+              });
+              markAsChanged();
+
+              // Trigger magical star animation
+              setTimeout(() => {
+                setMagicalStarTarget(newContent.id);
+              }, 100);
+            }}
+            onModifySpace={(spaceData) => {
+              setSpace({ ...space, ...spaceData, updatedAt: new Date() });
+              markAsChanged();
+            }}
+            onOpenCollectionDesigner={(collection) => {
+              setCurrentCollection(collection);
+              setShowCollectionDesigner(true);
+            }}
+          />
+        </div>
       )}
-      
+
       {/* Collection Designer */}
       <CollectionDesigner
         collection={currentCollection}
@@ -5460,7 +5452,7 @@ export default function DesignerPage() {
             ...prevSpace,
             cards: prevSpace.cards.map(card => ({
               ...card,
-              items: card.items.map(item => 
+              items: card.items.map(item =>
                 item.id === updatedCollection.id ? {
                   ...item,
                   title: updatedCollection.title,
@@ -5488,25 +5480,25 @@ export default function DesignerPage() {
               createdAt: new Date(),
               updatedAt: new Date()
             };
-            
+
             const updatedCollection = {
               ...currentCollection,
               children: [...(currentCollection.children || []), newCard]
             };
-            
+
             setCurrentCollection(updatedCollection);
-            
+
             // Trigger magical star animation
             setTimeout(() => {
               setMagicalStarTarget(newCard.id);
             }, 100);
-            
+
             // Update in space
             setSpace(prevSpace => ({
               ...prevSpace,
               cards: prevSpace.cards.map(card => ({
                 ...card,
-                items: card.items.map(item => 
+                items: card.items.map(item =>
                   item.id === currentCollection.id ? updatedCollection : item
                 )
               }))
@@ -5518,21 +5510,21 @@ export default function DesignerPage() {
           if (currentCollection) {
             const updatedCollection = {
               ...currentCollection,
-              children: currentCollection.children?.map(card => 
-                card.id === cardId 
+              children: currentCollection.children?.map(card =>
+                card.id === cardId
                   ? { ...card, ...cardData, updatedAt: new Date() }
                   : card
               ) || []
             };
-            
+
             setCurrentCollection(updatedCollection);
-            
+
             // Update in space
             setSpace(prevSpace => ({
               ...prevSpace,
               cards: prevSpace.cards.map(card => ({
                 ...card,
-                items: card.items.map(item => 
+                items: card.items.map(item =>
                   item.id === currentCollection.id ? updatedCollection : item
                 )
               }))
@@ -5546,15 +5538,15 @@ export default function DesignerPage() {
               ...currentCollection,
               children: currentCollection.children?.filter(card => card.id !== cardId) || []
             };
-            
+
             setCurrentCollection(updatedCollection);
-            
+
             // Update in space
             setSpace(prevSpace => ({
               ...prevSpace,
               cards: prevSpace.cards.map(card => ({
                 ...card,
-                items: card.items.map(item => 
+                items: card.items.map(item =>
                   item.id === currentCollection.id ? updatedCollection : item
                 )
               }))
@@ -5568,20 +5560,20 @@ export default function DesignerPage() {
               const card = currentCollection.children!.find(c => c.id === id);
               return card ? { ...card, order: index + 1 } : null;
             }).filter(Boolean) as CollectionCard[];
-            
+
             const updatedCollection = {
               ...currentCollection,
               children: reorderedCards
             };
-            
+
             setCurrentCollection(updatedCollection);
-            
+
             // Update in space
             setSpace(prevSpace => ({
               ...prevSpace,
               cards: prevSpace.cards.map(card => ({
                 ...card,
-                items: card.items.map(item => 
+                items: card.items.map(item =>
                   item.id === currentCollection.id ? updatedCollection : item
                 )
               }))

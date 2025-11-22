@@ -1,0 +1,59 @@
+# Large content files that aren't needed for deployment
+content_transcriptions/
+s3-content/
+*.pdf
+*.xlsx
+*.csv
+*.png
+*.jpg
+*.jpeg
+
+# Development files
+.DS_Store
+*.log
+*.tmp
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build artifacts
+.next/cache/
+node_modules/.cache/
+
+# Large data files
+detailed_content_analysis.json
+content_data.json
+intelligent_structure_summary.json
+intelligent_structure_implementation_roadmap.json
+intelligent_categorization.json
+
+# Python files (not needed for deployment)
+*.py
+requirements.txt
+
+# Documentation files
+*.md
+!README.md
+
+# Test files
+tests/
+*.spec.ts
+*.test.ts
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+Thumbs.db
+
+# Deployment files
+designer-app-deployment.zip
+designer-app-bluehost.zip
+
+# Large images
+intelligent_content_distribution.png
+intelligent_space_structure_diagram.png

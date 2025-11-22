@@ -11,6 +11,81 @@ const s3Client = new S3Client({
   },
 });
 
+export async function HEAD(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    
+    if (!id) {
+      return new NextResponse(null, { status: 400 });
+    }
+
+    // Convert ID to proper S3 key
+    let s3Key = id;
+    if (!id.startsWith('spaces/')) {
+      // Handle different ID formats
+      if (id.includes('_')) {
+        // Format: "10571_4-guideline-gas-and-flow-initiation-ECMO-protocol.pdf"
+        // Convert to: "spaces/4/content/10571/4-guideline-gas-and-flow-initiation-ECMO-protocol.pdf"
+        const parts = id.split('_');
+        const folderId = parts[0];
+        const fileName = parts.slice(1).join('_');
+        s3Key = `spaces/4/content/${folderId}/${fileName}`;
+      } else {
+        // Format: "10571" -> "spaces/4/content/10571"
+        s3Key = `spaces/4/content/${id}`;
+      }
+    }
+
+    // Validate S3 key
+    if (!s3Key.startsWith('spaces/')) {
+      return new NextResponse(null, { status: 400 });
+    }
+
+    // Check if AWS credentials are configured
+    if (!s3Config.accessKeyId || !s3Config.secretAccessKey) {
+      return new NextResponse(null, { status: 500 });
+    }
+
+    const command = new GetObjectCommand({
+      Bucket: s3Config.bucket,
+      Key: s3Key,
+    });
+
+    const response = await s3Client.send(command);
+    
+    if (!response.Body) {
+      return new NextResponse(null, { status: 404 });
+    }
+
+    // Return HEAD response with content type and length
+    return new NextResponse(null, {
+      status: 200,
+      headers: {
+        'Content-Type': response.ContentType || 'application/octet-stream',
+        'Content-Length': response.ContentLength?.toString() || '0',
+        'Cache-Control': 'public, max-age=3600',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, HEAD',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
+    });
+
+  } catch (error: any) {
+    console.error('Proxy content error:', error);
+    
+    if (error.name === 'NoSuchKey') {
+      return new NextResponse(null, { status: 404 });
+    }
+    
+    if (error.name === 'AccessDenied') {
+      return new NextResponse(null, { status: 403 });
+    }
+    
+    return new NextResponse(null, { status: 500 });
+  }
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

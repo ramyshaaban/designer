@@ -92,7 +92,10 @@ export async function POST(request: NextRequest) {
       topResults.map(async (result) => {
         try {
           // Check if AWS credentials are available by testing the proxy API with HEAD request
-          const proxyTest = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/proxy-content?id=${result.id}`, {
+          const baseUrl = process.env.VERCEL_URL 
+            ? `https://${process.env.VERCEL_URL}` 
+            : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+          const proxyTest = await fetch(`${baseUrl}/api/proxy-content?id=${result.id}`, {
             method: 'HEAD'
           });
           
